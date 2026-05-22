@@ -1,0 +1,13 @@
+{
+  "name": "fly-connection-creator",
+  "version": "1.0.0",
+  "description": "Playwright automation of AvePoint Fly Create Connection flow",
+  "private": true,
+  "scripts": {
+    "login":  "node fly-connector.js --mode=login",
+    "create": "node fly-connector.js --mode=create"
+  },
+  "dependencies": {
+    "playwright": "^1.47.0"
+  }
+}

@@ -1,0 +1,249 @@
+2026-05-20 14:13:41.036 [INFO ] ==== CREATE MODE START ====
+2026-05-20 14:13:41.036 [INFO ] Log file: C:\Temp\Scripts\Avepoint\FLY\logs\Fara_2026-05-20_141341\run.log
+2026-05-20 14:13:41.039 [INFO ] Received 6 tasks
+2026-05-20 14:13:41.854 [STEP ] Navigating to https://fly.avepointonlineservices.com/#/settings/connection
+2026-05-20 14:13:41.855 [STEP ] navigateToConnectionsPage: start
+2026-05-20 14:13:45.229 [STEP ] waiting for left nav to render
+2026-05-20 14:13:46.299 [STEP ] clicking Settings menu (button[aria-label="Settings"])
+2026-05-20 14:13:46.692 [STEP ] clicking Connection sub-item
+2026-05-20 14:13:46.696 [STEP ] Connection sub-item found via "button[aria-label="Connections"]"
+2026-05-20 14:13:46.814 [WARN ] req failed: GET https://graph-ne.avepointonlineservices.com/fly/jobs/recentmigrations?isSuccessful=true&migrationModuleType=0
+2026-05-20 14:13:46.814 [WARN ] req failed: GET https://graph-ne.avepointonlineservices.com/fly/license/usage?licenseModuleType=0
+2026-05-20 14:13:46.827 [STEP ] waiting for Create connection button on list page
+2026-05-20 14:13:46.836 [STEP ] navigateToConnectionsPage: done
+2026-05-20 14:13:47.182 [INFO ] Existing connections cached: 0
+2026-05-20 14:13:47.182 [INFO ] [info] Found 0 existing connections.
+2026-05-20 14:13:47.182 [STEP ] 5e4dc2e3 ensureCleanListPage: start
+2026-05-20 14:13:48.084 [STEP ] 5e4dc2e3 ensureCleanListPage: done
+2026-05-20 14:13:48.084 [TASK ] 5e4dc2e3 STARTED  workload="Exchange Online" name="Fara - Exchange Online"
+2026-05-20 14:13:48.084 [TASK ] 5e4dc2e3 WORKING  
+2026-05-20 14:13:48.084 [STEP ] 5e4dc2e3 click Create connection button
+2026-05-20 14:13:48.201 [STEP ] 5e4dc2e3 wait for Connection name input
+2026-05-20 14:13:48.412 [STEP ] 5e4dc2e3 fill name="Fara - Exchange Online"
+2026-05-20 14:13:48.557 [STEP ] 5e4dc2e3 open Connection type dropdown
+2026-05-20 14:13:48.871 [STEP ] 5e4dc2e3 pick workload="Exchange Online"
+2026-05-20 14:13:49.139 [STEP ] 5e4dc2e3 open Tenant dropdown
+2026-05-20 14:13:49.535 [STEP ] 5e4dc2e3 type tenant search="fara"
+2026-05-20 14:13:49.984 [STEP ] 5e4dc2e3 pick tenant row
+2026-05-20 14:13:50.079 [STEP ] 5e4dc2e3 wait for App profile field to appear
+2026-05-20 14:13:51.607 [STEP ] 5e4dc2e3 open App profile dropdown
+2026-05-20 14:13:51.978 [STEP ] 5e4dc2e3 search App profile for "ITVolaris-GA@mbufara.onmicrosoft.com"
+2026-05-20 14:13:57.554 [ERROR] 5e4dc2e3 DOM dumped to C:\Temp\Scripts\Avepoint\FLY\logs\Fara_2026-05-20_141341\fail-5e4dc2e3-1779279237475.html
+2026-05-20 14:13:57.554 [ERROR] 5e4dc2e3 FAILED   locator.waitFor: Timeout 5000ms exceeded.
+Call log:
+[2m  - waiting for locator('[role="option"], li').filter({ hasText: /ITVolaris-GA@mbufara\.onmicrosoft\.com/i }).first() to be visible[22m
+
+2026-05-20 14:13:57.554 [ERROR] 5e4dc2e3 stack: locator.waitFor: Timeout 5000ms exceeded.
+Call log:
+[2m  - waiting for locator('[role="option"], li').filter({ hasText: /ITVolaris-GA@mbufara\.onmicrosoft\.com/i }).first() to be visible[22m
+
+    at pickDropdownOptionContaining (C:\Temp\Scripts\Avepoint\FLY\fly-connector.js:444:14)
+    at async createOneConnection (C:\Temp\Scripts\Avepoint\FLY\fly-connector.js:534:3)
+    at async create (C:\Temp\Scripts\Avepoint\FLY\fly-connector.js:187:7)
+    at async C:\Temp\Scripts\Avepoint\FLY\fly-connector.js:1181:37
+2026-05-20 14:13:57.554 [ERROR] 5e4dc2e3 screenshot: C:\Temp\Scripts\Avepoint\FLY\logs\Fara_2026-05-20_141341\fail-5e4dc2e3-1779279237475.png
+2026-05-20 14:13:57.554 [TASK ] 5e4dc2e3 FAILED   locator.waitFor: Timeout 5000ms exceeded.  (see C:\Temp\Scripts\Avepoint\FLY\logs\Fara_2026-05-20_141341)
+2026-05-20 14:13:57.554 [STEP ] 41c891b9 ensureCleanListPage: start
+2026-05-20 14:13:58.043 [STEP ] 41c891b9 clicking drawer close button
+2026-05-20 14:13:58.431 [STEP ] 41c891b9 Create button not stable; renavigating via menu
+2026-05-20 14:13:58.431 [STEP ] navigateToConnectionsPage: start
+2026-05-20 14:13:58.431 [STEP ] waiting for left nav to render
+2026-05-20 14:13:58.436 [STEP ] clicking Settings menu (button[aria-label="Settings"])
+2026-05-20 14:13:58.786 [STEP ] clicking Connection sub-item
+2026-05-20 14:13:58.793 [STEP ] Connection sub-item: fallback to role-based match
+2026-05-20 14:14:08.798 [WARN ] 41c891b9 renavigation failed: locator.click: Timeout 10000ms exceeded.
+Call log:
+[2m  - waiting for getByRole('button', { name: /^Connection$/ }).first()[22m
+
+2026-05-20 14:14:08.798 [STEP ] 41c891b9 ensureCleanListPage: done
+2026-05-20 14:14:08.798 [TASK ] 41c891b9 STARTED  workload="SharePoint Online" name="Fara - SharePoint Online"
+2026-05-20 14:14:08.799 [TASK ] 41c891b9 WORKING  
+2026-05-20 14:14:08.799 [STEP ] 41c891b9 click Create connection button
+2026-05-20 14:14:08.941 [STEP ] 41c891b9 wait for Connection name input
+2026-05-20 14:14:10.787 [STEP ] 41c891b9 fill name="Fara - SharePoint Online"
+2026-05-20 14:14:10.837 [STEP ] 41c891b9 open Connection type dropdown
+2026-05-20 14:14:11.111 [STEP ] 41c891b9 pick workload="SharePoint Online"
+2026-05-20 14:14:11.426 [STEP ] 41c891b9 open Tenant dropdown
+2026-05-20 14:14:11.811 [STEP ] 41c891b9 type tenant search="fara"
+2026-05-20 14:14:12.246 [STEP ] 41c891b9 pick tenant row
+2026-05-20 14:14:12.328 [STEP ] 41c891b9 wait for App profile field to appear
+2026-05-20 14:14:13.752 [STEP ] 41c891b9 open App profile dropdown
+2026-05-20 14:14:14.124 [STEP ] 41c891b9 search App profile for "ITVolaris-GA@mbufara.onmicrosoft.com"
+2026-05-20 14:14:19.657 [ERROR] 41c891b9 DOM dumped to C:\Temp\Scripts\Avepoint\FLY\logs\Fara_2026-05-20_141341\fail-41c891b9-1779279259584.html
+2026-05-20 14:14:19.657 [ERROR] 41c891b9 FAILED   locator.waitFor: Timeout 5000ms exceeded.
+Call log:
+[2m  - waiting for locator('[role="option"], li').filter({ hasText: /ITVolaris-GA@mbufara\.onmicrosoft\.com/i }).first() to be visible[22m
+
+2026-05-20 14:14:19.657 [ERROR] 41c891b9 stack: locator.waitFor: Timeout 5000ms exceeded.
+Call log:
+[2m  - waiting for locator('[role="option"], li').filter({ hasText: /ITVolaris-GA@mbufara\.onmicrosoft\.com/i }).first() to be visible[22m
+
+    at pickDropdownOptionContaining (C:\Temp\Scripts\Avepoint\FLY\fly-connector.js:444:14)
+    at async createOneConnection (C:\Temp\Scripts\Avepoint\FLY\fly-connector.js:534:3)
+    at async create (C:\Temp\Scripts\Avepoint\FLY\fly-connector.js:187:7)
+    at async C:\Temp\Scripts\Avepoint\FLY\fly-connector.js:1181:37
+2026-05-20 14:14:19.657 [ERROR] 41c891b9 screenshot: C:\Temp\Scripts\Avepoint\FLY\logs\Fara_2026-05-20_141341\fail-41c891b9-1779279259584.png
+2026-05-20 14:14:19.657 [TASK ] 41c891b9 FAILED   locator.waitFor: Timeout 5000ms exceeded.  (see C:\Temp\Scripts\Avepoint\FLY\logs\Fara_2026-05-20_141341)
+2026-05-20 14:14:19.657 [STEP ] b298fbfb ensureCleanListPage: start
+2026-05-20 14:14:20.133 [STEP ] b298fbfb clicking drawer close button
+2026-05-20 14:14:20.548 [STEP ] b298fbfb Create button not stable; renavigating via menu
+2026-05-20 14:14:20.548 [STEP ] navigateToConnectionsPage: start
+2026-05-20 14:14:20.548 [STEP ] waiting for left nav to render
+2026-05-20 14:14:20.555 [STEP ] clicking Settings menu (button[aria-label="Settings"])
+2026-05-20 14:14:20.919 [STEP ] clicking Connection sub-item
+2026-05-20 14:14:20.924 [STEP ] Connection sub-item found via "button[aria-label="Connections"]"
+2026-05-20 14:14:21.002 [STEP ] waiting for Create connection button on list page
+2026-05-20 14:14:21.009 [STEP ] navigateToConnectionsPage: done
+2026-05-20 14:14:21.009 [STEP ] b298fbfb ensureCleanListPage: done
+2026-05-20 14:14:21.009 [TASK ] b298fbfb STARTED  workload="OneDrive" name="Fara - OneDrive"
+2026-05-20 14:14:21.009 [TASK ] b298fbfb WORKING  
+2026-05-20 14:14:21.010 [STEP ] b298fbfb click Create connection button
+2026-05-20 14:14:21.152 [STEP ] b298fbfb wait for Connection name input
+2026-05-20 14:14:21.247 [STEP ] b298fbfb fill name="Fara - OneDrive"
+2026-05-20 14:14:21.525 [STEP ] b298fbfb open Connection type dropdown
+2026-05-20 14:14:21.802 [STEP ] b298fbfb pick workload="OneDrive"
+2026-05-20 14:14:22.099 [STEP ] b298fbfb open Tenant dropdown
+2026-05-20 14:14:22.454 [STEP ] b298fbfb type tenant search="fara"
+2026-05-20 14:14:22.876 [STEP ] b298fbfb pick tenant row
+2026-05-20 14:14:22.955 [STEP ] b298fbfb wait for App profile field to appear
+2026-05-20 14:14:24.898 [STEP ] b298fbfb open App profile dropdown
+2026-05-20 14:14:25.253 [STEP ] b298fbfb search App profile for "ITVolaris-GA@mbufara.onmicrosoft.com"
+2026-05-20 14:14:30.746 [ERROR] b298fbfb DOM dumped to C:\Temp\Scripts\Avepoint\FLY\logs\Fara_2026-05-20_141341\fail-b298fbfb-1779279270688.html
+2026-05-20 14:14:30.746 [ERROR] b298fbfb FAILED   locator.waitFor: Timeout 5000ms exceeded.
+Call log:
+[2m  - waiting for locator('[role="option"], li').filter({ hasText: /ITVolaris-GA@mbufara\.onmicrosoft\.com/i }).first() to be visible[22m
+
+2026-05-20 14:14:30.747 [ERROR] b298fbfb stack: locator.waitFor: Timeout 5000ms exceeded.
+Call log:
+[2m  - waiting for locator('[role="option"], li').filter({ hasText: /ITVolaris-GA@mbufara\.onmicrosoft\.com/i }).first() to be visible[22m
+
+    at pickDropdownOptionContaining (C:\Temp\Scripts\Avepoint\FLY\fly-connector.js:444:14)
+    at async createOneConnection (C:\Temp\Scripts\Avepoint\FLY\fly-connector.js:534:3)
+    at async create (C:\Temp\Scripts\Avepoint\FLY\fly-connector.js:187:7)
+    at async C:\Temp\Scripts\Avepoint\FLY\fly-connector.js:1181:37
+2026-05-20 14:14:30.747 [ERROR] b298fbfb screenshot: C:\Temp\Scripts\Avepoint\FLY\logs\Fara_2026-05-20_141341\fail-b298fbfb-1779279270688.png
+2026-05-20 14:14:30.747 [TASK ] b298fbfb FAILED   locator.waitFor: Timeout 5000ms exceeded.  (see C:\Temp\Scripts\Avepoint\FLY\logs\Fara_2026-05-20_141341)
+2026-05-20 14:14:30.747 [STEP ] a113596a ensureCleanListPage: start
+2026-05-20 14:14:31.221 [STEP ] a113596a clicking drawer close button
+2026-05-20 14:14:31.627 [STEP ] a113596a Create button not stable; renavigating via menu
+2026-05-20 14:14:31.627 [STEP ] navigateToConnectionsPage: start
+2026-05-20 14:14:31.627 [STEP ] waiting for left nav to render
+2026-05-20 14:14:31.631 [STEP ] clicking Settings menu (button[aria-label="Settings"])
+2026-05-20 14:14:31.981 [STEP ] clicking Connection sub-item
+2026-05-20 14:14:31.987 [STEP ] Connection sub-item: fallback to role-based match
+2026-05-20 14:14:41.999 [WARN ] a113596a renavigation failed: locator.click: Timeout 10000ms exceeded.
+Call log:
+[2m  - waiting for getByRole('button', { name: /^Connection$/ }).first()[22m
+
+2026-05-20 14:14:41.999 [STEP ] a113596a ensureCleanListPage: done
+2026-05-20 14:14:41.999 [TASK ] a113596a STARTED  workload="Microsoft Teams" name="Fara - Microsoft Teams"
+2026-05-20 14:14:41.999 [TASK ] a113596a WORKING  
+2026-05-20 14:14:41.999 [STEP ] a113596a click Create connection button
+2026-05-20 14:14:42.141 [STEP ] a113596a wait for Connection name input
+2026-05-20 14:14:42.377 [STEP ] a113596a fill name="Fara - Microsoft Teams"
+2026-05-20 14:14:42.436 [STEP ] a113596a open Connection type dropdown
+2026-05-20 14:14:42.712 [STEP ] a113596a pick workload="Microsoft Teams"
+2026-05-20 14:14:43.055 [STEP ] a113596a open Tenant dropdown
+2026-05-20 14:14:43.439 [STEP ] a113596a type tenant search="fara"
+2026-05-20 14:14:43.862 [STEP ] a113596a pick tenant row
+2026-05-20 14:14:43.940 [STEP ] a113596a wait for App profile field to appear
+2026-05-20 14:14:45.909 [STEP ] a113596a open App profile dropdown
+2026-05-20 14:14:46.284 [STEP ] a113596a search App profile for "ITVolaris-GA@mbufara.onmicrosoft.com"
+2026-05-20 14:14:51.825 [ERROR] a113596a DOM dumped to C:\Temp\Scripts\Avepoint\FLY\logs\Fara_2026-05-20_141341\fail-a113596a-1779279291748.html
+2026-05-20 14:14:51.825 [ERROR] a113596a FAILED   locator.waitFor: Timeout 5000ms exceeded.
+Call log:
+[2m  - waiting for locator('[role="option"], li').filter({ hasText: /ITVolaris-GA@mbufara\.onmicrosoft\.com/i }).first() to be visible[22m
+
+2026-05-20 14:14:51.825 [ERROR] a113596a stack: locator.waitFor: Timeout 5000ms exceeded.
+Call log:
+[2m  - waiting for locator('[role="option"], li').filter({ hasText: /ITVolaris-GA@mbufara\.onmicrosoft\.com/i }).first() to be visible[22m
+
+    at pickDropdownOptionContaining (C:\Temp\Scripts\Avepoint\FLY\fly-connector.js:444:14)
+    at async createOneConnection (C:\Temp\Scripts\Avepoint\FLY\fly-connector.js:534:3)
+    at async create (C:\Temp\Scripts\Avepoint\FLY\fly-connector.js:187:7)
+    at async C:\Temp\Scripts\Avepoint\FLY\fly-connector.js:1181:37
+2026-05-20 14:14:51.825 [ERROR] a113596a screenshot: C:\Temp\Scripts\Avepoint\FLY\logs\Fara_2026-05-20_141341\fail-a113596a-1779279291748.png
+2026-05-20 14:14:51.825 [TASK ] a113596a FAILED   locator.waitFor: Timeout 5000ms exceeded.  (see C:\Temp\Scripts\Avepoint\FLY\logs\Fara_2026-05-20_141341)
+2026-05-20 14:14:51.825 [STEP ] 19479906 ensureCleanListPage: start
+2026-05-20 14:14:52.315 [STEP ] 19479906 clicking drawer close button
+2026-05-20 14:14:52.702 [STEP ] 19479906 Create button not stable; renavigating via menu
+2026-05-20 14:14:52.702 [STEP ] navigateToConnectionsPage: start
+2026-05-20 14:14:52.702 [STEP ] waiting for left nav to render
+2026-05-20 14:14:52.707 [STEP ] clicking Settings menu (button[aria-label="Settings"])
+2026-05-20 14:14:53.073 [STEP ] clicking Connection sub-item
+2026-05-20 14:14:53.077 [STEP ] Connection sub-item found via "button[aria-label="Connections"]"
+2026-05-20 14:14:53.139 [STEP ] waiting for Create connection button on list page
+2026-05-20 14:14:53.145 [STEP ] navigateToConnectionsPage: done
+2026-05-20 14:14:53.145 [STEP ] 19479906 ensureCleanListPage: done
+2026-05-20 14:14:53.145 [TASK ] 19479906 STARTED  workload="Microsoft Teams Chat" name="Fara - Microsoft Teams Chat"
+2026-05-20 14:14:53.145 [TASK ] 19479906 WORKING  
+2026-05-20 14:14:53.145 [STEP ] 19479906 click Create connection button
+2026-05-20 14:14:53.301 [STEP ] 19479906 wait for Connection name input
+2026-05-20 14:14:53.387 [STEP ] 19479906 fill name="Fara - Microsoft Teams Chat"
+2026-05-20 14:14:53.679 [STEP ] 19479906 open Connection type dropdown
+2026-05-20 14:14:53.953 [STEP ] 19479906 pick workload="Microsoft Teams Chat"
+2026-05-20 14:14:54.281 [STEP ] 19479906 Source/Destination radio present - picking Destination
+2026-05-20 14:14:54.331 [STEP ] 19479906 open Tenant dropdown
+2026-05-20 14:14:54.696 [STEP ] 19479906 type tenant search="fara"
+2026-05-20 14:14:55.128 [STEP ] 19479906 pick tenant row
+2026-05-20 14:14:55.205 [STEP ] 19479906 wait for App profile field to appear
+2026-05-20 14:14:56.750 [STEP ] 19479906 open App profile dropdown
+2026-05-20 14:14:57.122 [STEP ] 19479906 search App profile for "ITVolaris-GA@mbufara.onmicrosoft.com"
+2026-05-20 14:15:02.639 [ERROR] 19479906 DOM dumped to C:\Temp\Scripts\Avepoint\FLY\logs\Fara_2026-05-20_141341\fail-19479906-1779279302576.html
+2026-05-20 14:15:02.639 [ERROR] 19479906 FAILED   locator.waitFor: Timeout 5000ms exceeded.
+Call log:
+[2m  - waiting for locator('[role="option"], li').filter({ hasText: /ITVolaris-GA@mbufara\.onmicrosoft\.com/i }).first() to be visible[22m
+
+2026-05-20 14:15:02.639 [ERROR] 19479906 stack: locator.waitFor: Timeout 5000ms exceeded.
+Call log:
+[2m  - waiting for locator('[role="option"], li').filter({ hasText: /ITVolaris-GA@mbufara\.onmicrosoft\.com/i }).first() to be visible[22m
+
+    at pickDropdownOptionContaining (C:\Temp\Scripts\Avepoint\FLY\fly-connector.js:444:14)
+    at async createOneConnection (C:\Temp\Scripts\Avepoint\FLY\fly-connector.js:534:3)
+    at async create (C:\Temp\Scripts\Avepoint\FLY\fly-connector.js:187:7)
+    at async C:\Temp\Scripts\Avepoint\FLY\fly-connector.js:1181:37
+2026-05-20 14:15:02.639 [ERROR] 19479906 screenshot: C:\Temp\Scripts\Avepoint\FLY\logs\Fara_2026-05-20_141341\fail-19479906-1779279302576.png
+2026-05-20 14:15:02.639 [TASK ] 19479906 FAILED   locator.waitFor: Timeout 5000ms exceeded.  (see C:\Temp\Scripts\Avepoint\FLY\logs\Fara_2026-05-20_141341)
+2026-05-20 14:15:02.639 [STEP ] 6b69542d ensureCleanListPage: start
+2026-05-20 14:15:03.124 [STEP ] 6b69542d clicking drawer close button
+2026-05-20 14:15:03.511 [STEP ] 6b69542d Create button not stable; renavigating via menu
+2026-05-20 14:15:03.511 [STEP ] navigateToConnectionsPage: start
+2026-05-20 14:15:03.511 [STEP ] waiting for left nav to render
+2026-05-20 14:15:03.517 [STEP ] clicking Settings menu (button[aria-label="Settings"])
+2026-05-20 14:15:03.863 [STEP ] clicking Connection sub-item
+2026-05-20 14:15:03.870 [STEP ] Connection sub-item: fallback to role-based match
+2026-05-20 14:15:13.879 [WARN ] 6b69542d renavigation failed: locator.click: Timeout 10000ms exceeded.
+Call log:
+[2m  - waiting for getByRole('button', { name: /^Connection$/ }).first()[22m
+
+2026-05-20 14:15:13.879 [STEP ] 6b69542d ensureCleanListPage: done
+2026-05-20 14:15:13.879 [TASK ] 6b69542d STARTED  workload="Microsoft 365 Groups" name="Fara - Microsoft 365 Groups"
+2026-05-20 14:15:13.879 [TASK ] 6b69542d WORKING  
+2026-05-20 14:15:13.879 [STEP ] 6b69542d click Create connection button
+2026-05-20 14:15:14.047 [STEP ] 6b69542d wait for Connection name input
+2026-05-20 14:15:14.166 [STEP ] 6b69542d fill name="Fara - Microsoft 365 Groups"
+2026-05-20 14:15:14.437 [STEP ] 6b69542d open Connection type dropdown
+2026-05-20 14:15:14.710 [STEP ] 6b69542d pick workload="Microsoft 365 Groups"
+2026-05-20 14:15:15.040 [STEP ] 6b69542d open Tenant dropdown
+2026-05-20 14:15:15.424 [STEP ] 6b69542d type tenant search="fara"
+2026-05-20 14:15:15.843 [STEP ] 6b69542d pick tenant row
+2026-05-20 14:15:15.935 [STEP ] 6b69542d wait for App profile field to appear
+2026-05-20 14:15:16.862 [STEP ] 6b69542d open App profile dropdown
+2026-05-20 14:15:17.229 [STEP ] 6b69542d search App profile for "ITVolaris-GA@mbufara.onmicrosoft.com"
+2026-05-20 14:15:22.772 [ERROR] 6b69542d DOM dumped to C:\Temp\Scripts\Avepoint\FLY\logs\Fara_2026-05-20_141341\fail-6b69542d-1779279322702.html
+2026-05-20 14:15:22.772 [ERROR] 6b69542d FAILED   locator.waitFor: Timeout 5000ms exceeded.
+Call log:
+[2m  - waiting for locator('[role="option"], li').filter({ hasText: /ITVolaris-GA@mbufara\.onmicrosoft\.com/i }).first() to be visible[22m
+
+2026-05-20 14:15:22.772 [ERROR] 6b69542d stack: locator.waitFor: Timeout 5000ms exceeded.
+Call log:
+[2m  - waiting for locator('[role="option"], li').filter({ hasText: /ITVolaris-GA@mbufara\.onmicrosoft\.com/i }).first() to be visible[22m
+
+    at pickDropdownOptionContaining (C:\Temp\Scripts\Avepoint\FLY\fly-connector.js:444:14)
+    at async createOneConnection (C:\Temp\Scripts\Avepoint\FLY\fly-connector.js:534:3)
+    at async create (C:\Temp\Scripts\Avepoint\FLY\fly-connector.js:187:7)
+    at async C:\Temp\Scripts\Avepoint\FLY\fly-connector.js:1181:37
+2026-05-20 14:15:22.772 [ERROR] 6b69542d screenshot: C:\Temp\Scripts\Avepoint\FLY\logs\Fara_2026-05-20_141341\fail-6b69542d-1779279322702.png
+2026-05-20 14:15:22.772 [TASK ] 6b69542d FAILED   locator.waitFor: Timeout 5000ms exceeded.  (see C:\Temp\Scripts\Avepoint\FLY\logs\Fara_2026-05-20_141341)
+2026-05-20 14:15:23.032 [INFO ] ==== CREATE MODE END ====
+2026-05-20 14:15:23.032 [INFO ] [done] Log: C:\Temp\Scripts\Avepoint\FLY\logs\Fara_2026-05-20_141341\run.log

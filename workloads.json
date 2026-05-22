@@ -1,0 +1,32 @@
+{
+  "SharePoint": {
+    "Policy": "SPO Migration Policy",
+    "Source": "OurVolaris - SPO",
+    "Destination": "amickiel - SharePoint Online"
+  },
+  "Exchange": {
+    "Policy": "Mailbox Migration - Policy",
+    "Source": "OurVolaris - EXO",
+    "Destination": "amickiel - Exchange Online"
+  },
+  "OneDrive": {
+    "Policy": "OneDrive Migration - Policy",
+    "Source": "OurVolaris - OneDrive",
+    "Destination": "amickiel - OneDrive"
+  },
+  "Teams": {
+    "Policy": "MS Teams - Migration Policy",
+    "Source": "OurVolaris - MS Teams",
+    "Destination": "amickiel - Microsoft Teams"
+  },
+  "Teams Chat": {
+    "Policy": "Teams Chats policy",
+    "Source": "OurVolaris - Teams Chats",
+    "Destination": "amickiel - Microsoft Teams Chat"
+  },
+  "Groups": {
+    "Policy": "M365 Group Migration - Policy",
+    "Source": "OurVolaris - M365 Groups",
+    "Destination": "amickiel - Microsoft 365 Groups"
+  }
+}

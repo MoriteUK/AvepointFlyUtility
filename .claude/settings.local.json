@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -Command \"Get-ChildItem 'C:\\\\Users\\\\Andy White\\\\OneDrive - Andy White\\\\Documents\\\\WindowsPowerShell\\\\Modules\\\\Fly.Client\\\\4.6.19' | Select-Object Name\")",
+      "Bash(Copy-Item \"C:\\\\Temp\\\\ourvolaris.png\" \"C:\\\\Temp\\\\Scripts\\\\Avepoint\\\\FLY\\\\ourvolaris.png\" -Force)",
+      "Bash(powershell -NonInteractive -Command \"Get-Command Import-FlyExchangeMappings -ErrorAction SilentlyContinue | Select -ExpandProperty Parameters | ConvertTo-Json -Depth 2\")"
+    ]
+  }
+}
