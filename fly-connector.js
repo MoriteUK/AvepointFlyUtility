@@ -31,6 +31,7 @@ fs.mkdirSync(LOG_DIR, { recursive: true });
 
 const RUN_MODE   = (process.argv.find(a => a.startsWith('--mode=')) || '').split('=')[1] || 'unknown';
 const DISPLAY_NM = (process.argv.find(a => a.startsWith('--display-name=')) || '').split('=')[1] || '';
+const HEADLESS   = process.argv.includes('--headless') || process.env.FLY_HEADLESS === '1';
 
 // Per-run folder under logs/ so artifacts don't pile up across 200+ tenants.
 // Folder name: <SanitizedDisplayName>_<yyyy-MM-dd_HHmmss>
@@ -99,7 +100,7 @@ process.on('unhandledRejection', err => {
 
 async function login() {
   logInfo('==== LOGIN MODE START ====');
-  const browser = await chromium.launch({ headless: false });
+  const browser = await chromium.launch({ headless: HEADLESS });
   const context = await browser.newContext();
   const page    = await context.newPage();
 
@@ -150,7 +151,7 @@ async function create() {
     process.exit(4);
   }
 
-  const browser = await chromium.launch({ headless: false });
+  const browser = await chromium.launch({ headless: HEADLESS });
   const context = await browser.newContext({ storageState: STORAGE_STATE });
   const page    = await context.newPage();
 
@@ -691,7 +692,7 @@ async function setup() {
     process.exit(4);
   }
 
-  const browser = await chromium.launch({ headless: false });
+  const browser = await chromium.launch({ headless: HEADLESS });
   const context = await browser.newContext({ storageState: STORAGE_STATE });
   const page    = await context.newPage();
 

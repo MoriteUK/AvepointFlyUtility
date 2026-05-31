@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fly Migration — Sign In</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f0f2f7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,.10);
+      padding: 40px 48px;
+      width: 360px;
+      text-align: center;
+    }
+    .logo { font-size: 32px; margin-bottom: 8px; }
+    h1 { font-size: 20px; font-weight: 600; color: #1c1c20; margin-bottom: 4px; }
+    .subtitle { font-size: 13px; color: #646878; margin-bottom: 32px; }
+    .field { text-align: left; margin-bottom: 16px; }
+    label { display: block; font-size: 12px; font-weight: 600; color: #646878; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px; }
+    input[type=password] {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 15px;
+      outline: none;
+      transition: border-color .15s;
+    }
+    input[type=password]:focus { border-color: #0064b4; }
+    .btn {
+      width: 100%;
+      padding: 11px;
+      background: #0064b4;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background .15s;
+    }
+    .btn:hover { background: #0052a3; }
+    .error {
+      background: #fef2f2;
+      border: 1px solid #fca5a5;
+      color: #dc2626;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">✈️</div>
+    <h1>Fly Migration Toolkit</h1>
+    <p class="subtitle">AvePoint M365 Migration Automation</p>
+
+    <form method="POST" action="/auth/login">
+      <div id="err" class="error" style="display:none">Incorrect password. Try again.</div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" name="password" autofocus autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn">Sign in</button>
+    </form>
+  </div>
+  <script>
+    if (location.search.includes('error=1'))
+      document.getElementById('err').style.display = 'block';
+  </script>
+</body>
+</html>

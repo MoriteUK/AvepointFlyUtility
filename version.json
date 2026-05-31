@@ -1,0 +1,28 @@
+{
+  "version": "2.0.0",
+  "releaseDate": "2026-05-31",
+  "changelog": [
+    {
+      "version": "2.0.0",
+      "date": "2026-05-31",
+      "changes": [
+        "Added Update-UPN.ps1 with checkbox selection",
+        "Added Remove-devices.ps1 with DeviceObjectId support",
+        "Fixed column sorting in Update-UPN",
+        "Improved error handling across all scripts",
+        "Added comprehensive README documentation"
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-05-20",
+      "changes": [
+        "Initial release",
+        "Main menu system",
+        "Discovery tools",
+        "Domain removal tools",
+        "AvePoint Fly integration"
+      ]
+    }
+  ]
+}

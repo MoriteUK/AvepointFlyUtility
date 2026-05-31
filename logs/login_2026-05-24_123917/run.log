@@ -1,0 +1,6 @@
+2026-05-24 12:39:17.110 [INFO ] ==== LOGIN MODE START ====
+2026-05-24 12:39:38.587 [INFO ] [info] Opening Fly portal - please complete Microsoft SSO sign-in.
+2026-05-24 12:41:02.378 [INFO ] [info] Capturing AOS management session...
+2026-05-24 12:41:02.378 [STEP ] visiting AOS management portal to capture session
+2026-05-24 12:41:07.635 [INFO ] [login-ok] Session persisted to C:\Temp\Scripts\Avepoint\FLY\auth\storageState.json
+2026-05-24 12:41:07.867 [INFO ] ==== LOGIN MODE END ====
