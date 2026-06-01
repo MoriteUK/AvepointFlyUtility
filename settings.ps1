@@ -131,6 +131,58 @@ function Show-SettingsDialog {
     $tbSpoAdmin.Text = if ($sharedCfg.SharePointAdminUrl) { $sharedCfg.SharePointAdminUrl } else { '' }
     try { $tbSpoAdmin.PlaceholderText = 'https://tenant-admin.sharepoint.com' } catch {}
 
+    # Check for Updates button
+    & $mkCapLbl $tp1 "SOFTWARE UPDATES" 10 336
+    $btnCheckUpdates = New-Btn $tp1 "Check for Updates" 10 352 160 28
+    $lblUpdateStatus = New-Object System.Windows.Forms.Label
+    $lblUpdateStatus.Location = [System.Drawing.Point]::new(180, 358)
+    $lblUpdateStatus.AutoSize = $true
+    $lblUpdateStatus.Font = $FontBody
+    $lblUpdateStatus.ForeColor = $clrMuted
+    $lblUpdateStatus.Text = ''
+    $tp1.Controls.Add($lblUpdateStatus)
+
+    $btnCheckUpdates.Add_Click({
+        $checkUpdatesScript = Join-Path $PSScriptRoot 'Check-Updates.ps1'
+        if (-not (Test-Path $checkUpdatesScript)) {
+            $lblUpdateStatus.Text = 'Check-Updates.ps1 not found'
+            $lblUpdateStatus.ForeColor = $clrRed
+            return
+        }
+
+        $lblUpdateStatus.Text = 'Checking for updates...'
+        $lblUpdateStatus.ForeColor = $clrMuted
+        $btnCheckUpdates.Enabled = $false
+        [System.Windows.Forms.Application]::DoEvents()
+
+        try {
+            # Run Check-Updates.ps1 with -Force to show results
+            $result = & $checkUpdatesScript -Force 2>&1 | Out-String
+
+            if ($result -match 'Already up to date') {
+                $lblUpdateStatus.Text = 'Already up to date'
+                $lblUpdateStatus.ForeColor = $clrGreen
+            } elseif ($result -match 'Updated to|Installation complete') {
+                $lblUpdateStatus.Text = 'Update installed! Restart required.'
+                $lblUpdateStatus.ForeColor = $clrGreen
+                [System.Windows.Forms.MessageBox]::Show(
+                    "Update installed successfully!`n`nPlease close and restart the application to use the new version.",
+                    'Update Complete',
+                    'OK',
+                    'Information'
+                ) | Out-Null
+            } else {
+                $lblUpdateStatus.Text = 'Update check complete'
+                $lblUpdateStatus.ForeColor = $clrGreen
+            }
+        } catch {
+            $lblUpdateStatus.Text = "Update check failed: $_"
+            $lblUpdateStatus.ForeColor = $clrRed
+        } finally {
+            $btnCheckUpdates.Enabled = $true
+        }
+    }.GetNewClosure())
+
     $btnTest.Add_Click({
         $dotTest.ForeColor = $clrGrey; $lblTestResult.Text = "Connecting..."
         [System.Windows.Forms.Application]::DoEvents()
