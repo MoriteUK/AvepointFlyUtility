@@ -261,7 +261,7 @@ function Show-MiscSubMenu {
 function Show-DomainRemovalSubMenu {
     $dlg = New-Object System.Windows.Forms.Form
     $dlg.Text            = 'Domain Removal'
-    $dlg.ClientSize      = [System.Drawing.Size]::new(480, 650)
+    $dlg.ClientSize      = [System.Drawing.Size]::new(480, 534)
     $dlg.StartPosition   = [System.Windows.Forms.FormStartPosition]::CenterScreen
     $dlg.BackColor       = $clrBg
     $dlg.Font            = $FontBody
@@ -331,44 +331,6 @@ function Show-DomainRemovalSubMenu {
     $subWorkflow.Location  = [System.Drawing.Point]::new($bX + 4, $y)
     $subWorkflow.AutoSize  = $true
     $dlg.Controls.Add($subWorkflow)
-    $y += 26
-
-    # ── Remove Devices ────────────────────────────────────────────────────────
-    $script1 = Join-Path $PSScriptRoot 'Remove-devices.ps1'
-    $btn1 = New-Object System.Windows.Forms.Button
-    $btn1.Text      = 'Remove Devices'
-    $btn1.Font      = New-Object System.Drawing.Font('Segoe UI Semibold', 14)
-    $btn1.Location  = [System.Drawing.Point]::new($bX, $y)
-    $btn1.Size      = [System.Drawing.Size]::new($bW, $bH)
-    $btn1.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
-    $btn1.FlatAppearance.BorderSize = 0
-    $btn1.BackColor = $clrAccent
-    $btn1.ForeColor = [System.Drawing.Color]::White
-    $btn1.Cursor    = [System.Windows.Forms.Cursors]::Hand
-    $btn1.Add_Click({
-        Write-Log "Remove Devices clicked  path=$script1"
-        if (-not (Test-Path $script1)) {
-            [System.Windows.Forms.MessageBox]::Show("Script not found:`n$script1", 'Not Found', 'OK', 'Warning') | Out-Null; return
-        }
-        try   { [FlyConsole.NativeMethods]::AllowSetForegroundWindow(-1) | Out-Null } catch {}
-        try {
-            Start-HiddenProcess 'pwsh.exe' "-NoProfile -ExecutionPolicy Bypass -File `"$script1`""
-            Write-Log 'Remove Devices launched'
-        } catch {
-            Write-Log "Remove Devices launch FAILED: $_" 'ERROR'
-            [System.Windows.Forms.MessageBox]::Show("Failed to launch:`n$_", 'Launch Error', 'OK', 'Error') | Out-Null
-        }
-    }.GetNewClosure())
-    $dlg.Controls.Add($btn1)
-    $y += $bH + 6
-
-    $sub1 = New-Object System.Windows.Forms.Label
-    $sub1.Text      = 'Remove Entra ID / Intune registered devices from the tenant'
-    $sub1.Font      = New-Object System.Drawing.Font('Segoe UI', 8.5)
-    $sub1.ForeColor = $clrMuted
-    $sub1.Location  = [System.Drawing.Point]::new($bX + 4, $y)
-    $sub1.AutoSize  = $true
-    $dlg.Controls.Add($sub1)
     $y += 26
 
     # ── Remove Domain ─────────────────────────────────────────────────────────
