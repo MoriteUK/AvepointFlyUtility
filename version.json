@@ -1,7 +1,17 @@
 {
-  "version": "2.1.2",
+  "version": "2.1.3",
   "releaseDate": "2026-06-01",
   "changelog": [
+    {
+      "version": "2.1.3",
+      "date": "2026-06-01",
+      "changes": [
+        "Improved auto-update visibility with notification banner",
+        "Update check now shows yellow banner when updates available",
+        "Added one-click 'Install Update' button to notification",
+        "Removed 'Update Cloud UPNs' from Domain Removal menu"
+      ]
+    },
     {
       "version": "2.1.2",
       "date": "2026-06-01",
