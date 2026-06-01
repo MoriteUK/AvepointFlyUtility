@@ -261,7 +261,7 @@ function Show-MiscSubMenu {
 function Show-DomainRemovalSubMenu {
     $dlg = New-Object System.Windows.Forms.Form
     $dlg.Text            = 'Domain Removal'
-    $dlg.ClientSize      = [System.Drawing.Size]::new(480, 534)
+    $dlg.ClientSize      = [System.Drawing.Size]::new(480, 418)
     $dlg.StartPosition   = [System.Windows.Forms.FormStartPosition]::CenterScreen
     $dlg.BackColor       = $clrBg
     $dlg.Font            = $FontBody
@@ -407,44 +407,6 @@ function Show-DomainRemovalSubMenu {
     $domSub3.Location  = [System.Drawing.Point]::new($bX + 4, $y)
     $domSub3.AutoSize  = $true
     $dlg.Controls.Add($domSub3)
-    $y += 26
-
-    # ── Update Cloud UPNs ─────────────────────────────────────────────────────
-    $domScript3b = Join-Path $PSScriptRoot 'Update-UPN.ps1'
-    $domBtn3b = New-Object System.Windows.Forms.Button
-    $domBtn3b.Text      = 'Update Cloud UPNs'
-    $domBtn3b.Font      = New-Object System.Drawing.Font('Segoe UI Semibold', 14)
-    $domBtn3b.Location  = [System.Drawing.Point]::new($bX, $y)
-    $domBtn3b.Size      = [System.Drawing.Size]::new($bW, $bH)
-    $domBtn3b.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
-    $domBtn3b.FlatAppearance.BorderSize = 0
-    $domBtn3b.BackColor = $clrAccent
-    $domBtn3b.ForeColor = [System.Drawing.Color]::White
-    $domBtn3b.Cursor    = [System.Windows.Forms.Cursors]::Hand
-    $domBtn3b.Add_Click({
-        Write-Log "Update Cloud UPNs clicked  path=$domScript3b"
-        if (-not (Test-Path $domScript3b)) {
-            [System.Windows.Forms.MessageBox]::Show("Script not found:`n$domScript3b", 'Not Found', 'OK', 'Warning') | Out-Null; return
-        }
-        try { [FlyConsole.NativeMethods]::AllowSetForegroundWindow(-1) | Out-Null } catch {}
-        try {
-            Start-HiddenProcess 'pwsh.exe' "-NoProfile -ExecutionPolicy Bypass -File `"$domScript3b`""
-            Write-Log 'Update Cloud UPNs launched'
-        } catch {
-            Write-Log "Update Cloud UPNs launch FAILED: $_" 'ERROR'
-            [System.Windows.Forms.MessageBox]::Show("Failed to launch:`n$_", 'Launch Error', 'OK', 'Error') | Out-Null
-        }
-    }.GetNewClosure())
-    $dlg.Controls.Add($domBtn3b)
-    $y += $bH + 6
-
-    $domSub3b = New-Object System.Windows.Forms.Label
-    $domSub3b.Text      = 'Change UPN domain suffix for cloud users via Microsoft Graph'
-    $domSub3b.Font      = New-Object System.Drawing.Font('Segoe UI', 8.5)
-    $domSub3b.ForeColor = $clrMuted
-    $domSub3b.Location  = [System.Drawing.Point]::new($bX + 4, $y)
-    $domSub3b.AutoSize  = $true
-    $dlg.Controls.Add($domSub3b)
     $y += 26
 
     # ── Run AD Sync ───────────────────────────────────────────────────────────
