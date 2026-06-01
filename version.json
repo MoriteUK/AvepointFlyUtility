@@ -1,7 +1,16 @@
 {
-  "version": "2.1.1",
+  "version": "2.1.2",
   "releaseDate": "2026-06-01",
   "changelog": [
+    {
+      "version": "2.1.2",
+      "date": "2026-06-01",
+      "changes": [
+        "Updated New-Package.ps1 to include all new domain removal files",
+        "Added version.json and Check-Updates.ps1 to package",
+        "Package now includes complete auto-update system"
+      ]
+    },
     {
       "version": "2.1.1",
       "date": "2026-06-01",
