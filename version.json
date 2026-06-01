@@ -1,7 +1,20 @@
 {
-  "version": "2.0.0",
-  "releaseDate": "2026-05-31",
+  "version": "2.1.0",
+  "releaseDate": "2026-06-01",
   "changelog": [
+    {
+      "version": "2.1.0",
+      "date": "2026-06-01",
+      "changes": [
+        "Added Domain-Removal-Workflow.ps1 - 3-step guided workflow",
+        "Added Update-OnPremUPN.ps1 for on-premise Active Directory",
+        "Fixed Hide-AddressBook.ps1 ExchangeOnlineManagement module errors",
+        "Added account preview list to Hide-AddressBook",
+        "Integrated Azure AD Sync functionality (VOL-ane-aad1)",
+        "Split Domain Removal menu: Workflow + individual tools",
+        "Hardcoded target domain to @ourvolaris.onmicrosoft.com"
+      ]
+    },
     {
       "version": "2.0.0",
       "date": "2026-05-31",

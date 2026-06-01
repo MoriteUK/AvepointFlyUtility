@@ -261,7 +261,7 @@ function Show-MiscSubMenu {
 function Show-DomainRemovalSubMenu {
     $dlg = New-Object System.Windows.Forms.Form
     $dlg.Text            = 'Domain Removal'
-    $dlg.ClientSize      = [System.Drawing.Size]::new(480, 390)
+    $dlg.ClientSize      = [System.Drawing.Size]::new(480, 650)
     $dlg.StartPosition   = [System.Windows.Forms.FormStartPosition]::CenterScreen
     $dlg.BackColor       = $clrBg
     $dlg.Font            = $FontBody
@@ -294,6 +294,44 @@ function Show-DomainRemovalSubMenu {
     $hdr.Controls.Add($btnGear)
 
     $bW = 400; $bH = 90; $bX = 40; $y = 82
+
+    # ── Domain Removal Workflow ───────────────────────────────────────────────
+    $workflowScript = Join-Path $PSScriptRoot 'Domain-Removal-Workflow.ps1'
+    $btnWorkflow = New-Object System.Windows.Forms.Button
+    $btnWorkflow.Text      = 'Domain Removal Workflow'
+    $btnWorkflow.Font      = New-Object System.Drawing.Font('Segoe UI Semibold', 14)
+    $btnWorkflow.Location  = [System.Drawing.Point]::new($bX, $y)
+    $btnWorkflow.Size      = [System.Drawing.Size]::new($bW, $bH)
+    $btnWorkflow.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
+    $btnWorkflow.FlatAppearance.BorderSize = 0
+    $btnWorkflow.BackColor = [System.Drawing.Color]::FromArgb(195, 30, 30)
+    $btnWorkflow.ForeColor = [System.Drawing.Color]::White
+    $btnWorkflow.Cursor    = [System.Windows.Forms.Cursors]::Hand
+    $btnWorkflow.Add_Click({
+        Write-Log "Domain Removal Workflow clicked  path=$workflowScript"
+        if (-not (Test-Path $workflowScript)) {
+            [System.Windows.Forms.MessageBox]::Show("Script not found:`n$workflowScript", 'Not Found', 'OK', 'Warning') | Out-Null; return
+        }
+        try { [FlyConsole.NativeMethods]::AllowSetForegroundWindow(-1) | Out-Null } catch {}
+        try {
+            Start-HiddenProcess 'pwsh.exe' "-NoProfile -ExecutionPolicy Bypass -File `"$workflowScript`""
+            Write-Log 'Domain Removal Workflow launched'
+        } catch {
+            Write-Log "Domain Removal Workflow launch FAILED: $_" 'ERROR'
+            [System.Windows.Forms.MessageBox]::Show("Failed to launch:`n$_", 'Launch Error', 'OK', 'Error') | Out-Null
+        }
+    }.GetNewClosure())
+    $dlg.Controls.Add($btnWorkflow)
+    $y += $bH + 6
+
+    $subWorkflow = New-Object System.Windows.Forms.Label
+    $subWorkflow.Text      = '3-step workflow: Update on-prem UPN → AD Sync → Remove domain'
+    $subWorkflow.Font      = New-Object System.Drawing.Font('Segoe UI', 8.5)
+    $subWorkflow.ForeColor = $clrMuted
+    $subWorkflow.Location  = [System.Drawing.Point]::new($bX + 4, $y)
+    $subWorkflow.AutoSize  = $true
+    $dlg.Controls.Add($subWorkflow)
+    $y += 26
 
     # ── Remove Devices ────────────────────────────────────────────────────────
     $script1 = Join-Path $PSScriptRoot 'Remove-devices.ps1'
@@ -371,10 +409,10 @@ function Show-DomainRemovalSubMenu {
     $dlg.Controls.Add($sub2)
     $y += 26
 
-    # ── Update UPNs ───────────────────────────────────────────────────────────
-    $domScript3 = Join-Path $PSScriptRoot 'Update-UPN.ps1'
+    # ── Update On-Premise UPNs ────────────────────────────────────────────────
+    $domScript3 = Join-Path $PSScriptRoot 'Update-OnPremUPN.ps1'
     $domBtn3 = New-Object System.Windows.Forms.Button
-    $domBtn3.Text      = 'Update UPNs'
+    $domBtn3.Text      = 'Update On-Premise UPNs'
     $domBtn3.Font      = New-Object System.Drawing.Font('Segoe UI Semibold', 14)
     $domBtn3.Location  = [System.Drawing.Point]::new($bX, $y)
     $domBtn3.Size      = [System.Drawing.Size]::new($bW, $bH)
@@ -384,16 +422,16 @@ function Show-DomainRemovalSubMenu {
     $domBtn3.ForeColor = [System.Drawing.Color]::White
     $domBtn3.Cursor    = [System.Windows.Forms.Cursors]::Hand
     $domBtn3.Add_Click({
-        Write-Log "Update UPNs clicked  path=$domScript3"
+        Write-Log "Update On-Premise UPNs clicked  path=$domScript3"
         if (-not (Test-Path $domScript3)) {
             [System.Windows.Forms.MessageBox]::Show("Script not found:`n$domScript3", 'Not Found', 'OK', 'Warning') | Out-Null; return
         }
         try { [FlyConsole.NativeMethods]::AllowSetForegroundWindow(-1) | Out-Null } catch {}
         try {
             Start-HiddenProcess 'pwsh.exe' "-NoProfile -ExecutionPolicy Bypass -File `"$domScript3`""
-            Write-Log 'Update UPNs launched'
+            Write-Log 'Update On-Premise UPNs launched'
         } catch {
-            Write-Log "Update UPNs launch FAILED: $_" 'ERROR'
+            Write-Log "Update On-Premise UPNs launch FAILED: $_" 'ERROR'
             [System.Windows.Forms.MessageBox]::Show("Failed to launch:`n$_", 'Launch Error', 'OK', 'Error') | Out-Null
         }
     }.GetNewClosure())
@@ -401,12 +439,109 @@ function Show-DomainRemovalSubMenu {
     $y += $bH + 6
 
     $domSub3 = New-Object System.Windows.Forms.Label
-    $domSub3.Text      = 'Change UPN domain suffix for all users matching a source domain'
+    $domSub3.Text      = 'Update UPN, email, and aliases in on-premise Active Directory'
     $domSub3.Font      = New-Object System.Drawing.Font('Segoe UI', 8.5)
     $domSub3.ForeColor = $clrMuted
     $domSub3.Location  = [System.Drawing.Point]::new($bX + 4, $y)
     $domSub3.AutoSize  = $true
     $dlg.Controls.Add($domSub3)
+    $y += 26
+
+    # ── Update Cloud UPNs ─────────────────────────────────────────────────────
+    $domScript3b = Join-Path $PSScriptRoot 'Update-UPN.ps1'
+    $domBtn3b = New-Object System.Windows.Forms.Button
+    $domBtn3b.Text      = 'Update Cloud UPNs'
+    $domBtn3b.Font      = New-Object System.Drawing.Font('Segoe UI Semibold', 14)
+    $domBtn3b.Location  = [System.Drawing.Point]::new($bX, $y)
+    $domBtn3b.Size      = [System.Drawing.Size]::new($bW, $bH)
+    $domBtn3b.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
+    $domBtn3b.FlatAppearance.BorderSize = 0
+    $domBtn3b.BackColor = $clrAccent
+    $domBtn3b.ForeColor = [System.Drawing.Color]::White
+    $domBtn3b.Cursor    = [System.Windows.Forms.Cursors]::Hand
+    $domBtn3b.Add_Click({
+        Write-Log "Update Cloud UPNs clicked  path=$domScript3b"
+        if (-not (Test-Path $domScript3b)) {
+            [System.Windows.Forms.MessageBox]::Show("Script not found:`n$domScript3b", 'Not Found', 'OK', 'Warning') | Out-Null; return
+        }
+        try { [FlyConsole.NativeMethods]::AllowSetForegroundWindow(-1) | Out-Null } catch {}
+        try {
+            Start-HiddenProcess 'pwsh.exe' "-NoProfile -ExecutionPolicy Bypass -File `"$domScript3b`""
+            Write-Log 'Update Cloud UPNs launched'
+        } catch {
+            Write-Log "Update Cloud UPNs launch FAILED: $_" 'ERROR'
+            [System.Windows.Forms.MessageBox]::Show("Failed to launch:`n$_", 'Launch Error', 'OK', 'Error') | Out-Null
+        }
+    }.GetNewClosure())
+    $dlg.Controls.Add($domBtn3b)
+    $y += $bH + 6
+
+    $domSub3b = New-Object System.Windows.Forms.Label
+    $domSub3b.Text      = 'Change UPN domain suffix for cloud users via Microsoft Graph'
+    $domSub3b.Font      = New-Object System.Drawing.Font('Segoe UI', 8.5)
+    $domSub3b.ForeColor = $clrMuted
+    $domSub3b.Location  = [System.Drawing.Point]::new($bX + 4, $y)
+    $domSub3b.AutoSize  = $true
+    $dlg.Controls.Add($domSub3b)
+    $y += 26
+
+    # ── Run AD Sync ───────────────────────────────────────────────────────────
+    $domBtn3c = New-Object System.Windows.Forms.Button
+    $domBtn3c.Text      = 'Run AD Sync'
+    $domBtn3c.Font      = New-Object System.Drawing.Font('Segoe UI Semibold', 14)
+    $domBtn3c.Location  = [System.Drawing.Point]::new($bX, $y)
+    $domBtn3c.Size      = [System.Drawing.Size]::new($bW, $bH)
+    $domBtn3c.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
+    $domBtn3c.FlatAppearance.BorderSize = 0
+    $domBtn3c.BackColor = [System.Drawing.Color]::FromArgb(0, 130, 70)
+    $domBtn3c.ForeColor = [System.Drawing.Color]::White
+    $domBtn3c.Cursor    = [System.Windows.Forms.Cursors]::Hand
+    $domBtn3c.Add_Click({
+        Write-Log "Run AD Sync clicked"
+        $result = [System.Windows.Forms.MessageBox]::Show(
+            "Trigger Azure AD Connect sync on VOL-ane-aad1?`n`nThis will start a delta sync cycle.",
+            'Confirm AD Sync',
+            'YesNo',
+            'Question'
+        )
+        if ($result -eq 'Yes') {
+            try {
+                Write-Log "Starting AD Sync on VOL-ane-aad1..."
+                $syncScript = {
+                    Import-Module ADSync -ErrorAction Stop
+                    Start-ADSyncSyncCycle -PolicyType Delta -ErrorAction Stop
+                }
+                $session = New-PSSession -ComputerName 'VOL-ane-aad1' -ErrorAction Stop
+                $syncResult = Invoke-Command -Session $session -ScriptBlock $syncScript -ErrorAction Stop
+                Remove-PSSession $session
+                Write-Log "AD Sync completed: $($syncResult.Result)" 'OK'
+                [System.Windows.Forms.MessageBox]::Show(
+                    "AD Sync initiated successfully.`n`nResult: $($syncResult.Result)",
+                    'AD Sync',
+                    'OK',
+                    'Information'
+                ) | Out-Null
+            } catch {
+                Write-Log "AD Sync failed: $_" 'ERROR'
+                [System.Windows.Forms.MessageBox]::Show(
+                    "Failed to run AD Sync:`n`n$_",
+                    'AD Sync Error',
+                    'OK',
+                    'Error'
+                ) | Out-Null
+            }
+        }
+    }.GetNewClosure())
+    $dlg.Controls.Add($domBtn3c)
+    $y += $bH + 6
+
+    $domSub3c = New-Object System.Windows.Forms.Label
+    $domSub3c.Text      = 'Trigger Azure AD Connect delta sync on VOL-ane-aad1 server'
+    $domSub3c.Font      = New-Object System.Drawing.Font('Segoe UI', 8.5)
+    $domSub3c.ForeColor = $clrMuted
+    $domSub3c.Location  = [System.Drawing.Point]::new($bX + 4, $y)
+    $domSub3c.AutoSize  = $true
+    $dlg.Controls.Add($domSub3c)
     $y += 26
 
     # ── Hide from Address Book ────────────────────────────────────────────────
