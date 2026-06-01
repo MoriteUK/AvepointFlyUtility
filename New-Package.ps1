@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+#Requires -Version 7.0
 <#
 .SYNOPSIS
     Creates a distributable ZIP of the Fly Migration Tools ready for a new user to install.
@@ -62,15 +62,56 @@ if (-not $OutputPath) {
 $src = if ($PSScriptRoot) { $PSScriptRoot } else { Split-Path -Parent $MyInvocation.MyCommand.Path }
 
 $files = @(
-    'FlyMigration.exe'        # no-console launcher – double-click entry point
-    'FlyMigration.ico'        # icon used by the launcher and all banner headers
-    'menu.ps1'
-    'fly-connector.js'
-    'package.json'
-    'install-flymodules.ps1'
-    'Setup.ps1'
-    'Setup.cmd'
+    # ── Core shared library (must be first — all other scripts dot-source it) ─
+    'lib.ps1'                  # colours, fonts, helpers, NativeMethods P/Invoke
+    'settings.ps1'             # Show-SettingsDialog and shared config helpers
+
+    # ── Launcher ───────────────────────────────────────────────────────────
+    'MigrationTools.exe'       # no-console launcher — double-click entry point
+    'FlyMigration.ico'         # icon used by the launcher and all banner headers
+    'main-menu.ps1'            # top-level GUI — opens Discovery, AvePoint Fly, Misc, Domain Removal
+
+    # ── AvePoint Fly Migration Toolkit ─────────────────────────────────────
+    'menu.ps1'                 # Fly migration GUI menu
+    'connections.ps1'          # connection management GUI
+    'runner.ps1'               # migration runner GUI
+    'monitor.ps1'              # project monitor GUI
+    'fly-migrator.ps1'         # migration orchestration logic
+    'fly-reporter.ps1'         # migration reporting logic
+    'reports.ps1'              # report viewer GUI
+    'aossetup.ps1'             # AOS setup helper
+    'appregistration.ps1'      # App registration helper
+    'Add-SiteLabel.ps1'        # SharePoint site label utility
+    'fly-connector.js'         # Node.js Fly API connector
+    'package.json'             # npm manifest for fly-connector.js
+    'install-flymodules.ps1'   # Fly PS module installer
+    'Setup.ps1'                # First-run setup script
+    'Setup.cmd'                # Setup launcher for end users
     'README.md'
+
+    # ── Discovery ──────────────────────────────────────────────────────────
+    'discovery-menu.ps1'       # GUI launcher for M365 discovery
+    'search-domain.ps1'        # single-domain M365 tenant discovery
+    'run-multiple-domains.ps1' # multi-domain batch orchestrator
+    'domains.json'             # domain → VBU ID lookup for the discovery launcher
+    'Import-DomainsFromExcel.ps1' # populates domains.json from an xlsx file
+
+    # ── Domain Removal ─────────────────────────────────────────────────────
+    'Domain-Removal-Workflow.ps1'  # 3-step guided workflow: On-Prem UPN → AD Sync → Remove Domain
+    'remove-domain.ps1'            # remove M365 domain objects GUI (standalone)
+    'Remove-devices.ps1'           # Entra device removal GUI
+    'Update-OnPremUPN.ps1'         # on-premise Active Directory UPN/email/proxy updates
+    'Update-UPN.ps1'               # cloud UPN domain suffix update GUI
+    'Hide-AddressBook.ps1'         # bulk hide Exchange Online recipients from GAL
+    'Check-Updates.ps1'            # GitHub auto-update checker
+
+    # ── Misc Scripts ───────────────────────────────────────────────────────
+    'provision-onedrives.ps1'  # OneDrive pre-provisioning GUI
+    'Set-TeamsOwners.ps1'      # Teams owner assignment GUI
+
+    # ── Version Control ────────────────────────────────────────────────────
+    'version.json'             # version manifest for auto-update system
+    '.gitignore'               # git ignore rules (if using git)
 )
 
 # Clean workloads template - tenant-specific values stripped so the new user starts fresh
@@ -107,6 +148,9 @@ try {
         Set-Content (Join-Path $tmp 'workloads.json') -Encoding UTF8
     Write-Ok "Included: workloads.json  (blank template - tenant values stripped)"
 
+    $Version | Set-Content (Join-Path $tmp 'version.txt') -Encoding UTF8 -NoNewline
+    Write-Ok "Included: version.txt  (v$Version)"
+
     # -----------------------------------------------------------------------
     Write-Step "Creating ZIP"
 
@@ -132,7 +176,7 @@ try {
     Write-Host ""
     Write-Host "    Unzip to any folder, then:" -ForegroundColor White
     Write-Host "      1. Run Setup.cmd once to install Node.js, npm packages, and Playwright." -ForegroundColor Gray
-    Write-Host "      2. Double-click FlyMigration.exe to launch the toolkit." -ForegroundColor Gray
+    Write-Host "      2. Double-click MigrationTools.exe to launch the toolkit." -ForegroundColor Gray
     Write-Host ""
     Write-Host "    Before running migrations, edit workloads.json to add:" -ForegroundColor White
     Write-Host "        - Policy names (from their Fly environment)" -ForegroundColor Gray
