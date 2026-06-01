@@ -108,6 +108,12 @@ function Show-SettingsDialog {
     $tbSec = & $mkTb $tp1 300 84 230 $true
     $tbSec.Text = $apiSec
 
+    & $mkCapLbl $tp1 "SECRET EXPIRY (yyyy-MM-dd)" 540 68
+    $tbExpiry = & $mkTb $tp1 540 84 160
+    $tbExpiry.Text = if ($sharedCfg.SecretExpiry) {
+        try { ([datetime]$sharedCfg.SecretExpiry).ToString('yyyy-MM-dd') } catch { [string]$sharedCfg.SecretExpiry }
+    } else { '' }
+
     $btnTest = New-Btn $tp1 "Test Connection" 10 128 140 28
     $dotTest = New-Dot $tp1 158 134
     $lblTestResult = New-Object System.Windows.Forms.Label
@@ -120,22 +126,16 @@ function Show-SettingsDialog {
     $tbPortal.Text = if ($sharedCfg.PortalUrl) { $sharedCfg.PortalUrl } else { '' }
     & $mkNote $tp1 "Web portal base URL — used to open projects when double-clicking in the Project Monitor" 10 216
 
-    & $mkCapLbl $tp1 "SECRET EXPIRY (yyyy-MM-dd)" 10 240
-    $tbExpiry = & $mkTb $tp1 10 256 160
-    $tbExpiry.Text = if ($sharedCfg.SecretExpiry) {
-        try { ([datetime]$sharedCfg.SecretExpiry).ToString('yyyy-MM-dd') } catch { [string]$sharedCfg.SecretExpiry }
-    } else { '' }
-
-    & $mkCapLbl $tp1 "SHAREPOINT ADMIN URL" 10 288
-    $tbSpoAdmin = & $mkTb $tp1 10 304 530
+    & $mkCapLbl $tp1 "SHAREPOINT ADMIN URL" 10 240
+    $tbSpoAdmin = & $mkTb $tp1 10 256 530
     $tbSpoAdmin.Text = if ($sharedCfg.SharePointAdminUrl) { $sharedCfg.SharePointAdminUrl } else { '' }
     try { $tbSpoAdmin.PlaceholderText = 'https://tenant-admin.sharepoint.com' } catch {}
 
     # Check for Updates button
-    & $mkCapLbl $tp1 "SOFTWARE UPDATES" 10 336
-    $btnCheckUpdates = New-Btn $tp1 "Check for Updates" 10 352 160 28
+    & $mkCapLbl $tp1 "SOFTWARE UPDATES" 10 288
+    $btnCheckUpdates = New-Btn $tp1 "Check for Updates" 10 304 160 28
     $lblUpdateStatus = New-Object System.Windows.Forms.Label
-    $lblUpdateStatus.Location = [System.Drawing.Point]::new(180, 358)
+    $lblUpdateStatus.Location = [System.Drawing.Point]::new(180, 310)
     $lblUpdateStatus.AutoSize = $true
     $lblUpdateStatus.Font = $FontBody
     $lblUpdateStatus.ForeColor = $clrMuted
