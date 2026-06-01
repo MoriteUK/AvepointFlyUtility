@@ -565,7 +565,42 @@ function Show-Launcher {
     else { $btnGear.Text = [char]0x2699; $btnGear.Font = New-Object System.Drawing.Font('Segoe UI', 16); $btnGear.ForeColor = [System.Drawing.Color]::White }
     $hdr.Controls.Add($btnGear)
 
-    $bW = 400; $bH = 90; $bX = 40; $y = 82
+    # ── Update Notification Banner ───────────────────────────────────────────
+    $updateBanner = $null
+    if ($script:UpdateAvailable) {
+        $updateBanner = New-Object System.Windows.Forms.Panel
+        $updateBanner.Height = 36
+        $updateBanner.Dock = [System.Windows.Forms.DockStyle]::Top
+        $updateBanner.BackColor = [System.Drawing.Color]::FromArgb(255, 193, 7)
+        $form.Controls.Add($updateBanner)
+
+        $lblUpdate = New-Object System.Windows.Forms.Label
+        $lblUpdate.Text = "  Update available: v$($script:UpdateAvailable.Current) → v$($script:UpdateAvailable.Latest)"
+        $lblUpdate.Font = New-Object System.Drawing.Font('Segoe UI Semibold', 10)
+        $lblUpdate.ForeColor = [System.Drawing.Color]::FromArgb(33, 33, 33)
+        $lblUpdate.Location = [System.Drawing.Point]::new(8, 8)
+        $lblUpdate.AutoSize = $true
+        $updateBanner.Controls.Add($lblUpdate)
+
+        $btnInstallUpdate = New-Object System.Windows.Forms.Button
+        $btnInstallUpdate.Text = 'Install Update'
+        $btnInstallUpdate.Location = [System.Drawing.Point]::new(340, 4)
+        $btnInstallUpdate.Size = [System.Drawing.Size]::new(130, 28)
+        $btnInstallUpdate.Font = New-Object System.Drawing.Font('Segoe UI Semibold', 9)
+        $btnInstallUpdate.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
+        $btnInstallUpdate.FlatAppearance.BorderSize = 0
+        $btnInstallUpdate.BackColor = [System.Drawing.Color]::FromArgb(0, 130, 70)
+        $btnInstallUpdate.ForeColor = [System.Drawing.Color]::White
+        $btnInstallUpdate.Cursor = [System.Windows.Forms.Cursors]::Hand
+        $btnInstallUpdate.Add_Click({
+            if (Test-Path $CheckUpdatesScript) {
+                Start-Process 'pwsh.exe' "-NoProfile -ExecutionPolicy Bypass -File `"$CheckUpdatesScript`" -Force"
+            }
+        }.GetNewClosure())
+        $updateBanner.Controls.Add($btnInstallUpdate)
+    }
+
+    $bW = 400; $bH = 90; $bX = 40; $y = if ($updateBanner) { 118 } else { 82 }
 
     # ── Discovery tile ────────────────────────────────────────────────────────
     $btnDisc = New-Object System.Windows.Forms.Button
@@ -720,14 +755,39 @@ $CheckUpdatesScript = Join-Path $PSScriptRoot 'Check-Updates.ps1'
 if (Test-Path $CheckUpdatesScript) {
     try {
         Write-Log 'Checking for updates...'
-        # Run update check silently in background (won't block startup)
-        $null = Start-Job -ScriptBlock {
+        # Run update check in background
+        $updateJob = Start-Job -ScriptBlock {
             param($ScriptPath)
-            & $ScriptPath -Silent
+            # Check without prompting
+            $localVersionPath = Join-Path (Split-Path $ScriptPath) 'version.json'
+            if (Test-Path $localVersionPath) {
+                $localVer = (Get-Content $localVersionPath -Raw | ConvertFrom-Json).version
+                try {
+                    $remoteVer = (Invoke-RestMethod -Uri "https://raw.githubusercontent.com/MoriteUK/AvepointFlyUtility/main/version.json" -ErrorAction Stop).version
+                    if ([Version]$remoteVer -gt [Version]$localVer) {
+                        return @{ Available = $true; Current = $localVer; Latest = $remoteVer }
+                    }
+                } catch { }
+            }
+            return @{ Available = $false }
         } -ArgumentList $CheckUpdatesScript
 
-        # Don't wait for update check - let it run in background
-        Write-Log 'Update check started in background'
+        # Check result after a short delay (non-blocking)
+        Start-Sleep -Milliseconds 500
+        if ($updateJob.State -eq 'Completed') {
+            $result = Receive-Job $updateJob
+            if ($result.Available) {
+                Write-Log "Update available: $($result.Current) -> $($result.Latest)" 'OK'
+                # Show notification in main window after it loads
+                $script:UpdateAvailable = $result
+            } else {
+                Write-Log 'No updates available'
+            }
+        } else {
+            Write-Log 'Update check running in background'
+        }
+
+        Remove-Job $updateJob -Force -ErrorAction SilentlyContinue
     } catch {
         Write-Log "Update check failed to start: $($_.Exception.Message)" 'WARN'
     }
