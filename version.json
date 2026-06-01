@@ -1,7 +1,15 @@
 {
-  "version": "2.1.0",
+  "version": "2.1.1",
   "releaseDate": "2026-06-01",
   "changelog": [
+    {
+      "version": "2.1.1",
+      "date": "2026-06-01",
+      "changes": [
+        "Added 'Check for Updates' button in Settings > Config tab",
+        "Removed 'Remove Devices' from Domain Removal menu"
+      ]
+    },
     {
       "version": "2.1.0",
       "date": "2026-06-01",
