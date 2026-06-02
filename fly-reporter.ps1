@@ -1,3 +1,4 @@
+#Requires -Version 7.0
 <#
 .SYNOPSIS
     fly-reporter.ps1 — fetches migration/mapping reports from the Fly API

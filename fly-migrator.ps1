@@ -1,3 +1,4 @@
+#Requires -Version 7.0
 <#
 .SYNOPSIS
     fly-migrator.ps1 — headless migration runner for the Fly web UI.

@@ -1,32 +1,38 @@
 {
   "SharePoint": {
-    "Policy": "SPO Migration Policy",
-    "Source": "OurVolaris - SPO",
-    "Destination": "amickiel - SharePoint Online"
+    "Policy": "",
+    "Source": "",
+    "Destination": "",
+    "ProjectSuffix": "SharePoint"
   },
   "Exchange": {
-    "Policy": "Mailbox Migration - Policy",
-    "Source": "OurVolaris - EXO",
-    "Destination": "amickiel - Exchange Online"
+    "Policy": "",
+    "Source": "",
+    "Destination": "",
+    "ProjectSuffix": "Exchange"
   },
   "OneDrive": {
-    "Policy": "OneDrive Migration - Policy",
-    "Source": "OurVolaris - OneDrive",
-    "Destination": "amickiel - OneDrive"
+    "Policy": "",
+    "Source": "",
+    "Destination": "",
+    "ProjectSuffix": "OneDrive"
   },
   "Teams": {
-    "Policy": "MS Teams - Migration Policy",
-    "Source": "OurVolaris - MS Teams",
-    "Destination": "amickiel - Microsoft Teams"
+    "Policy": "",
+    "Source": "",
+    "Destination": "",
+    "ProjectSuffix": "Teams"
   },
   "Teams Chat": {
-    "Policy": "Teams Chats policy",
-    "Source": "OurVolaris - Teams Chats",
-    "Destination": "amickiel - Microsoft Teams Chat"
+    "Policy": "",
+    "Source": "",
+    "Destination": "",
+    "ProjectSuffix": "Teams Chat"
   },
   "Groups": {
-    "Policy": "M365 Group Migration - Policy",
-    "Source": "OurVolaris - M365 Groups",
-    "Destination": "amickiel - Microsoft 365 Groups"
+    "Policy": "",
+    "Source": "",
+    "Destination": "",
+    "ProjectSuffix": "Groups"
   }
 }

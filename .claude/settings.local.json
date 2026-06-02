@@ -1,5 +1,8 @@
 {
   "permissions": {
+    {
+  "model": "claude-sonnet-4-5"
+}
     "allow": [
       "Bash(powershell -Command \"Get-ChildItem 'C:\\\\Users\\\\Andy White\\\\OneDrive - Andy White\\\\Documents\\\\WindowsPowerShell\\\\Modules\\\\Fly.Client\\\\4.6.19' | Select-Object Name\")",
       "Bash(Copy-Item \"C:\\\\Temp\\\\ourvolaris.png\" \"C:\\\\Temp\\\\Scripts\\\\Avepoint\\\\FLY\\\\ourvolaris.png\" -Force)",

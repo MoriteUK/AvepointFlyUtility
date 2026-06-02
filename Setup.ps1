@@ -189,8 +189,8 @@ if ($flyModule) {
 } else {
     Write-Warn "Fly.Client not found. Running install-flymodules.ps1..."
     $installScript = Join-Path $scriptDir 'install-flymodules.ps1'
-    $proc = Start-Process powershell.exe `
-        -ArgumentList "-ExecutionPolicy Bypass -NonInteractive -File `"$installScript`"" `
+    $proc = Start-Process pwsh.exe `
+        -ArgumentList "-NoProfile -ExecutionPolicy Bypass -NonInteractive -File `"$installScript`"" `
         -Wait -PassThru -NoNewWindow
     if ($proc.ExitCode -ne 0) {
         Write-Err "Fly.Client installation failed (exit $($proc.ExitCode))."
@@ -207,10 +207,60 @@ if ($flyModule) {
 }
 
 # -------------------------------------------------------------------
+# Step 6: Microsoft Graph PowerShell modules
+# -------------------------------------------------------------------
+Write-Step "Checking Microsoft Graph PowerShell modules"
+
+$graphModules = @(
+    'Microsoft.Graph.Authentication'               # Connect-MgGraph, Get-MgContext
+    'Microsoft.Graph.Identity.DirectoryManagement' # Get-MgDomain, Get-MgDevice, Remove-MgDevice
+    'Microsoft.Graph.Users'                        # Get-MgUser, Update-MgUser
+    'Microsoft.Graph.Applications'                 # Remove-MgApplication, Remove-MgServicePrincipal
+)
+
+$graphFailed = [System.Collections.Generic.List[string]]::new()
+
+foreach ($mod in $graphModules) {
+    $installed = Get-Module -ListAvailable -Name $mod |
+                 Sort-Object Version -Descending | Select-Object -First 1
+
+    if ($installed) {
+        Write-Ok "$mod $($installed.Version) already installed."
+    } else {
+        Write-Warn "$mod not found — installing from PSGallery (CurrentUser scope)..."
+        try {
+            Install-Module -Name $mod -Scope CurrentUser -Force -AllowClobber `
+                           -Repository PSGallery -ErrorAction Stop
+            $installed = Get-Module -ListAvailable -Name $mod |
+                         Sort-Object Version -Descending | Select-Object -First 1
+            if ($installed) {
+                Write-Ok "$mod $($installed.Version) installed."
+            } else {
+                Write-Warn "$mod install reported success but module not yet visible — may need a new PS session."
+            }
+        } catch {
+            Write-Err "$mod installation FAILED: $($_.Exception.Message)"
+            $graphFailed.Add($mod)
+        }
+    }
+}
+
+if ($graphFailed.Count -gt 0) {
+    Write-Warn ""
+    Write-Warn "The following Graph module(s) could not be installed automatically:"
+    $graphFailed | ForEach-Object { Write-Warn "  - $_" }
+    Write-Warn "Install them manually with:"
+    Write-Warn "  Install-Module $($graphFailed -join ', ') -Scope CurrentUser -Force"
+    Write-Warn "The toolkit will still start but Graph-dependent features will not work."
+} else {
+    Write-Ok "All Microsoft Graph modules present."
+}
+
+# -------------------------------------------------------------------
 # Done
 # -------------------------------------------------------------------
 Write-Step "Setup complete"
 Write-Host ""
-Write-Host "    Double-click FlyMigration.exe to launch the toolkit." -ForegroundColor White
-Write-Host "    (Or: .\menu.ps1 directly from PowerShell)" -ForegroundColor Gray
+Write-Host "    Double-click MigrationTools.exe to launch the toolkit." -ForegroundColor White
+Write-Host "    (Or: .\main-menu.ps1 directly from PowerShell)" -ForegroundColor Gray
 Write-Host ""

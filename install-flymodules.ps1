@@ -1,4 +1,4 @@
-﻿#Requires -Version 5.1
+﻿#Requires -Version 7.0
 <#
 .SYNOPSIS
     install-fly-modules.ps1 — Installs the AvePoint Fly.Client PowerShell module from the
