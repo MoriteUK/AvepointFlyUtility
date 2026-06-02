@@ -571,7 +571,59 @@ function Show-Launcher {
     else { $btnGear.Text = [char]0x2699; $btnGear.Font = New-Object System.Drawing.Font('Segoe UI', 16); $btnGear.ForeColor = [System.Drawing.Color]::White }
     $hdr.Controls.Add($btnGear)
 
-    $bW = 400; $bH = 90; $bX = 40; $y = 82
+    # ── Update Notification Banner ───────────────────────────────────────────
+    $updateBanner = $null
+    if ($script:UpdateAvailable) {
+        $updateBanner = New-Object System.Windows.Forms.Panel
+        $updateBanner.Height = 36
+        $updateBanner.Dock = [System.Windows.Forms.DockStyle]::Top
+        $updateBanner.BackColor = [System.Drawing.Color]::FromArgb(255, 243, 205)
+        $form.Controls.Add($updateBanner)
+
+        $lblUpdate = New-Object System.Windows.Forms.Label
+        $lblUpdate.Text = "  Update available: v$($script:UpdateAvailable.Current) → v$($script:UpdateAvailable.Latest)"
+        $lblUpdate.Font = New-Object System.Drawing.Font('Segoe UI Semibold', 10)
+        $lblUpdate.ForeColor = [System.Drawing.Color]::FromArgb(33, 33, 33)
+        $lblUpdate.Location = [System.Drawing.Point]::new(8, 8)
+        $lblUpdate.AutoSize = $true
+        $updateBanner.Controls.Add($lblUpdate)
+
+        $btnInstallUpdate = New-Object System.Windows.Forms.Button
+        $btnInstallUpdate.Text = 'Install Update'
+        $btnInstallUpdate.Size = [System.Drawing.Size]::new(120, 26)
+        $btnInstallUpdate.Location = [System.Drawing.Point]::new(350, 5)
+        $btnInstallUpdate.BackColor = [System.Drawing.Color]::FromArgb(0, 100, 180)
+        $btnInstallUpdate.ForeColor = [System.Drawing.Color]::White
+        $btnInstallUpdate.Font = New-Object System.Drawing.Font('Segoe UI Semibold', 9)
+        $btnInstallUpdate.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
+        $btnInstallUpdate.FlatAppearance.BorderSize = 0
+        $btnInstallUpdate.Cursor = [System.Windows.Forms.Cursors]::Hand
+        $btnInstallUpdate.Add_Click({
+            $checkUpdatesScript = Join-Path $PSScriptRoot 'Check-Updates.ps1'
+            if (Test-Path $checkUpdatesScript) {
+                try {
+                    & $checkUpdatesScript -Force
+                    [System.Windows.Forms.MessageBox]::Show(
+                        "Update complete! Please restart the application.",
+                        'Update Complete',
+                        'OK',
+                        'Information'
+                    ) | Out-Null
+                    $form.Close()
+                } catch {
+                    [System.Windows.Forms.MessageBox]::Show(
+                        "Update failed: $_",
+                        'Update Error',
+                        'OK',
+                        'Error'
+                    ) | Out-Null
+                }
+            }
+        }.GetNewClosure())
+        $updateBanner.Controls.Add($btnInstallUpdate)
+    }
+
+    $bW = 400; $bH = 90; $bX = 40; $y = if ($updateBanner) { 118 } else { 82 }
 
     # ── Discovery tile ────────────────────────────────────────────────────────
     $btnDisc = New-Object System.Windows.Forms.Button
@@ -726,14 +778,62 @@ $CheckUpdatesScript = Join-Path $PSScriptRoot 'Check-Updates.ps1'
 if (Test-Path $CheckUpdatesScript) {
     try {
         Write-Log 'Checking for updates...'
-        # Run update check silently in background (won't block startup)
-        $null = Start-Job -ScriptBlock {
+        # Run update check in background
+        $updateJob = Start-Job -ScriptBlock {
             param($ScriptPath)
-            & $ScriptPath -Silent
+            try {
+                # Check without prompting
+                $scriptDir = Split-Path $ScriptPath
+                $localVersionPath = Join-Path $scriptDir 'version.json'
+
+                if (-not (Test-Path $localVersionPath)) {
+                    return @{ Available = $false; Error = 'Local version.json not found' }
+                }
+
+                $localVer = (Get-Content $localVersionPath -Raw | ConvertFrom-Json).version
+
+                try {
+                    $remoteJson = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/MoriteUK/AvepointFlyUtility/main/version.json?t=$([DateTimeOffset]::UtcNow.ToUnixTimeSeconds())" -ErrorAction Stop
+                    $remoteVer = $remoteJson.version
+
+                    if ([Version]$remoteVer -gt [Version]$localVer) {
+                        return @{ Available = $true; Current = $localVer; Latest = $remoteVer }
+                    } else {
+                        return @{ Available = $false; Current = $localVer; Latest = $remoteVer }
+                    }
+                } catch {
+                    return @{ Available = $false; Error = "Failed to check remote version: $($_.Exception.Message)" }
+                }
+            } catch {
+                return @{ Available = $false; Error = "Update check error: $($_.Exception.Message)" }
+            }
         } -ArgumentList $CheckUpdatesScript
 
-        # Don't wait for update check - let it run in background
-        Write-Log 'Update check started in background'
+        # Wait for update check to complete (with timeout)
+        $timeout = 5000  # 5 seconds
+        $elapsed = 0
+        $checkInterval = 100
+        while ($updateJob.State -eq 'Running' -and $elapsed -lt $timeout) {
+            Start-Sleep -Milliseconds $checkInterval
+            $elapsed += $checkInterval
+        }
+
+        if ($updateJob.State -eq 'Completed') {
+            $result = Receive-Job $updateJob
+            if ($result -and $result.Available) {
+                Write-Log "Update available: $($result.Current) -> $($result.Latest)" 'OK'
+                # Show notification in main window after it loads
+                $script:UpdateAvailable = $result
+            } elseif ($result.Error) {
+                Write-Log "Update check error: $($result.Error)" 'WARN'
+            } else {
+                Write-Log "Already up to date (v$($result.Current))"
+            }
+        } else {
+            Write-Log 'Update check timed out or failed' 'WARN'
+        }
+
+        Remove-Job $updateJob -Force -ErrorAction SilentlyContinue
     } catch {
         Write-Log "Update check failed to start: $($_.Exception.Message)" 'WARN'
     }

@@ -1,7 +1,18 @@
 {
-  "version": "2.1.10",
+  "version": "2.1.11",
   "releaseDate": "2026-06-02",
   "changelog": [
+    {
+      "version": "2.1.11",
+      "date": "2026-06-02",
+      "changes": [
+        "FIXED: Added missing update notification banner to main menu",
+        "Update check now shows yellow banner when updates are available",
+        "Added 'Install Update' button in notification banner",
+        "Update check waits for completion instead of running silently in background",
+        "Auto-update notification was completely missing - now restored"
+      ]
+    },
     {
       "version": "2.1.10",
       "date": "2026-06-02",
