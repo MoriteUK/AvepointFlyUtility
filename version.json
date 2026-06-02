@@ -1,7 +1,17 @@
 {
-  "version": "2.1.4",
+  "version": "2.1.5",
   "releaseDate": "2026-06-02",
   "changelog": [
+    {
+      "version": "2.1.5",
+      "date": "2026-06-02",
+      "changes": [
+        "Removed 'Update Cloud UPNs' button from Domain Removal menu",
+        "Removed obsolete packaging scripts (New-Package.ps1, Build-Exe.ps1, Deploy-ToServer.ps1)",
+        "Updated SERVER-DEPLOYMENT.md for GitHub-first deployment approach",
+        "Added AUTO-UPDATE-SYSTEM.md documentation"
+      ]
+    },
     {
       "version": "2.1.4",
       "date": "2026-06-02",
