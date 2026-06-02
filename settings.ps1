@@ -275,13 +275,31 @@ function Show-SettingsDialog {
 
     $dgvPfx.DataSource = $pfxTable
 
-    $pfxTable.Add_ColumnChanged({
-        param($s, $e)
-        if ($e.Column.ColumnName -eq 'AccountName' -and -not "$($e.Row['SharePointAdminUrl'])") {
-            if ("$($e.Row['AccountName'])" -match '@([\w-]+)\.onmicrosoft\.com') {
-                $e.Row['SharePointAdminUrl'] = "https://$($Matches[1])-admin.sharepoint.com"
+    # Auto-fill SharePoint Admin URL when Account Name is entered (only after editing is complete)
+    $dgvPfx.Add_CellEndEdit({
+        param($sender, $e)
+        try {
+            if ($e.ColumnIndex -eq 1) { # AccountName column
+                $row = $dgvPfx.Rows[$e.RowIndex]
+                $accountName = $row.Cells[1].Value
+                $spAdminUrl = $row.Cells[2].Value
+
+                # Only auto-fill if SharePoint Admin URL is empty
+                if ($accountName -and -not $spAdminUrl) {
+                    if ($accountName -match '@([\w-]+)\.onmicrosoft\.com') {
+                        $row.Cells[2].Value = "https://$($Matches[1])-admin.sharepoint.com"
+                    }
+                }
             }
+        } catch {
+            # Silently ignore errors during auto-fill
         }
+    }.GetNewClosure())
+
+    # Suppress DataError notifications that might occur during editing
+    $dgvPfx.Add_DataError({
+        param($sender, $e)
+        $e.ThrowException = $false
     })
 
     $tp2.Controls.Add($dgvPfx)

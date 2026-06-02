@@ -21,7 +21,8 @@
 param(
     [string]$GitHubRepo = "MoriteUK/AvepointFlyUtility",
     [switch]$Silent,
-    [switch]$Force
+    [switch]$Force,
+    [int]$CheckIntervalHours = 0  # 0 = check every time, 24 = daily, 168 = weekly
 )
 
 $ErrorActionPreference = 'Stop'
@@ -75,15 +76,15 @@ function Set-UpdateCache {
     $Data | ConvertTo-Json -Depth 10 | Set-Content $UpdateCachePath -Encoding UTF8
 }
 
-# Check if we recently checked for updates (within last 24 hours)
-if (-not $Force) {
+# Check if we recently checked for updates (based on CheckIntervalHours)
+if (-not $Force -and $CheckIntervalHours -gt 0) {
     $cache = Get-UpdateCache
     if ($cache -and $cache.LastCheck) {
         $lastCheck = [DateTime]::Parse($cache.LastCheck)
         $hoursSinceCheck = ([DateTime]::Now - $lastCheck).TotalHours
 
-        if ($hoursSinceCheck -lt 24) {
-            Write-UpdateLog "Last update check was $([Math]::Round($hoursSinceCheck, 1)) hours ago. Skipping check (use -Force to override)"
+        if ($hoursSinceCheck -lt $CheckIntervalHours) {
+            Write-UpdateLog "Last update check was $([Math]::Round($hoursSinceCheck, 1)) hours ago. Skipping check (interval: $CheckIntervalHours hours, use -Force to override)"
             return
         }
     }
@@ -200,6 +201,7 @@ try {
     $BackupDir = Join-Path $ScriptRoot "backup-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
     New-Item -ItemType Directory -Path $BackupDir -Force | Out-Null
 
+    # Script root config files
     $ConfigFiles = @(
         'domains.json'
         'workloads.json'
@@ -214,6 +216,20 @@ try {
             Copy-Item -Path $filePath -Destination $BackupDir -Force
             Write-UpdateLog "  Backed up: $file"
         }
+    }
+
+    # APPDATA config files (Fly API credentials)
+    $AppDataConfigPath = Join-Path $env:APPDATA 'FlyMigration\config.json'
+    if (Test-Path $AppDataConfigPath) {
+        Copy-Item -Path $AppDataConfigPath -Destination (Join-Path $BackupDir 'appdata-config.json') -Force
+        Write-UpdateLog "  Backed up: Fly API config (from APPDATA)"
+    }
+
+    # LOCALAPPDATA config files
+    $LocalAppDataConfigPath = Join-Path $env:LOCALAPPDATA 'FlyMigration\shared-config.json'
+    if (Test-Path $LocalAppDataConfigPath) {
+        Copy-Item -Path $LocalAppDataConfigPath -Destination (Join-Path $BackupDir 'localappdata-shared-config.json') -Force
+        Write-UpdateLog "  Backed up: Shared config (from LOCALAPPDATA)"
     }
 
     # Copy new files (excluding config files)
@@ -250,6 +266,24 @@ try {
             Copy-Item -Path $backupPath -Destination (Join-Path $ScriptRoot $file) -Force
             Write-UpdateLog "  Restored: $file"
         }
+    }
+
+    # Restore APPDATA config (Fly API credentials)
+    $appDataBackupPath = Join-Path $BackupDir 'appdata-config.json'
+    if (Test-Path $appDataBackupPath) {
+        $appDataDir = Join-Path $env:APPDATA 'FlyMigration'
+        if (-not (Test-Path $appDataDir)) { New-Item -ItemType Directory -Path $appDataDir -Force | Out-Null }
+        Copy-Item -Path $appDataBackupPath -Destination (Join-Path $appDataDir 'config.json') -Force
+        Write-UpdateLog "  Restored: Fly API config (to APPDATA)"
+    }
+
+    # Restore LOCALAPPDATA config
+    $localAppDataBackupPath = Join-Path $BackupDir 'localappdata-shared-config.json'
+    if (Test-Path $localAppDataBackupPath) {
+        $localAppDataDir = Join-Path $env:LOCALAPPDATA 'FlyMigration'
+        if (-not (Test-Path $localAppDataDir)) { New-Item -ItemType Directory -Path $localAppDataDir -Force | Out-Null }
+        Copy-Item -Path $localAppDataBackupPath -Destination (Join-Path $localAppDataDir 'shared-config.json') -Force
+        Write-UpdateLog "  Restored: Shared config (to LOCALAPPDATA)"
     }
 
     Write-UpdateLog "Update installed successfully!" 'OK'

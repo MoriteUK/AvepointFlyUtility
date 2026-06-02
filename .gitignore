@@ -42,3 +42,4 @@ node_modules/
 # Old/backup files
 *-old.*
 *.bak
+backup-*/

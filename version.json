@@ -1,7 +1,20 @@
 {
-  "version": "2.1.3",
-  "releaseDate": "2026-06-01",
+  "version": "2.1.4",
+  "releaseDate": "2026-06-02",
   "changelog": [
+    {
+      "version": "2.1.4",
+      "date": "2026-06-02",
+      "changes": [
+        "Fixed auto-update preserving Fly API credentials (ClientSecret)",
+        "Auto-update now backs up APPDATA and LOCALAPPDATA config files",
+        "Fixed update notification not showing in main menu",
+        "Update check now waits 5 seconds instead of 500ms",
+        "Fixed SECRET EXPIRY field layout in Settings (now on same row as CLIENT SECRET)",
+        "Fixed Customer grid issue where AccountName corrupted cell display",
+        "Replaced DataTable ColumnChanged with CellEndEdit event handler"
+      ]
+    },
     {
       "version": "2.1.3",
       "date": "2026-06-01",
