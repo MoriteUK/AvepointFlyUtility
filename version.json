@@ -1,7 +1,19 @@
 {
-  "version": "2.1.12",
+  "version": "2.1.13",
   "releaseDate": "2026-06-02",
   "changelog": [
+    {
+      "version": "2.1.13",
+      "date": "2026-06-02",
+      "changes": [
+        "Added update progress indicator to Install Update button",
+        "Button shows: 'Downloading...' → 'Extracting...' → 'Installing...'",
+        "Animated dots show activity during update",
+        "Success shows green '✓ Complete' before restart",
+        "Failure shows red '✗ Failed' with error message",
+        "Banner label updates to show current status"
+      ]
+    },
     {
       "version": "2.1.12",
       "date": "2026-06-02",

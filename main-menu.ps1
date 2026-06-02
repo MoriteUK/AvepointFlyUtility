@@ -601,22 +601,84 @@ function Show-Launcher {
         $btnInstallUpdate.Add_Click({
             $checkUpdatesScript = Join-Path $PSScriptRoot 'Check-Updates.ps1'
             if (Test-Path $checkUpdatesScript) {
+                # Disable button and show progress
+                $btnInstallUpdate.Enabled = $false
+                $originalText = $btnInstallUpdate.Text
+                $btnInstallUpdate.Text = 'Downloading...'
+                $lblUpdate.Text = "  Installing update - please wait..."
+                [System.Windows.Forms.Application]::DoEvents()
+
                 try {
-                    & $checkUpdatesScript -Force
-                    [System.Windows.Forms.MessageBox]::Show(
-                        "Update complete! Please restart the application.",
-                        'Update Complete',
-                        'OK',
-                        'Information'
-                    ) | Out-Null
-                    $form.Close()
+                    # Run update in background job so we can show progress
+                    $updateJob = Start-Job -ScriptBlock {
+                        param($ScriptPath)
+                        & $ScriptPath -Force 2>&1 | Out-String
+                    } -ArgumentList $checkUpdatesScript
+
+                    # Show progress updates
+                    $elapsed = 0
+                    $dots = ""
+                    while ($updateJob.State -eq 'Running' -and $elapsed -lt 60000) {
+                        Start-Sleep -Milliseconds 500
+                        $elapsed += 500
+
+                        # Animated progress
+                        if ($elapsed -lt 5000) {
+                            $btnInstallUpdate.Text = "Downloading$dots"
+                        } elseif ($elapsed -lt 10000) {
+                            $btnInstallUpdate.Text = "Extracting$dots"
+                        } else {
+                            $btnInstallUpdate.Text = "Installing$dots"
+                        }
+
+                        $dots = if ($dots.Length -ge 3) { "" } else { $dots + "." }
+                        [System.Windows.Forms.Application]::DoEvents()
+                    }
+
+                    # Get result
+                    if ($updateJob.State -eq 'Completed') {
+                        $result = Receive-Job $updateJob
+                        Remove-Job $updateJob -Force
+
+                        # Check if update succeeded
+                        if ($result -match 'Update installed successfully|Updated to version') {
+                            $btnInstallUpdate.Text = '✓ Complete'
+                            $btnInstallUpdate.BackColor = [System.Drawing.Color]::FromArgb(0, 130, 70)
+                            $lblUpdate.Text = "  Update installed successfully!"
+                            [System.Windows.Forms.Application]::DoEvents()
+                            Start-Sleep -Milliseconds 500
+
+                            [System.Windows.Forms.MessageBox]::Show(
+                                "Update complete! Please restart the application.",
+                                'Update Complete',
+                                'OK',
+                                'Information'
+                            ) | Out-Null
+                            $form.Close()
+                        } else {
+                            throw "Update process did not complete successfully"
+                        }
+                    } else {
+                        Remove-Job $updateJob -Force -ErrorAction SilentlyContinue
+                        throw "Update timed out or failed"
+                    }
                 } catch {
+                    $btnInstallUpdate.Text = '✗ Failed'
+                    $btnInstallUpdate.BackColor = [System.Drawing.Color]::FromArgb(195, 30, 30)
+                    $lblUpdate.Text = "  Update failed - see error below"
+                    [System.Windows.Forms.Application]::DoEvents()
+
                     [System.Windows.Forms.MessageBox]::Show(
                         "Update failed: $_",
                         'Update Error',
                         'OK',
                         'Error'
                     ) | Out-Null
+
+                    # Reset button
+                    $btnInstallUpdate.Enabled = $true
+                    $btnInstallUpdate.Text = $originalText
+                    $btnInstallUpdate.BackColor = [System.Drawing.Color]::FromArgb(0, 100, 180)
                 }
             }
         }.GetNewClosure())
