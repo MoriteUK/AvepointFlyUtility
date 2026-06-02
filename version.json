@@ -1,7 +1,16 @@
 {
-  "version": "2.1.9",
+  "version": "2.1.10",
   "releaseDate": "2026-06-02",
   "changelog": [
+    {
+      "version": "2.1.10",
+      "date": "2026-06-02",
+      "changes": [
+        "Moved 'Remove Domain' button below 'Run AD Sync' in Domain Removal menu",
+        "Better logical flow: Update UPNs → Sync → Remove Domain → Hide Addresses",
+        "Added Test-AutoUpdate.ps1 diagnostic script for troubleshooting auto-update issues"
+      ]
+    },
     {
       "version": "2.1.9",
       "date": "2026-06-02",
