@@ -1,7 +1,17 @@
 {
-  "version": "2.1.7",
+  "version": "2.1.8",
   "releaseDate": "2026-06-02",
   "changelog": [
+    {
+      "version": "2.1.8",
+      "date": "2026-06-02",
+      "changes": [
+        "Added current version display in Settings > Config tab",
+        "Shows 'Current version: X.X.X' above Check for Updates button",
+        "Update status now shows version numbers (e.g., '2.1.7 → 2.1.8')",
+        "Version label updates after successful installation"
+      ]
+    },
     {
       "version": "2.1.7",
       "date": "2026-06-02",

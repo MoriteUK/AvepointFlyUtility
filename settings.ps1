@@ -133,9 +133,30 @@ function Show-SettingsDialog {
 
     # Check for Updates button
     & $mkCapLbl $tp1 "SOFTWARE UPDATES" 10 288
-    $btnCheckUpdates = New-Btn $tp1 "Check for Updates" 10 304 160 28
+
+    # Display current version
+    $currentVersion = 'Unknown'
+    $versionPath = Join-Path $PSScriptRoot 'version.json'
+    if (Test-Path $versionPath) {
+        try {
+            $versionJson = Get-Content $versionPath -Raw | ConvertFrom-Json
+            $currentVersion = $versionJson.version
+        } catch {
+            $currentVersion = 'Error reading version'
+        }
+    }
+
+    $lblCurrentVersion = New-Object System.Windows.Forms.Label
+    $lblCurrentVersion.Text = "Current version: $currentVersion"
+    $lblCurrentVersion.Location = [System.Drawing.Point]::new(10, 304)
+    $lblCurrentVersion.AutoSize = $true
+    $lblCurrentVersion.Font = $FontBody
+    $lblCurrentVersion.ForeColor = $clrText
+    $tp1.Controls.Add($lblCurrentVersion)
+
+    $btnCheckUpdates = New-Btn $tp1 "Check for Updates" 10 326 160 28
     $lblUpdateStatus = New-Object System.Windows.Forms.Label
-    $lblUpdateStatus.Location = [System.Drawing.Point]::new(180, 310)
+    $lblUpdateStatus.Location = [System.Drawing.Point]::new(180, 332)
     $lblUpdateStatus.AutoSize = $true
     $lblUpdateStatus.Font = $FontBody
     $lblUpdateStatus.ForeColor = $clrMuted
@@ -159,14 +180,30 @@ function Show-SettingsDialog {
             # Run Check-Updates.ps1 with -Force to show results
             $result = & $checkUpdatesScript -Force 2>&1 | Out-String
 
-            if ($result -match 'Already up to date') {
+            # Extract version numbers from result
+            if ($result -match 'Current version:\s*(\S+)') {
+                $localVer = $matches[1]
+            }
+            if ($result -match 'Remote version:\s*(\S+)') {
+                $remoteVer = $matches[1]
+            }
+
+            if ($result -match 'You have the latest version|Already up to date') {
                 $lblUpdateStatus.Text = 'Already up to date'
                 $lblUpdateStatus.ForeColor = $clrGreen
-            } elseif ($result -match 'Updated to|Installation complete') {
-                $lblUpdateStatus.Text = 'Update installed! Restart required.'
+            } elseif ($result -match 'Update available') {
+                $lblUpdateStatus.Text = "Update available: $localVer → $remoteVer"
+                $lblUpdateStatus.ForeColor = [System.Drawing.Color]::FromArgb(220, 165, 45)
+            } elseif ($result -match 'Updated to version:\s*(\S+)|Installation complete') {
+                $newVer = if ($matches[1]) { $matches[1] } else { $remoteVer }
+                $lblUpdateStatus.Text = "Updated to v$newVer - Restart required"
                 $lblUpdateStatus.ForeColor = $clrGreen
+
+                # Update the current version label
+                $lblCurrentVersion.Text = "Current version: $newVer"
+
                 [System.Windows.Forms.MessageBox]::Show(
-                    "Update installed successfully!`n`nPlease close and restart the application to use the new version.",
+                    "Update installed successfully!`n`nNew version: $newVer`n`nPlease close and restart the application to use the new version.",
                     'Update Complete',
                     'OK',
                     'Information'
