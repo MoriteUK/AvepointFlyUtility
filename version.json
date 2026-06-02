@@ -1,7 +1,18 @@
 {
-  "version": "2.1.6",
+  "version": "2.1.7",
   "releaseDate": "2026-06-02",
   "changelog": [
+    {
+      "version": "2.1.7",
+      "date": "2026-06-02",
+      "changes": [
+        "Added automatic log file organization system",
+        "Logs folder now auto-organizes old files into 'Old/YYYY-MM-DD' subfolders",
+        "Only today's logs remain in the root logs folder",
+        "Runs automatically on toolkit startup",
+        "Handles both log files (.log, .html, .png) and log subdirectories"
+      ]
+    },
     {
       "version": "2.1.6",
       "date": "2026-06-02",

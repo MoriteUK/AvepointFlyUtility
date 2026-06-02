@@ -17,7 +17,13 @@ Write-Log "=== main-menu.ps1 started  PID=$PID  PSVersion=$($PSVersionTable.PSVe
 Write-Log "Script root: $PSScriptRoot"
 
 $_startupError = $null
-try   { . "$PSScriptRoot\lib.ps1";      Write-Log 'lib.ps1 loaded OK' }
+try   {
+    . "$PSScriptRoot\lib.ps1"
+    Write-Log 'lib.ps1 loaded OK'
+    # Organize old log files into date-based folders
+    Invoke-LogCleanup
+    Write-Log 'Log cleanup completed'
+}
 catch { $_startupError = "lib.ps1 failed to load: $($_.Exception.Message)"; Write-Log $_startupError 'ERROR' }
 
 if ($_startupError) {

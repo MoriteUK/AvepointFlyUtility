@@ -1,5 +1,6 @@
 # Logs
 logs/
+!logs/Old/
 *.log
 
 # Reports
