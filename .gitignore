@@ -10,9 +10,10 @@ auth/storageState.json
 .env
 .env.local
 
-# Build outputs
+# Build outputs (obsolete - now using GitHub auto-update)
 *.exe
-!MigrationTools.exe
+*.zip
+fly-config.json
 
 # Configuration (user-specific)
 domains.json

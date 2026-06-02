@@ -4,8 +4,25 @@ This guide explains how to deploy the VG Migration Tools to your server.
 
 ## Quick Deployment Steps
 
-### 1. Copy Files to Server
+### 1. Get the Latest Version
 
+**Option A: Clone from GitHub (Recommended)**
+```powershell
+# Install git if needed
+winget install Git.Git
+
+# Clone the repository
+cd C:\Scripts
+git clone https://github.com/MoriteUK/AvepointFlyUtility.git VGMigrations
+cd VGMigrations
+```
+
+**Option B: Download ZIP from GitHub**
+1. Go to https://github.com/MoriteUK/AvepointFlyUtility
+2. Click "Code" → "Download ZIP"
+3. Extract to `C:\Scripts\VGMigrations\`
+
+**Option C: Copy from existing installation**
 Copy the entire `VGMigrations` folder to your server:
 ```
 C:\Scripts\VGMigrations\
@@ -24,15 +41,7 @@ C:\Users\[YourUsername]\AppData\Roaming\FlyMigration\config.json
 C:\Users\[ServerUsername]\AppData\Roaming\FlyMigration\config.json
 ```
 
-**Option B: Use the included fly-config.json**
-```powershell
-# On the server, run:
-$destFolder = "$env:APPDATA\FlyMigration"
-New-Item -ItemType Directory -Path $destFolder -Force
-Copy-Item "C:\Scripts\VGMigrations\fly-config.json" -Destination "$destFolder\config.json"
-```
-
-**Option C: Enter credentials via Settings (Recommended if encryption doesn't work)**
+**Option B: Enter credentials via Settings (Recommended)**
 1. Launch the toolkit: `.\main-menu.ps1`
 2. Click the ⚙ Settings icon
 3. Go to **Config** tab
@@ -43,18 +52,20 @@ Copy-Item "C:\Scripts\VGMigrations\fly-config.json" -Destination "$destFolder\co
 5. Click **Test Connection** to verify
 6. Close Settings (auto-saves)
 
-### 3. Important Files for Server
+### 3. Transfer Configuration (Optional)
 
-These files should be transferred from your working installation:
+If you have an existing installation, you can transfer these config files:
 
-**Required Configuration:**
-- `fly-config.json` → Copy to `%APPDATA%\FlyMigration\config.json`
+**From Script Directory:**
 - `domains.json` - Domain to VBU ID mappings
-- `workloads.json` - Workload configuration
+- `workloads.json` - Workload configuration  
 - `tenant-sites.json` - SharePoint site data (if using)
-
-**Optional (can be recreated):**
 - `shared-config.json` - Customer prefixes, portal URL, secret expiry
+
+**From AppData (if copying from same user):**
+- `%APPDATA%\FlyMigration\config.json` - Fly API credentials
+
+> **Note:** You can also configure everything from scratch via Settings after launching the toolkit.
 
 ### 4. Install Prerequisites
 
@@ -91,22 +102,27 @@ These files should be transferred from your working installation:
 
 ### 5. Launch the Toolkit
 
-**Option 1: Double-click**
-```
-MigrationTools.exe
-```
-
-**Option 2: PowerShell**
 ```powershell
 .\main-menu.ps1
 ```
 
-### 6. Verify Auto-Update Works
+### 6. Auto-Update System
 
-The toolkit checks for updates from GitHub automatically:
-- Repository: `MoriteUK/AvepointFlyUtility`
-- Yellow banner appears when updates are available
-- Click "Install Update" to get latest version
+The toolkit automatically checks for updates from GitHub **every time you run it**:
+
+- **Repository:** https://github.com/MoriteUK/AvepointFlyUtility
+- **Update Check:** Runs automatically on launch
+- **Notification:** Yellow banner appears when updates are available
+- **Installation:** Click "Install Update" button
+- **Configuration:** Preserved automatically (including Fly API credentials)
+
+**After first run, the server will:**
+1. Check GitHub for updates automatically
+2. Notify you of available updates
+3. Allow one-click installation
+4. Never lose your credentials during updates
+
+See [AUTO-UPDATE-SYSTEM.md](AUTO-UPDATE-SYSTEM.md) for details.
 
 ## Configuration File Locations
 
@@ -148,10 +164,21 @@ These files/folders are created during use and should **not** be transferred:
 
 ## Support
 
-Current Version: **2.1.3**  
+Current Version: **2.1.4**  
 Repository: https://github.com/MoriteUK/AvepointFlyUtility
 
 For issues, check:
 1. Log files in `logs\` folder
 2. GitHub repository for latest updates
 3. Settings > Config > Check for Updates
+4. [AUTO-UPDATE-SYSTEM.md](AUTO-UPDATE-SYSTEM.md) for auto-update troubleshooting
+
+## Deployment Methods Comparison
+
+| Method | Best For | Keeps Updated? |
+|--------|----------|----------------|
+| **Git Clone** | Development/Admin | ✅ `git pull` |
+| **Download ZIP** | One-time setup | ✅ Auto-update |
+| **Copy Folder** | Quick transfer | ✅ Auto-update |
+
+All methods support auto-update from GitHub!
