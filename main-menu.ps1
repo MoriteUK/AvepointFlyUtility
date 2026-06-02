@@ -417,7 +417,7 @@ function Show-DomainRemovalSubMenu {
     $domBtn3c.Size      = [System.Drawing.Size]::new($bW, $bH)
     $domBtn3c.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
     $domBtn3c.FlatAppearance.BorderSize = 0
-    $domBtn3c.BackColor = [System.Drawing.Color]::FromArgb(0, 130, 70)
+    $domBtn3c.BackColor = $clrAccent
     $domBtn3c.ForeColor = [System.Drawing.Color]::White
     $domBtn3c.Cursor    = [System.Windows.Forms.Cursors]::Hand
     $domBtn3c.Add_Click({
