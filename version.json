@@ -1,7 +1,16 @@
 {
-  "version": "2.1.5",
+  "version": "2.1.6",
   "releaseDate": "2026-06-02",
   "changelog": [
+    {
+      "version": "2.1.6",
+      "date": "2026-06-02",
+      "changes": [
+        "Fixed GitHub CDN caching issue - added cache-busting to version check",
+        "Changed Run AD Sync button color from green to blue (matches other buttons)",
+        "Update check now bypasses GitHub CDN cache with timestamp parameter"
+      ]
+    },
     {
       "version": "2.1.5",
       "date": "2026-06-02",

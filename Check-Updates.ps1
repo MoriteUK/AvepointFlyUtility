@@ -107,8 +107,9 @@ Write-UpdateLog "Current version: $LocalVersion"
 Write-UpdateLog "Checking GitHub for updates..."
 
 try {
-    # Get latest version.json from GitHub
-    $GitHubVersionUrl = "https://raw.githubusercontent.com/$GitHubRepo/main/version.json"
+    # Get latest version.json from GitHub (with cache-busting to avoid CDN stale cache)
+    $timestamp = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
+    $GitHubVersionUrl = "https://raw.githubusercontent.com/$GitHubRepo/main/version.json?t=$timestamp"
     $RemoteVersionJson = Invoke-RestMethod -Uri $GitHubVersionUrl -ErrorAction Stop
     $RemoteVersion = $RemoteVersionJson.version
 
