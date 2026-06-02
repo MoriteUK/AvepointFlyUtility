@@ -1,7 +1,17 @@
 {
-  "version": "2.1.8",
+  "version": "2.1.9",
   "releaseDate": "2026-06-02",
   "changelog": [
+    {
+      "version": "2.1.9",
+      "date": "2026-06-02",
+      "changes": [
+        "Fixed null array exception in Hide from Address Book when selecting sections",
+        "Changed $RowCounts to $script:RowCounts for proper scope access",
+        "Added null checks when accessing array elements",
+        "Error: 'Cannot index into a null array' - RESOLVED"
+      ]
+    },
     {
       "version": "2.1.8",
       "date": "2026-06-02",
