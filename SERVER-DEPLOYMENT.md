@@ -1,6 +1,6 @@
 # Server Deployment Guide
 
-This guide explains how to deploy the VG Migration Tools to your server.
+This guide explains how to deploy the Migration Tools to your server.
 
 ## Quick Deployment Steps
 

@@ -1,7 +1,17 @@
 {
-  "version": "2.1.11",
+  "version": "2.1.12",
   "releaseDate": "2026-06-02",
   "changelog": [
+    {
+      "version": "2.1.12",
+      "date": "2026-06-02",
+      "changes": [
+        "Rebranded: Changed 'VG Migration Tools' to 'Migration Tools'",
+        "Updated all UI elements, documentation, and scripts",
+        "Restored packaging scripts for customer distribution",
+        "Added DISTRIBUTION-GUIDE.md with hybrid deployment model"
+      ]
+    },
     {
       "version": "2.1.11",
       "date": "2026-06-02",

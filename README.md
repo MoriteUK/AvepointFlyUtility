@@ -1,8 +1,8 @@
-# VG Migration Tools - AvePoint Fly Edition
+# Migration Tools - AvePoint Fly Edition
 
 ## What is This?
 
-This is the **AvePoint Fly** edition of the VG Migration Tools. It provides a complete toolkit for migrating Microsoft 365 tenants using the AvePoint Fly migration platform.
+This is the **AvePoint Fly** edition of the Migration Tools. It provides a complete toolkit for migrating Microsoft 365 tenants using the AvePoint Fly migration platform.
 
 ## Platform
 

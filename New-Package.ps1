@@ -1,7 +1,7 @@
 #Requires -Version 7.0
 <#
 .SYNOPSIS
-    Creates a distributable ZIP of the Fly Migration Tools ready for a new user to install.
+    Creates a distributable ZIP of the Migration Tools ready for a new user to install.
 
 .PARAMETER Version
     Version string to embed in the ZIP filename, e.g. "1.0", "1.2.3".
@@ -71,7 +71,7 @@ $files = @(
     'FlyMigration.ico'         # icon used by the launcher and all banner headers
     'main-menu.ps1'            # top-level GUI — opens Discovery, AvePoint Fly, Misc, Domain Removal
 
-    # ── AvePoint Fly Migration Toolkit ─────────────────────────────────────
+    # ── AvePoint Migration Toolkit ─────────────────────────────────────
     'menu.ps1'                 # Fly migration GUI menu
     'connections.ps1'          # connection management GUI
     'runner.ps1'               # migration runner GUI

@@ -1,5 +1,5 @@
 #Requires -Version 7.0
-# AvePoint Fly Migration Toolkit - Entry Point
+# Migration Toolkit - Entry Point
 
 . "$PSScriptRoot\lib.ps1"
 Invoke-LogCleanup  # Organize old logs into date-based folders
@@ -25,7 +25,7 @@ function Show-MainMenu {
     $MenuForm.Controls.Add($hdr)
     $_hdrX = Add-HeaderLogo $hdr 40
     $hdrTitle = New-Object System.Windows.Forms.Label
-    $hdrTitle.Text      = "  Fly Migration Toolkit"
+    $hdrTitle.Text      = "  Migration Toolkit"
     $hdrTitle.Font      = $FontTitle
     $hdrTitle.ForeColor = [System.Drawing.Color]::White
     $hdrTitle.Location  = [System.Drawing.Point]::new($_hdrX, 0)

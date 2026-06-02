@@ -4,7 +4,7 @@
     Check-Updates.ps1 - Check for and install updates from GitHub
 
 .DESCRIPTION
-    Checks the GitHub repository for updates to the VG Migration Tools.
+    Checks the GitHub repository for updates to the Migration Tools.
     If updates are available, downloads and installs them automatically.
     Preserves user configuration files.
 
@@ -297,7 +297,7 @@ try {
         Write-Host "`n╔═══════════════════════════════════════════╗" -ForegroundColor Green
         Write-Host "║    UPDATE COMPLETE                        ║" -ForegroundColor Green
         Write-Host "╚═══════════════════════════════════════════╝" -ForegroundColor Green
-        Write-Host "`nThe VG Migration Tools have been updated to version $RemoteVersion" -ForegroundColor Green
+        Write-Host "`nThe Migration Tools have been updated to version $RemoteVersion" -ForegroundColor Green
         Write-Host "Your configuration files have been preserved.`n" -ForegroundColor Gray
         Write-Host "Backup location: $BackupDir`n" -ForegroundColor Gray
     }

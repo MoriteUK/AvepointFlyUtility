@@ -1,5 +1,5 @@
 #Requires -Version 7.0
-# VG Migrations — Top-Level Launcher
+# Migration Tools — Top-Level Launcher
 
 # Load WinForms early so we can show error dialogs if lib.ps1 is missing
 Add-Type -AssemblyName System.Windows.Forms -ErrorAction SilentlyContinue
@@ -535,7 +535,7 @@ function Show-DomainRemovalSubMenu {
 # ── Main launcher ─────────────────────────────────────────────────────────────
 function Show-Launcher {
     $form = New-Object System.Windows.Forms.Form
-    $form.Text            = 'VG Migration Tools'
+    $form.Text            = 'Migration Tools'
     $form.ClientSize      = [System.Drawing.Size]::new(480, 620)
     $form.StartPosition   = [System.Windows.Forms.FormStartPosition]::CenterScreen
     $form.BackColor       = $clrBg
@@ -553,7 +553,7 @@ function Show-Launcher {
     $form.Controls.Add($hdr)
     $_hdrX = Add-HeaderLogo $hdr 36
     $hdrLbl = New-Object System.Windows.Forms.Label
-    $hdrLbl.Text      = '  VG Migration Tools'
+    $hdrLbl.Text      = '  Migration Tools'
     $hdrLbl.Font      = $FontTitle
     $hdrLbl.ForeColor = [System.Drawing.Color]::White
     $hdrLbl.Location  = [System.Drawing.Point]::new($_hdrX, 0)

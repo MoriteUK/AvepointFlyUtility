@@ -1,7 +1,7 @@
 # Auto-Update System
 
 ## Overview
-The VG Migration Tools now automatically check for updates from GitHub every time they run.
+The Migration Tools now automatically check for updates from GitHub every time they run.
 
 ## How It Works
 

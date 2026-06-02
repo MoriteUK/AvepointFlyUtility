@@ -1,6 +1,6 @@
-# Distribution Guide - VG Migration Tools
+# Distribution Guide - Migration Tools
 
-This guide explains how to package and distribute the VG Migration Tools to customers.
+This guide explains how to package and distribute the Migration Tools to customers.
 
 ## Distribution Strategies
 
@@ -115,7 +115,7 @@ Before packaging, you can pre-configure:
 Create a simple instruction document for customers:
 
 ```
-VG Migration Tools - Installation Guide
+Migration Tools - Installation Guide
 
 Prerequisites:
 - Windows 10/11 or Windows Server 2019+
