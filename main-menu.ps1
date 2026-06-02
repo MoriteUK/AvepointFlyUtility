@@ -339,44 +339,6 @@ function Show-DomainRemovalSubMenu {
     $dlg.Controls.Add($subWorkflow)
     $y += 26
 
-    # ── Remove Domain ─────────────────────────────────────────────────────────
-    $script2 = Join-Path $PSScriptRoot 'remove-domain.ps1'
-    $btn2 = New-Object System.Windows.Forms.Button
-    $btn2.Text      = 'Remove Domain'
-    $btn2.Font      = New-Object System.Drawing.Font('Segoe UI Semibold', 14)
-    $btn2.Location  = [System.Drawing.Point]::new($bX, $y)
-    $btn2.Size      = [System.Drawing.Size]::new($bW, $bH)
-    $btn2.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
-    $btn2.FlatAppearance.BorderSize = 0
-    $btn2.BackColor = $clrAccent
-    $btn2.ForeColor = [System.Drawing.Color]::White
-    $btn2.Cursor    = [System.Windows.Forms.Cursors]::Hand
-    $btn2.Add_Click({
-        Write-Log "Remove Domain clicked  path=$script2"
-        if (-not (Test-Path $script2)) {
-            [System.Windows.Forms.MessageBox]::Show("Script not found:`n$script2", 'Not Found', 'OK', 'Warning') | Out-Null; return
-        }
-        try   { [FlyConsole.NativeMethods]::AllowSetForegroundWindow(-1) | Out-Null } catch {}
-        try {
-            Start-HiddenProcess 'pwsh.exe' "-NoProfile -ExecutionPolicy Bypass -File `"$script2`""
-            Write-Log 'Remove Domain launched'
-        } catch {
-            Write-Log "Remove Domain launch FAILED: $_" 'ERROR'
-            [System.Windows.Forms.MessageBox]::Show("Failed to launch:`n$_", 'Launch Error', 'OK', 'Error') | Out-Null
-        }
-    }.GetNewClosure())
-    $dlg.Controls.Add($btn2)
-    $y += $bH + 6
-
-    $sub2 = New-Object System.Windows.Forms.Label
-    $sub2.Text      = 'Remove a verified domain and all associated M365 objects'
-    $sub2.Font      = New-Object System.Drawing.Font('Segoe UI', 8.5)
-    $sub2.ForeColor = $clrMuted
-    $sub2.Location  = [System.Drawing.Point]::new($bX + 4, $y)
-    $sub2.AutoSize  = $true
-    $dlg.Controls.Add($sub2)
-    $y += 26
-
     # ── Update On-Premise UPNs ────────────────────────────────────────────────
     $domScript3 = Join-Path $PSScriptRoot 'Update-OnPremUPN.ps1'
     $domBtn3 = New-Object System.Windows.Forms.Button
@@ -472,6 +434,44 @@ function Show-DomainRemovalSubMenu {
     $domSub3c.Location  = [System.Drawing.Point]::new($bX + 4, $y)
     $domSub3c.AutoSize  = $true
     $dlg.Controls.Add($domSub3c)
+    $y += 26
+
+    # ── Remove Domain ─────────────────────────────────────────────────────────
+    $script2 = Join-Path $PSScriptRoot 'remove-domain.ps1'
+    $btn2 = New-Object System.Windows.Forms.Button
+    $btn2.Text      = 'Remove Domain'
+    $btn2.Font      = New-Object System.Drawing.Font('Segoe UI Semibold', 14)
+    $btn2.Location  = [System.Drawing.Point]::new($bX, $y)
+    $btn2.Size      = [System.Drawing.Size]::new($bW, $bH)
+    $btn2.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
+    $btn2.FlatAppearance.BorderSize = 0
+    $btn2.BackColor = $clrAccent
+    $btn2.ForeColor = [System.Drawing.Color]::White
+    $btn2.Cursor    = [System.Windows.Forms.Cursors]::Hand
+    $btn2.Add_Click({
+        Write-Log "Remove Domain clicked  path=$script2"
+        if (-not (Test-Path $script2)) {
+            [System.Windows.Forms.MessageBox]::Show("Script not found:`n$script2", 'Not Found', 'OK', 'Warning') | Out-Null; return
+        }
+        try   { [FlyConsole.NativeMethods]::AllowSetForegroundWindow(-1) | Out-Null } catch {}
+        try {
+            Start-HiddenProcess 'pwsh.exe' "-NoProfile -ExecutionPolicy Bypass -File `"$script2`""
+            Write-Log 'Remove Domain launched'
+        } catch {
+            Write-Log "Remove Domain launch FAILED: $_" 'ERROR'
+            [System.Windows.Forms.MessageBox]::Show("Failed to launch:`n$_", 'Launch Error', 'OK', 'Error') | Out-Null
+        }
+    }.GetNewClosure())
+    $dlg.Controls.Add($btn2)
+    $y += $bH + 6
+
+    $sub2 = New-Object System.Windows.Forms.Label
+    $sub2.Text      = 'Remove a verified domain and all associated M365 objects'
+    $sub2.Font      = New-Object System.Drawing.Font('Segoe UI', 8.5)
+    $sub2.ForeColor = $clrMuted
+    $sub2.Location  = [System.Drawing.Point]::new($bX + 4, $y)
+    $sub2.AutoSize  = $true
+    $dlg.Controls.Add($sub2)
     $y += 26
 
     # ── Hide from Address Book ────────────────────────────────────────────────
