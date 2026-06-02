@@ -13,19 +13,19 @@ winget install Git.Git
 
 # Clone the repository
 cd C:\Scripts
-git clone https://github.com/MoriteUK/AvepointFlyUtility.git VGMigrations
-cd VGMigrations
+git clone https://github.com/MoriteUK/AvepointFlyUtility.git MigrationToolkit
+cd MigrationToolkit
 ```
 
 **Option B: Download ZIP from GitHub**
 1. Go to https://github.com/MoriteUK/AvepointFlyUtility
 2. Click "Code" → "Download ZIP"
-3. Extract to `C:\Scripts\VGMigrations\`
+3. Extract to `C:\Scripts\MigrationToolkit\`
 
 **Option C: Copy from existing installation**
-Copy the entire `VGMigrations` folder to your server:
+Copy the entire `MigrationToolkit` folder to your server:
 ```
-C:\Scripts\VGMigrations\
+C:\Scripts\MigrationToolkit\
 ```
 
 ### 2. Set Up Fly API Configuration
@@ -129,10 +129,10 @@ See [AUTO-UPDATE-SYSTEM.md](AUTO-UPDATE-SYSTEM.md) for details.
 | File | Purpose | Location |
 |------|---------|----------|
 | `config.json` | Fly API credentials | `%APPDATA%\FlyMigration\config.json` |
-| `domains.json` | Domain mappings | `VGMigrations\domains.json` |
-| `workloads.json` | Workload settings | `VGMigrations\workloads.json` |
-| `shared-config.json` | Customer info | `VGMigrations\shared-config.json` |
-| `version.json` | Current version | `VGMigrations\version.json` |
+| `domains.json` | Domain mappings | `MigrationToolkit\domains.json` |
+| `workloads.json` | Workload settings | `MigrationToolkit\workloads.json` |
+| `shared-config.json` | Customer info | `MigrationToolkit\shared-config.json` |
+| `version.json` | Current version | `MigrationToolkit\version.json` |
 
 ## Troubleshooting
 

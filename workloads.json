@@ -2,37 +2,31 @@
   "SharePoint": {
     "Policy": "",
     "Source": "",
-    "Destination": "",
-    "ProjectSuffix": "SharePoint"
+    "Destination": ""
   },
   "Exchange": {
     "Policy": "",
     "Source": "",
-    "Destination": "",
-    "ProjectSuffix": "Exchange"
+    "Destination": ""
   },
   "OneDrive": {
     "Policy": "",
     "Source": "",
-    "Destination": "",
-    "ProjectSuffix": "OneDrive"
+    "Destination": ""
   },
   "Teams": {
     "Policy": "",
     "Source": "",
-    "Destination": "",
-    "ProjectSuffix": "Teams"
+    "Destination": ""
   },
   "Teams Chat": {
     "Policy": "",
     "Source": "",
-    "Destination": "",
-    "ProjectSuffix": "Teams Chat"
+    "Destination": ""
   },
   "Groups": {
     "Policy": "",
     "Source": "",
-    "Destination": "",
-    "ProjectSuffix": "Groups"
+    "Destination": ""
   }
 }

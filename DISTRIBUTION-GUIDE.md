@@ -24,7 +24,7 @@ You have **two options** for distributing the toolkit to customers:
 2. **Customers clone or download:**
    ```powershell
    # Option A: Clone with git
-   git clone https://github.com/MoriteUK/AvepointFlyUtility.git VGMigrations
+   git clone https://github.com/MoriteUK/AvepointFlyUtility.git MigrationToolkit
    
    # Option B: Download ZIP
    # Download from GitHub → Extract to desired location
@@ -32,7 +32,7 @@ You have **two options** for distributing the toolkit to customers:
 
 3. **Run setup:**
    ```powershell
-   cd VGMigrations
+   cd MigrationToolkit
    .\Setup.ps1
    ```
 
@@ -68,7 +68,7 @@ You have **two options** for distributing the toolkit to customers:
 #### Step 1: Create the Package
 
 ```powershell
-# In your VGMigrations directory
+# In your MigrationToolkit directory
 .\New-Package.ps1
 ```
 
@@ -125,12 +125,12 @@ Prerequisites:
 Installation Steps:
 
 1. Extract MigrationToolkit.zip to:
-   C:\VGMigrations\
+   C:\MigrationToolkit\
 
 2. Right-click PowerShell 7 and "Run as Administrator"
 
 3. Navigate to the folder:
-   cd C:\VGMigrations
+   cd C:\MigrationToolkit
 
 4. Run the setup:
    .\Setup.ps1

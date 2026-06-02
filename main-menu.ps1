@@ -1,5 +1,5 @@
 #Requires -Version 7.0
-# Migration Tools — Top-Level Launcher
+# Migration Toolkit — Top-Level Launcher
 
 # Load WinForms early so we can show error dialogs if lib.ps1 is missing
 Add-Type -AssemblyName System.Windows.Forms -ErrorAction SilentlyContinue
@@ -17,13 +17,7 @@ Write-Log "=== main-menu.ps1 started  PID=$PID  PSVersion=$($PSVersionTable.PSVe
 Write-Log "Script root: $PSScriptRoot"
 
 $_startupError = $null
-try   {
-    . "$PSScriptRoot\lib.ps1"
-    Write-Log 'lib.ps1 loaded OK'
-    # Organize old log files into date-based folders
-    Invoke-LogCleanup
-    Write-Log 'Log cleanup completed'
-}
+try   { . "$PSScriptRoot\lib.ps1";      Write-Log 'lib.ps1 loaded OK' }
 catch { $_startupError = "lib.ps1 failed to load: $($_.Exception.Message)"; Write-Log $_startupError 'ERROR' }
 
 if ($_startupError) {
@@ -339,6 +333,44 @@ function Show-DomainRemovalSubMenu {
     $dlg.Controls.Add($subWorkflow)
     $y += 26
 
+    # ── Remove Domain ─────────────────────────────────────────────────────────
+    $script2 = Join-Path $PSScriptRoot 'remove-domain.ps1'
+    $btn2 = New-Object System.Windows.Forms.Button
+    $btn2.Text      = 'Remove Domain'
+    $btn2.Font      = New-Object System.Drawing.Font('Segoe UI Semibold', 14)
+    $btn2.Location  = [System.Drawing.Point]::new($bX, $y)
+    $btn2.Size      = [System.Drawing.Size]::new($bW, $bH)
+    $btn2.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
+    $btn2.FlatAppearance.BorderSize = 0
+    $btn2.BackColor = $clrAccent
+    $btn2.ForeColor = [System.Drawing.Color]::White
+    $btn2.Cursor    = [System.Windows.Forms.Cursors]::Hand
+    $btn2.Add_Click({
+        Write-Log "Remove Domain clicked  path=$script2"
+        if (-not (Test-Path $script2)) {
+            [System.Windows.Forms.MessageBox]::Show("Script not found:`n$script2", 'Not Found', 'OK', 'Warning') | Out-Null; return
+        }
+        try   { [FlyConsole.NativeMethods]::AllowSetForegroundWindow(-1) | Out-Null } catch {}
+        try {
+            Start-HiddenProcess 'pwsh.exe' "-NoProfile -ExecutionPolicy Bypass -File `"$script2`""
+            Write-Log 'Remove Domain launched'
+        } catch {
+            Write-Log "Remove Domain launch FAILED: $_" 'ERROR'
+            [System.Windows.Forms.MessageBox]::Show("Failed to launch:`n$_", 'Launch Error', 'OK', 'Error') | Out-Null
+        }
+    }.GetNewClosure())
+    $dlg.Controls.Add($btn2)
+    $y += $bH + 6
+
+    $sub2 = New-Object System.Windows.Forms.Label
+    $sub2.Text      = 'Remove a verified domain and all associated M365 objects'
+    $sub2.Font      = New-Object System.Drawing.Font('Segoe UI', 8.5)
+    $sub2.ForeColor = $clrMuted
+    $sub2.Location  = [System.Drawing.Point]::new($bX + 4, $y)
+    $sub2.AutoSize  = $true
+    $dlg.Controls.Add($sub2)
+    $y += 26
+
     # ── Update On-Premise UPNs ────────────────────────────────────────────────
     $domScript3 = Join-Path $PSScriptRoot 'Update-OnPremUPN.ps1'
     $domBtn3 = New-Object System.Windows.Forms.Button
@@ -377,6 +409,44 @@ function Show-DomainRemovalSubMenu {
     $dlg.Controls.Add($domSub3)
     $y += 26
 
+    # ── Update Cloud UPNs ─────────────────────────────────────────────────────
+    $domScript3b = Join-Path $PSScriptRoot 'Update-UPN.ps1'
+    $domBtn3b = New-Object System.Windows.Forms.Button
+    $domBtn3b.Text      = 'Update Cloud UPNs'
+    $domBtn3b.Font      = New-Object System.Drawing.Font('Segoe UI Semibold', 14)
+    $domBtn3b.Location  = [System.Drawing.Point]::new($bX, $y)
+    $domBtn3b.Size      = [System.Drawing.Size]::new($bW, $bH)
+    $domBtn3b.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
+    $domBtn3b.FlatAppearance.BorderSize = 0
+    $domBtn3b.BackColor = $clrAccent
+    $domBtn3b.ForeColor = [System.Drawing.Color]::White
+    $domBtn3b.Cursor    = [System.Windows.Forms.Cursors]::Hand
+    $domBtn3b.Add_Click({
+        Write-Log "Update Cloud UPNs clicked  path=$domScript3b"
+        if (-not (Test-Path $domScript3b)) {
+            [System.Windows.Forms.MessageBox]::Show("Script not found:`n$domScript3b", 'Not Found', 'OK', 'Warning') | Out-Null; return
+        }
+        try { [FlyConsole.NativeMethods]::AllowSetForegroundWindow(-1) | Out-Null } catch {}
+        try {
+            Start-HiddenProcess 'pwsh.exe' "-NoProfile -ExecutionPolicy Bypass -File `"$domScript3b`""
+            Write-Log 'Update Cloud UPNs launched'
+        } catch {
+            Write-Log "Update Cloud UPNs launch FAILED: $_" 'ERROR'
+            [System.Windows.Forms.MessageBox]::Show("Failed to launch:`n$_", 'Launch Error', 'OK', 'Error') | Out-Null
+        }
+    }.GetNewClosure())
+    $dlg.Controls.Add($domBtn3b)
+    $y += $bH + 6
+
+    $domSub3b = New-Object System.Windows.Forms.Label
+    $domSub3b.Text      = 'Change UPN domain suffix for cloud users via Microsoft Graph'
+    $domSub3b.Font      = New-Object System.Drawing.Font('Segoe UI', 8.5)
+    $domSub3b.ForeColor = $clrMuted
+    $domSub3b.Location  = [System.Drawing.Point]::new($bX + 4, $y)
+    $domSub3b.AutoSize  = $true
+    $dlg.Controls.Add($domSub3b)
+    $y += 26
+
     # ── Run AD Sync ───────────────────────────────────────────────────────────
     $domBtn3c = New-Object System.Windows.Forms.Button
     $domBtn3c.Text      = 'Run AD Sync'
@@ -385,7 +455,7 @@ function Show-DomainRemovalSubMenu {
     $domBtn3c.Size      = [System.Drawing.Size]::new($bW, $bH)
     $domBtn3c.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
     $domBtn3c.FlatAppearance.BorderSize = 0
-    $domBtn3c.BackColor = $clrAccent
+    $domBtn3c.BackColor = [System.Drawing.Color]::FromArgb(0, 130, 70)
     $domBtn3c.ForeColor = [System.Drawing.Color]::White
     $domBtn3c.Cursor    = [System.Windows.Forms.Cursors]::Hand
     $domBtn3c.Add_Click({
@@ -434,44 +504,6 @@ function Show-DomainRemovalSubMenu {
     $domSub3c.Location  = [System.Drawing.Point]::new($bX + 4, $y)
     $domSub3c.AutoSize  = $true
     $dlg.Controls.Add($domSub3c)
-    $y += 26
-
-    # ── Remove Domain ─────────────────────────────────────────────────────────
-    $script2 = Join-Path $PSScriptRoot 'remove-domain.ps1'
-    $btn2 = New-Object System.Windows.Forms.Button
-    $btn2.Text      = 'Remove Domain'
-    $btn2.Font      = New-Object System.Drawing.Font('Segoe UI Semibold', 14)
-    $btn2.Location  = [System.Drawing.Point]::new($bX, $y)
-    $btn2.Size      = [System.Drawing.Size]::new($bW, $bH)
-    $btn2.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
-    $btn2.FlatAppearance.BorderSize = 0
-    $btn2.BackColor = $clrAccent
-    $btn2.ForeColor = [System.Drawing.Color]::White
-    $btn2.Cursor    = [System.Windows.Forms.Cursors]::Hand
-    $btn2.Add_Click({
-        Write-Log "Remove Domain clicked  path=$script2"
-        if (-not (Test-Path $script2)) {
-            [System.Windows.Forms.MessageBox]::Show("Script not found:`n$script2", 'Not Found', 'OK', 'Warning') | Out-Null; return
-        }
-        try   { [FlyConsole.NativeMethods]::AllowSetForegroundWindow(-1) | Out-Null } catch {}
-        try {
-            Start-HiddenProcess 'pwsh.exe' "-NoProfile -ExecutionPolicy Bypass -File `"$script2`""
-            Write-Log 'Remove Domain launched'
-        } catch {
-            Write-Log "Remove Domain launch FAILED: $_" 'ERROR'
-            [System.Windows.Forms.MessageBox]::Show("Failed to launch:`n$_", 'Launch Error', 'OK', 'Error') | Out-Null
-        }
-    }.GetNewClosure())
-    $dlg.Controls.Add($btn2)
-    $y += $bH + 6
-
-    $sub2 = New-Object System.Windows.Forms.Label
-    $sub2.Text      = 'Remove a verified domain and all associated M365 objects'
-    $sub2.Font      = New-Object System.Drawing.Font('Segoe UI', 8.5)
-    $sub2.ForeColor = $clrMuted
-    $sub2.Location  = [System.Drawing.Point]::new($bX + 4, $y)
-    $sub2.AutoSize  = $true
-    $dlg.Controls.Add($sub2)
     $y += 26
 
     # ── Hide from Address Book ────────────────────────────────────────────────
@@ -535,7 +567,7 @@ function Show-DomainRemovalSubMenu {
 # ── Main launcher ─────────────────────────────────────────────────────────────
 function Show-Launcher {
     $form = New-Object System.Windows.Forms.Form
-    $form.Text            = 'Migration Tools'
+    $form.Text            = 'Migration Toolkit'
     $form.ClientSize      = [System.Drawing.Size]::new(480, 620)
     $form.StartPosition   = [System.Windows.Forms.FormStartPosition]::CenterScreen
     $form.BackColor       = $clrBg
@@ -553,7 +585,7 @@ function Show-Launcher {
     $form.Controls.Add($hdr)
     $_hdrX = Add-HeaderLogo $hdr 36
     $hdrLbl = New-Object System.Windows.Forms.Label
-    $hdrLbl.Text      = '  Migration Tools'
+    $hdrLbl.Text      = '  Migration Toolkit'
     $hdrLbl.Font      = $FontTitle
     $hdrLbl.ForeColor = [System.Drawing.Color]::White
     $hdrLbl.Location  = [System.Drawing.Point]::new($_hdrX, 0)
@@ -571,121 +603,7 @@ function Show-Launcher {
     else { $btnGear.Text = [char]0x2699; $btnGear.Font = New-Object System.Drawing.Font('Segoe UI', 16); $btnGear.ForeColor = [System.Drawing.Color]::White }
     $hdr.Controls.Add($btnGear)
 
-    # ── Update Notification Banner ───────────────────────────────────────────
-    $updateBanner = $null
-    if ($script:UpdateAvailable) {
-        $updateBanner = New-Object System.Windows.Forms.Panel
-        $updateBanner.Height = 36
-        $updateBanner.Dock = [System.Windows.Forms.DockStyle]::Top
-        $updateBanner.BackColor = [System.Drawing.Color]::FromArgb(255, 243, 205)
-        $form.Controls.Add($updateBanner)
-
-        $lblUpdate = New-Object System.Windows.Forms.Label
-        $lblUpdate.Text = "  Update available: v$($script:UpdateAvailable.Current) → v$($script:UpdateAvailable.Latest)"
-        $lblUpdate.Font = New-Object System.Drawing.Font('Segoe UI Semibold', 10)
-        $lblUpdate.ForeColor = [System.Drawing.Color]::FromArgb(33, 33, 33)
-        $lblUpdate.Location = [System.Drawing.Point]::new(8, 8)
-        $lblUpdate.AutoSize = $true
-        $updateBanner.Controls.Add($lblUpdate)
-
-        $btnInstallUpdate = New-Object System.Windows.Forms.Button
-        $btnInstallUpdate.Text = 'Install Update'
-        $btnInstallUpdate.Size = [System.Drawing.Size]::new(120, 26)
-        $btnInstallUpdate.Location = [System.Drawing.Point]::new(350, 5)
-        $btnInstallUpdate.BackColor = [System.Drawing.Color]::FromArgb(0, 100, 180)
-        $btnInstallUpdate.ForeColor = [System.Drawing.Color]::White
-        $btnInstallUpdate.Font = New-Object System.Drawing.Font('Segoe UI Semibold', 9)
-        $btnInstallUpdate.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
-        $btnInstallUpdate.FlatAppearance.BorderSize = 0
-        $btnInstallUpdate.Cursor = [System.Windows.Forms.Cursors]::Hand
-        $btnInstallUpdate.Add_Click({
-            $checkUpdatesScript = Join-Path $PSScriptRoot 'Check-Updates.ps1'
-            if (Test-Path $checkUpdatesScript) {
-                # Disable button and show progress
-                $btnInstallUpdate.Enabled = $false
-                $originalText = $btnInstallUpdate.Text
-                $btnInstallUpdate.Text = 'Downloading...'
-                $lblUpdate.Text = "  Installing update - please wait..."
-                [System.Windows.Forms.Application]::DoEvents()
-
-                try {
-                    # Run update in background job so we can show progress
-                    $updateJob = Start-Job -ScriptBlock {
-                        param($ScriptPath)
-                        & $ScriptPath -Force 2>&1 | Out-String
-                    } -ArgumentList $checkUpdatesScript
-
-                    # Show progress updates
-                    $elapsed = 0
-                    $dots = ""
-                    while ($updateJob.State -eq 'Running' -and $elapsed -lt 60000) {
-                        Start-Sleep -Milliseconds 500
-                        $elapsed += 500
-
-                        # Animated progress
-                        if ($elapsed -lt 5000) {
-                            $btnInstallUpdate.Text = "Downloading$dots"
-                        } elseif ($elapsed -lt 10000) {
-                            $btnInstallUpdate.Text = "Extracting$dots"
-                        } else {
-                            $btnInstallUpdate.Text = "Installing$dots"
-                        }
-
-                        $dots = if ($dots.Length -ge 3) { "" } else { $dots + "." }
-                        [System.Windows.Forms.Application]::DoEvents()
-                    }
-
-                    # Get result
-                    if ($updateJob.State -eq 'Completed') {
-                        $result = Receive-Job $updateJob
-                        Remove-Job $updateJob -Force
-
-                        # Check if update succeeded
-                        if ($result -match 'Update installed successfully|Updated to version') {
-                            $btnInstallUpdate.Text = '✓ Complete'
-                            $btnInstallUpdate.BackColor = [System.Drawing.Color]::FromArgb(0, 130, 70)
-                            $lblUpdate.Text = "  Update installed successfully!"
-                            [System.Windows.Forms.Application]::DoEvents()
-                            Start-Sleep -Milliseconds 500
-
-                            [System.Windows.Forms.MessageBox]::Show(
-                                "Update complete! Please restart the application.",
-                                'Update Complete',
-                                'OK',
-                                'Information'
-                            ) | Out-Null
-                            $form.Close()
-                        } else {
-                            throw "Update process did not complete successfully"
-                        }
-                    } else {
-                        Remove-Job $updateJob -Force -ErrorAction SilentlyContinue
-                        throw "Update timed out or failed"
-                    }
-                } catch {
-                    $btnInstallUpdate.Text = '✗ Failed'
-                    $btnInstallUpdate.BackColor = [System.Drawing.Color]::FromArgb(195, 30, 30)
-                    $lblUpdate.Text = "  Update failed - see error below"
-                    [System.Windows.Forms.Application]::DoEvents()
-
-                    [System.Windows.Forms.MessageBox]::Show(
-                        "Update failed: $_",
-                        'Update Error',
-                        'OK',
-                        'Error'
-                    ) | Out-Null
-
-                    # Reset button
-                    $btnInstallUpdate.Enabled = $true
-                    $btnInstallUpdate.Text = $originalText
-                    $btnInstallUpdate.BackColor = [System.Drawing.Color]::FromArgb(0, 100, 180)
-                }
-            }
-        }.GetNewClosure())
-        $updateBanner.Controls.Add($btnInstallUpdate)
-    }
-
-    $bW = 400; $bH = 90; $bX = 40; $y = if ($updateBanner) { 118 } else { 82 }
+    $bW = 400; $bH = 90; $bX = 40; $y = 82
 
     # ── Discovery tile ────────────────────────────────────────────────────────
     $btnDisc = New-Object System.Windows.Forms.Button
@@ -840,62 +758,14 @@ $CheckUpdatesScript = Join-Path $PSScriptRoot 'Check-Updates.ps1'
 if (Test-Path $CheckUpdatesScript) {
     try {
         Write-Log 'Checking for updates...'
-        # Run update check in background
-        $updateJob = Start-Job -ScriptBlock {
+        # Run update check silently in background (won't block startup)
+        $null = Start-Job -ScriptBlock {
             param($ScriptPath)
-            try {
-                # Check without prompting
-                $scriptDir = Split-Path $ScriptPath
-                $localVersionPath = Join-Path $scriptDir 'version.json'
-
-                if (-not (Test-Path $localVersionPath)) {
-                    return @{ Available = $false; Error = 'Local version.json not found' }
-                }
-
-                $localVer = (Get-Content $localVersionPath -Raw | ConvertFrom-Json).version
-
-                try {
-                    $remoteJson = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/MoriteUK/AvepointFlyUtility/main/version.json?t=$([DateTimeOffset]::UtcNow.ToUnixTimeSeconds())" -ErrorAction Stop
-                    $remoteVer = $remoteJson.version
-
-                    if ([Version]$remoteVer -gt [Version]$localVer) {
-                        return @{ Available = $true; Current = $localVer; Latest = $remoteVer }
-                    } else {
-                        return @{ Available = $false; Current = $localVer; Latest = $remoteVer }
-                    }
-                } catch {
-                    return @{ Available = $false; Error = "Failed to check remote version: $($_.Exception.Message)" }
-                }
-            } catch {
-                return @{ Available = $false; Error = "Update check error: $($_.Exception.Message)" }
-            }
+            & $ScriptPath -Silent
         } -ArgumentList $CheckUpdatesScript
 
-        # Wait for update check to complete (with timeout)
-        $timeout = 5000  # 5 seconds
-        $elapsed = 0
-        $checkInterval = 100
-        while ($updateJob.State -eq 'Running' -and $elapsed -lt $timeout) {
-            Start-Sleep -Milliseconds $checkInterval
-            $elapsed += $checkInterval
-        }
-
-        if ($updateJob.State -eq 'Completed') {
-            $result = Receive-Job $updateJob
-            if ($result -and $result.Available) {
-                Write-Log "Update available: $($result.Current) -> $($result.Latest)" 'OK'
-                # Show notification in main window after it loads
-                $script:UpdateAvailable = $result
-            } elseif ($result.Error) {
-                Write-Log "Update check error: $($result.Error)" 'WARN'
-            } else {
-                Write-Log "Already up to date (v$($result.Current))"
-            }
-        } else {
-            Write-Log 'Update check timed out or failed' 'WARN'
-        }
-
-        Remove-Job $updateJob -Force -ErrorAction SilentlyContinue
+        # Don't wait for update check - let it run in background
+        Write-Log 'Update check started in background'
     } catch {
         Write-Log "Update check failed to start: $($_.Exception.Message)" 'WARN'
     }

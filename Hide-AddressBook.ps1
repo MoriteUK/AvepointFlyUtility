@@ -309,6 +309,7 @@ function Show-HideAddressBookUI {
     $script:rdRunspace = $null
     $script:rdPS       = $null
     $script:RowCounts  = @(0, 0, 0, 0, 0)
+    $RowCounts = $script:RowCounts
 
     # ── Selection status and account list ─────────────────────────────────────
     $script:AllAccounts = [System.Collections.Generic.List[pscustomobject]]::new()
@@ -317,9 +318,7 @@ function Show-HideAddressBookUI {
         $cnt = $clbSections.CheckedItems.Count
         $selItems = 0
         for ($i = 0; $i -lt $clbSections.Items.Count; $i++) {
-            if ($clbSections.GetItemChecked($i) -and $script:RowCounts[$i]) {
-                $selItems += $script:RowCounts[$i]
-            }
+            if ($clbSections.GetItemChecked($i)) { $selItems += $RowCounts[$i] }
         }
         $lblSelStatus.Text = "$cnt section(s) selected  ($selItems items)"
 
@@ -402,7 +401,7 @@ function Show-HideAddressBookUI {
             } else {
                 Write-Log "  $($sec.CsvName): not found"
             }
-            $script:RowCounts[$i] = $cnt
+            $RowCounts[$i] = $cnt
             $clbSections.Items[$i] = if ($cnt -gt 0) {
                 "{0,-38} ({1} items)" -f $sec.Label, $cnt
             } elseif (Test-Path $path) {
@@ -444,10 +443,8 @@ function Show-HideAddressBookUI {
         for ($i = 0; $i -lt $clbSections.Items.Count; $i++) {
             if ($clbSections.GetItemChecked($i)) {
                 $selectedCsvs.Add($secDefsRun[$i].CsvName)
-                if ($script:RowCounts[$i]) {
-                    $totalItems += $script:RowCounts[$i]
-                }
-                Write-Log "  Selected: $($secDefsRun[$i].CsvName)  ($($script:RowCounts[$i]) item(s))"
+                $totalItems += $RowCounts[$i]
+                Write-Log "  Selected: $($secDefsRun[$i].CsvName)  ($($RowCounts[$i]) item(s))"
             }
         }
         if ($selectedCsvs.Count -eq 0) {

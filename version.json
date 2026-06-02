@@ -1,110 +1,15 @@
 {
-  "version": "2.1.13",
+  "version": "2.1.4",
   "releaseDate": "2026-06-02",
   "changelog": [
-    {
-      "version": "2.1.13",
-      "date": "2026-06-02",
-      "changes": [
-        "Added update progress indicator to Install Update button",
-        "Button shows: 'Downloading...' → 'Extracting...' → 'Installing...'",
-        "Animated dots show activity during update",
-        "Success shows green '✓ Complete' before restart",
-        "Failure shows red '✗ Failed' with error message",
-        "Banner label updates to show current status"
-      ]
-    },
-    {
-      "version": "2.1.12",
-      "date": "2026-06-02",
-      "changes": [
-        "Rebranded: Changed 'VG Migration Tools' to 'Migration Tools'",
-        "Updated all UI elements, documentation, and scripts",
-        "Restored packaging scripts for customer distribution",
-        "Added DISTRIBUTION-GUIDE.md with hybrid deployment model"
-      ]
-    },
-    {
-      "version": "2.1.11",
-      "date": "2026-06-02",
-      "changes": [
-        "FIXED: Added missing update notification banner to main menu",
-        "Update check now shows yellow banner when updates are available",
-        "Added 'Install Update' button in notification banner",
-        "Update check waits for completion instead of running silently in background",
-        "Auto-update notification was completely missing - now restored"
-      ]
-    },
-    {
-      "version": "2.1.10",
-      "date": "2026-06-02",
-      "changes": [
-        "Moved 'Remove Domain' button below 'Run AD Sync' in Domain Removal menu",
-        "Better logical flow: Update UPNs → Sync → Remove Domain → Hide Addresses",
-        "Added Test-AutoUpdate.ps1 diagnostic script for troubleshooting auto-update issues"
-      ]
-    },
-    {
-      "version": "2.1.9",
-      "date": "2026-06-02",
-      "changes": [
-        "Fixed null array exception in Hide from Address Book when selecting sections",
-        "Changed $RowCounts to $script:RowCounts for proper scope access",
-        "Added null checks when accessing array elements",
-        "Error: 'Cannot index into a null array' - RESOLVED"
-      ]
-    },
-    {
-      "version": "2.1.8",
-      "date": "2026-06-02",
-      "changes": [
-        "Added current version display in Settings > Config tab",
-        "Shows 'Current version: X.X.X' above Check for Updates button",
-        "Update status now shows version numbers (e.g., '2.1.7 → 2.1.8')",
-        "Version label updates after successful installation"
-      ]
-    },
-    {
-      "version": "2.1.7",
-      "date": "2026-06-02",
-      "changes": [
-        "Added automatic log file organization system",
-        "Logs folder now auto-organizes old files into 'Old/YYYY-MM-DD' subfolders",
-        "Only today's logs remain in the root logs folder",
-        "Runs automatically on toolkit startup",
-        "Handles both log files (.log, .html, .png) and log subdirectories"
-      ]
-    },
-    {
-      "version": "2.1.6",
-      "date": "2026-06-02",
-      "changes": [
-        "Fixed GitHub CDN caching issue - added cache-busting to version check",
-        "Changed Run AD Sync button color from green to blue (matches other buttons)",
-        "Update check now bypasses GitHub CDN cache with timestamp parameter"
-      ]
-    },
-    {
-      "version": "2.1.5",
-      "date": "2026-06-02",
-      "changes": [
-        "Removed 'Update Cloud UPNs' button from Domain Removal menu",
-        "Removed obsolete packaging scripts (New-Package.ps1, Build-Exe.ps1, Deploy-ToServer.ps1)",
-        "Updated SERVER-DEPLOYMENT.md for GitHub-first deployment approach",
-        "Added AUTO-UPDATE-SYSTEM.md documentation"
-      ]
-    },
     {
       "version": "2.1.4",
       "date": "2026-06-02",
       "changes": [
-        "Fixed auto-update preserving Fly API credentials (ClientSecret)",
-        "Auto-update now backs up APPDATA and LOCALAPPDATA config files",
-        "Fixed update notification not showing in main menu",
-        "Update check now waits 5 seconds instead of 500ms",
-        "Fixed SECRET EXPIRY field layout in Settings (now on same row as CLIENT SECRET)",
-        "Fixed Customer grid issue where AccountName corrupted cell display",
-        "Replaced DataTable ColumnChanged with CellEndEdit event handler"
+        "Rebranded from 'VG Migration Tools' to 'Migration Toolkit'",
+        "Updated all UI elements to use new branding",
+        "Updated documentation to reflect new product name",
+        "Added visual progress feedback during update installation"
       ]
     },
     {

@@ -4,7 +4,7 @@
     Deploy-ToServer.ps1 - Prepare configuration files for server deployment
 
 .DESCRIPTION
-    Copies essential configuration files from AppData to the VGMigrations folder
+    Copies essential configuration files from AppData to the MigrationToolkit folder
     for easy transfer to the server.
 
 .EXAMPLE
@@ -73,7 +73,7 @@ Write-Host ""
 Write-Host "Deployment package ready!" -ForegroundColor Green
 Write-Host ""
 Write-Host "Next steps:" -ForegroundColor Cyan
-Write-Host "  1. Copy the entire VGMigrations folder to your server" -ForegroundColor White
+Write-Host "  1. Copy the entire MigrationToolkit folder to your server" -ForegroundColor White
 Write-Host "  2. On the server, run this to install Fly API config:" -ForegroundColor White
 Write-Host ""
 Write-Host '     $destFolder = "$env:APPDATA\FlyMigration"' -ForegroundColor Gray

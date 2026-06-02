@@ -4,7 +4,7 @@
     Check-Updates.ps1 - Check for and install updates from GitHub
 
 .DESCRIPTION
-    Checks the GitHub repository for updates to the Migration Tools.
+    Checks the GitHub repository for updates to the Migration Toolkit.
     If updates are available, downloads and installs them automatically.
     Preserves user configuration files.
 
@@ -21,8 +21,7 @@
 param(
     [string]$GitHubRepo = "MoriteUK/AvepointFlyUtility",
     [switch]$Silent,
-    [switch]$Force,
-    [int]$CheckIntervalHours = 0  # 0 = check every time, 24 = daily, 168 = weekly
+    [switch]$Force
 )
 
 $ErrorActionPreference = 'Stop'
@@ -76,15 +75,15 @@ function Set-UpdateCache {
     $Data | ConvertTo-Json -Depth 10 | Set-Content $UpdateCachePath -Encoding UTF8
 }
 
-# Check if we recently checked for updates (based on CheckIntervalHours)
-if (-not $Force -and $CheckIntervalHours -gt 0) {
+# Check if we recently checked for updates (within last 24 hours)
+if (-not $Force) {
     $cache = Get-UpdateCache
     if ($cache -and $cache.LastCheck) {
         $lastCheck = [DateTime]::Parse($cache.LastCheck)
         $hoursSinceCheck = ([DateTime]::Now - $lastCheck).TotalHours
 
-        if ($hoursSinceCheck -lt $CheckIntervalHours) {
-            Write-UpdateLog "Last update check was $([Math]::Round($hoursSinceCheck, 1)) hours ago. Skipping check (interval: $CheckIntervalHours hours, use -Force to override)"
+        if ($hoursSinceCheck -lt 24) {
+            Write-UpdateLog "Last update check was $([Math]::Round($hoursSinceCheck, 1)) hours ago. Skipping check (use -Force to override)"
             return
         }
     }
@@ -107,9 +106,8 @@ Write-UpdateLog "Current version: $LocalVersion"
 Write-UpdateLog "Checking GitHub for updates..."
 
 try {
-    # Get latest version.json from GitHub (with cache-busting to avoid CDN stale cache)
-    $timestamp = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
-    $GitHubVersionUrl = "https://raw.githubusercontent.com/$GitHubRepo/main/version.json?t=$timestamp"
+    # Get latest version.json from GitHub
+    $GitHubVersionUrl = "https://raw.githubusercontent.com/$GitHubRepo/main/version.json"
     $RemoteVersionJson = Invoke-RestMethod -Uri $GitHubVersionUrl -ErrorAction Stop
     $RemoteVersion = $RemoteVersionJson.version
 
@@ -178,7 +176,7 @@ Write-UpdateLog "Downloading update from GitHub..."
 
 try {
     # Create temp directory for download
-    $TempDir = Join-Path $env:TEMP "VGMigrations-Update-$(Get-Date -Format 'yyyyMMddHHmmss')"
+    $TempDir = Join-Path $env:TEMP "MigrationToolkit-Update-$(Get-Date -Format 'yyyyMMddHHmmss')"
     New-Item -ItemType Directory -Path $TempDir -Force | Out-Null
 
     # Download ZIP from GitHub
@@ -297,7 +295,7 @@ try {
         Write-Host "`n╔═══════════════════════════════════════════╗" -ForegroundColor Green
         Write-Host "║    UPDATE COMPLETE                        ║" -ForegroundColor Green
         Write-Host "╚═══════════════════════════════════════════╝" -ForegroundColor Green
-        Write-Host "`nThe Migration Tools have been updated to version $RemoteVersion" -ForegroundColor Green
+        Write-Host "`nThe Migration Toolkit have been updated to version $RemoteVersion" -ForegroundColor Green
         Write-Host "Your configuration files have been preserved.`n" -ForegroundColor Gray
         Write-Host "Backup location: $BackupDir`n" -ForegroundColor Gray
     }

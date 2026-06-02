@@ -1,6 +1,5 @@
 # Logs
 logs/
-!logs/Old/
 *.log
 
 # Reports
@@ -11,10 +10,9 @@ auth/storageState.json
 .env
 .env.local
 
-# Build outputs (obsolete - now using GitHub auto-update)
+# Build outputs
 *.exe
-*.zip
-fly-config.json
+!MigrationTools.exe
 
 # Configuration (user-specific)
 domains.json
@@ -44,4 +42,3 @@ node_modules/
 # Old/backup files
 *-old.*
 *.bak
-backup-*/

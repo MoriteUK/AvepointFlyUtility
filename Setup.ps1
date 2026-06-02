@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    One-time setup for the Migration Toolkit.
+    One-time setup for the Fly Migration Toolkit.
 
     Checks for Node.js, installs it from nodejs.org if missing, then runs
     'npm install' and 'npx playwright install chromium' in this folder.
