@@ -224,8 +224,14 @@ function Show-DiscoveryMenu {
     }
 
     function MkSep { param([int]$Y)
-        # Modern separator - just adds spacing, no visible line needed
-        return $Y
+        # Modern separator - invisible spacer panel
+        $p = New-Object System.Windows.Forms.Panel
+        $p.Location = [System.Drawing.Point]::new($lx,$Y)
+        $p.Size = [System.Drawing.Size]::new($rw,1)
+        $p.BackColor = $clrBg
+        $p.Visible = $false  # Invisible, just for spacing
+        $form.Controls.Add($p)
+        return $p
     }
 
     # ── Scan Scope Card ───────────────────────────────────────────────────────
