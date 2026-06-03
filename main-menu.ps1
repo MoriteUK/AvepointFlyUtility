@@ -636,27 +636,27 @@ function Show-Launcher {
             $pen.Dispose()
             $path.Dispose()
         }.GetNewClosure())
+        $lblLabel = New-Object System.Windows.Forms.Label
+        $lblLabel.Text = $Label.ToUpper()
+        $lblLabel.Location = [System.Drawing.Point]::new(16, 16)
+        $lblLabel.Size = [System.Drawing.Size]::new($W - 32, 18)
+        $lblLabel.Font = New-Object System.Drawing.Font('Segoe UI Semibold', 8.5)
+        $lblLabel.ForeColor = $clrText
+        $card.Controls.Add($lblLabel)
         $lblValue = New-Object System.Windows.Forms.Label
         $lblValue.Text = $Value
-        $lblValue.Location = [System.Drawing.Point]::new(16, 16)
+        $lblValue.Location = [System.Drawing.Point]::new(16, 36)
         $lblValue.AutoSize = $true
         $lblValue.Font = New-Object System.Drawing.Font('Segoe UI Light', 28)
         $lblValue.ForeColor = $clrText
         $card.Controls.Add($lblValue)
-        $lblLabel = New-Object System.Windows.Forms.Label
-        $lblLabel.Text = $Label
-        $lblLabel.Location = [System.Drawing.Point]::new(16, 60)
-        $lblLabel.Size = [System.Drawing.Size]::new($W - 32, 20)
-        $lblLabel.Font = New-Object System.Drawing.Font('Segoe UI', 9)
-        $lblLabel.ForeColor = $clrMuted
-        $card.Controls.Add($lblLabel)
         if ($Status) {
             $lblStatus = New-Object System.Windows.Forms.Label
             $lblStatus.Text = $Status
-            $lblStatus.Location = [System.Drawing.Point]::new(16, 84)
+            $lblStatus.Location = [System.Drawing.Point]::new(16, 80)
             $lblStatus.AutoSize = $true
             $lblStatus.Font = New-Object System.Drawing.Font('Segoe UI Semibold', 8)
-            $lblStatus.ForeColor = [System.Drawing.Color]::FromArgb(16, 124, 16)
+            $lblStatus.ForeColor = $clrMuted
             $card.Controls.Add($lblStatus)
         }
         $form.Controls.Add($card)
