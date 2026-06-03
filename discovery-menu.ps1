@@ -131,9 +131,9 @@ function Show-DiscoveryMenu {
     }
 
     $form = New-Object System.Windows.Forms.Form
-    $form.Text            = 'M365 Discovery Launcher'
-    $form.ClientSize      = [System.Drawing.Size]::new(540, 900)
-    $form.MinimumSize     = [System.Drawing.Size]::new(540, 700)
+    $form.Text            = 'M365 Discovery'
+    $form.ClientSize      = [System.Drawing.Size]::new(700, 900)
+    $form.MinimumSize     = [System.Drawing.Size]::new(700, 700)
     $form.StartPosition   = [System.Windows.Forms.FormStartPosition]::CenterScreen
     $form.BackColor       = $clrBg
     $form.Font            = $FontBody
@@ -144,15 +144,15 @@ function Show-DiscoveryMenu {
 
     # ── Header ────────────────────────────────────────────────────────────────
     $hdr = New-Object System.Windows.Forms.Panel
-    $hdr.Size = [System.Drawing.Size]::new(540, 56); $hdr.Dock = [System.Windows.Forms.DockStyle]::Top
+    $hdr.Size = [System.Drawing.Size]::new(700, 72); $hdr.Dock = [System.Windows.Forms.DockStyle]::Top
     $hdr.BackColor = $clrAccent
     $form.Controls.Add($hdr)
-    $_hdrX = Add-HeaderLogo $hdr 36
+    $_hdrX = Add-HeaderLogo $hdr 44
     $hdrLbl = New-Object System.Windows.Forms.Label
-    $hdrLbl.Text = '  M365 Discovery'; $hdrLbl.Font = $FontTitle
+    $hdrLbl.Text = '  📊 M365 Discovery'; $hdrLbl.Font = New-Object System.Drawing.Font('Segoe UI Semibold', 16)
     $hdrLbl.ForeColor = [System.Drawing.Color]::White
     $hdrLbl.Location  = [System.Drawing.Point]::new($_hdrX, 0)
-    $hdrLbl.Size      = [System.Drawing.Size]::new(440, 56)
+    $hdrLbl.Size      = [System.Drawing.Size]::new(600, 72)
     $hdrLbl.TextAlign = [System.Drawing.ContentAlignment]::MiddleLeft
     $hdr.Controls.Add($hdrLbl)
 
@@ -160,106 +160,150 @@ function Show-DiscoveryMenu {
     $btnGear.BackColor = $clrAccent; $btnGear.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
     $btnGear.FlatAppearance.BorderSize = 0
     $btnGear.FlatAppearance.MouseOverBackColor = $clrAccentHover
-    $btnGear.Size = [System.Drawing.Size]::new(38, 38); $btnGear.Location = [System.Drawing.Point]::new(494, 9)
+    $btnGear.Size = [System.Drawing.Size]::new(42, 42); $btnGear.Location = [System.Drawing.Point]::new(648, 15)
     $btnGear.Cursor = [System.Windows.Forms.Cursors]::Hand
     $btnGear.Add_Click({ if (Get-Command Show-SettingsDialog -ErrorAction SilentlyContinue) { Show-SettingsDialog } })
     if ($script:GearBitmap) { $btnGear.Image = $script:GearBitmap; $btnGear.ImageAlign = [System.Drawing.ContentAlignment]::MiddleCenter }
-    else { $btnGear.Text = [char]0x2699; $btnGear.Font = New-Object System.Drawing.Font('Segoe UI', 16); $btnGear.ForeColor = [System.Drawing.Color]::White }
+    else { $btnGear.Text = [char]0x2699; $btnGear.Font = New-Object System.Drawing.Font('Segoe UI Symbol', 20); $btnGear.ForeColor = [System.Drawing.Color]::White }
     $hdr.Controls.Add($btnGear)
 
     # ── Footer ────────────────────────────────────────────────────────────────
     $footer = New-Object System.Windows.Forms.Panel
-    $footer.Height = 46; $footer.Dock = [System.Windows.Forms.DockStyle]::Bottom
-    $footer.BackColor = $clrFooter
+    $footer.Height = 64; $footer.Dock = [System.Windows.Forms.DockStyle]::Bottom
+    $footer.BackColor = [System.Drawing.Color]::FromArgb(248, 249, 251)
     $form.Controls.Add($footer)
+
     $btnClose = New-Object System.Windows.Forms.Button
-    $btnClose.Text = 'Close'; $btnClose.Size = [System.Drawing.Size]::new(90, 30)
-    $btnClose.Location = [System.Drawing.Point]::new(444, 8)
-    $btnClose.BackColor = $clrCloseRed
-    $btnClose.ForeColor = [System.Drawing.Color]::White; $btnClose.Font = $FontBold
-    $btnClose.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat; $btnClose.FlatAppearance.BorderSize = 0
+    $btnClose.Text = 'Close'; $btnClose.Size = [System.Drawing.Size]::new(100, 36)
+    $btnClose.Location = [System.Drawing.Point]::new(584, 14)
+    $btnClose.BackColor = [System.Drawing.Color]::FromArgb(240, 242, 247)
+    $btnClose.ForeColor = $clrText; $btnClose.Font = $FontBold
+    $btnClose.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
+    $btnClose.FlatAppearance.BorderColor = $clrBorder
+    $btnClose.FlatAppearance.BorderSize = 1
+    $btnClose.FlatAppearance.MouseOverBackColor = [System.Drawing.Color]::FromArgb(230, 232, 237)
     $btnClose.Cursor = [System.Windows.Forms.Cursors]::Hand; $btnClose.Add_Click({ $form.Close() })
     $footer.Controls.Add($btnClose)
-    $footer.Add_SizeChanged({ $btnClose.Left = $footer.Width - 100 }.GetNewClosure())
+    $footer.Add_SizeChanged({ $btnClose.Left = $footer.Width - 116 }.GetNewClosure())
 
-    # ── Helpers ───────────────────────────────────────────────────────────────
-    $lx = 20; $rw = 500; $y = 72
+    # ── Helpers for modern card-based layout ─────────────────────────────────
+    $lx = 32; $rw = 636; $y = 96  # More generous margins
+
+    # Create a card panel (white background, subtle border)
+    function MkCard { param([int]$X,[int]$Y,[int]$W,[int]$H)
+        $card = New-Object System.Windows.Forms.Panel
+        $card.Location = [System.Drawing.Point]::new($X,$Y)
+        $card.Size = [System.Drawing.Size]::new($W,$H)
+        $card.BackColor = [System.Drawing.Color]::White
+        $card.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
+        $form.Controls.Add($card)
+        return $card
+    }
 
     function MkLabel { param([string]$Text,[int]$X,[int]$Y,[bool]$Bold=$false)
         $l = New-Object System.Windows.Forms.Label
         $l.Text = $Text; $l.Location = [System.Drawing.Point]::new($X,$Y); $l.AutoSize = $true
         $l.ForeColor = $clrText; if ($Bold) { $l.Font = $FontBold }
         $form.Controls.Add($l); return $l }
+
     function MkCheck { param([string]$Text,[int]$X,[int]$Y,[bool]$Chk=$false)
         $c = New-Object System.Windows.Forms.CheckBox
         $c.Text = $Text; $c.Location = [System.Drawing.Point]::new($X,$Y); $c.AutoSize = $true
         $c.ForeColor = $clrText; $c.Checked = $Chk
         $form.Controls.Add($c); return $c }
-    function MkSep { param([int]$Y)
-        $p = New-Object System.Windows.Forms.Panel
-        $p.Location = [System.Drawing.Point]::new($lx,$Y); $p.Size = [System.Drawing.Size]::new($rw,1)
-        $p.BackColor = [System.Drawing.Color]::FromArgb(50,60,85); $form.Controls.Add($p); return $p }
 
-    # ── Scan scope radios ─────────────────────────────────────────────────────
-    $null = MkLabel 'Scan scope:' $lx ($y+2) $true
-    $radSingle = New-Object System.Windows.Forms.RadioButton
-    $radSingle.Text = 'Single domain'; $radSingle.Location = [System.Drawing.Point]::new(110,$y)
-    $radSingle.AutoSize = $true; $radSingle.ForeColor = $clrText; $radSingle.Checked = $true
-    $form.Controls.Add($radSingle)
-    $radMulti = New-Object System.Windows.Forms.RadioButton
-    $radMulti.Text = 'Multiple domains'; $radMulti.Location = [System.Drawing.Point]::new(258,$y)
-    $radMulti.AutoSize = $true; $radMulti.ForeColor = $clrText
-    $form.Controls.Add($radMulti)
+    function MkSectionHeader { param([string]$Text,[int]$Y)
+        $l = New-Object System.Windows.Forms.Label
+        $l.Text = $Text
+        $l.Location = [System.Drawing.Point]::new($lx,$Y)
+        $l.AutoSize = $true
+        $l.Font = New-Object System.Drawing.Font('Segoe UI Semibold', 12)
+        $l.ForeColor = $clrText
+        $form.Controls.Add($l)
+        return $l
+    }
+
+    # ── Scan Scope Card ───────────────────────────────────────────────────────
+    $null = MkSectionHeader 'Scan Scope' $y
     $y += 32
 
-    # ── Single domain panel (28px tall) ───────────────────────────────────────
-    $pnlSingle = New-Object System.Windows.Forms.Panel
-    $pnlSingle.Location = [System.Drawing.Point]::new($lx,$y); $pnlSingle.Size = [System.Drawing.Size]::new($rw,28)
-    $pnlSingle.BackColor = $clrBg
-    $form.Controls.Add($pnlSingle)
+    $cardScope = MkCard $lx $y $rw 64
+    $radSingle = New-Object System.Windows.Forms.RadioButton
+    $radSingle.Text = 'Single domain'; $radSingle.Location = [System.Drawing.Point]::new(24,20)
+    $radSingle.AutoSize = $true; $radSingle.ForeColor = $clrText; $radSingle.Checked = $true
+    $radSingle.Font = $FontBold
+    $cardScope.Controls.Add($radSingle)
+    $radMulti = New-Object System.Windows.Forms.RadioButton
+    $radMulti.Text = 'Multiple domains'; $radMulti.Location = [System.Drawing.Point]::new(200,20)
+    $radMulti.AutoSize = $true; $radMulti.ForeColor = $clrText
+    $radMulti.Font = $FontBold
+    $cardScope.Controls.Add($radMulti)
+    $y += 84
+
+    # ── Domain Selection Card ─────────────────────────────────────────────────
+    $null = MkSectionHeader 'Domain Selection' $y
+    $y += 32
+
+    # ── Single domain panel (Card with dropdown) ──────────────────────────────
+    $pnlSingle = MkCard $lx $y $rw 90
     $lbDom = New-Object System.Windows.Forms.Label
-    $lbDom.Text = 'Domain:'; $lbDom.Location = [System.Drawing.Point]::new(0,6); $lbDom.AutoSize = $true
-    $lbDom.Font = $FontBold; $lbDom.ForeColor = $clrText; $pnlSingle.Controls.Add($lbDom)
+    $lbDom.Text = 'Domain'; $lbDom.Location = [System.Drawing.Point]::new(24,16); $lbDom.AutoSize = $true
+    $lbDom.Font = New-Object System.Drawing.Font('Segoe UI Semibold', 10); $lbDom.ForeColor = $clrText
+    $pnlSingle.Controls.Add($lbDom)
+
     $cmbDomain = New-Object System.Windows.Forms.ComboBox
-    $cmbDomain.Location        = [System.Drawing.Point]::new(115, 2)
-    $cmbDomain.Size            = [System.Drawing.Size]::new(280, 24)
-    $cmbDomain.BackColor       = [System.Drawing.Color]::FromArgb(40, 50, 70)
-    $cmbDomain.ForeColor       = [System.Drawing.Color]::FromArgb(235, 195, 80)
+    $cmbDomain.Location        = [System.Drawing.Point]::new(24, 44)
+    $cmbDomain.Size            = [System.Drawing.Size]::new(400, 28)
+    $cmbDomain.BackColor       = [System.Drawing.Color]::White
+    $cmbDomain.ForeColor       = $clrText
+    $cmbDomain.Font            = $FontBody
     $cmbDomain.DropDownStyle   = [System.Windows.Forms.ComboBoxStyle]::DropDown
     $cmbDomain.AutoCompleteMode   = [System.Windows.Forms.AutoCompleteMode]::SuggestAppend
     $cmbDomain.AutoCompleteSource = [System.Windows.Forms.AutoCompleteSource]::ListItems
     foreach ($d in $domainListSorted) { $cmbDomain.Items.Add($d) | Out-Null }
     $pnlSingle.Controls.Add($cmbDomain)
 
-    # ── Multiple domains panel (100px tall — multiline text box) ──────────────
-    $pnlMulti = New-Object System.Windows.Forms.Panel
-    $pnlMulti.Location = [System.Drawing.Point]::new($lx,$y); $pnlMulti.Size = [System.Drawing.Size]::new($rw,100)
-    $pnlMulti.BackColor = $clrBg; $pnlMulti.Visible = $false
-    $form.Controls.Add($pnlMulti)
+    # ── Multiple domains panel (Card with multiline textbox) ──────────────────
+    $pnlMulti = MkCard $lx $y $rw 180
+    $pnlMulti.Visible = $false
+
     $lbDoms = New-Object System.Windows.Forms.Label
-    $lbDoms.Text = 'Domains:'; $lbDoms.Location = [System.Drawing.Point]::new(0,4); $lbDoms.AutoSize = $true
-    $lbDoms.Font = $FontBold; $lbDoms.ForeColor = $clrText; $pnlMulti.Controls.Add($lbDoms)
+    $lbDoms.Text = 'Domains'; $lbDoms.Location = [System.Drawing.Point]::new(24,16); $lbDoms.AutoSize = $true
+    $lbDoms.Font = New-Object System.Drawing.Font('Segoe UI Semibold', 10); $lbDoms.ForeColor = $clrText
+    $pnlMulti.Controls.Add($lbDoms)
+
     $lbDomsHint = New-Object System.Windows.Forms.Label
-    $lbDomsHint.Text = '(one per line)'; $lbDomsHint.Location = [System.Drawing.Point]::new(115,6)
+    $lbDomsHint.Text = 'One domain per line'; $lbDomsHint.Location = [System.Drawing.Point]::new(100,18)
     $lbDomsHint.AutoSize = $true; $lbDomsHint.ForeColor = $clrMuted; $pnlMulti.Controls.Add($lbDomsHint)
+
     $txtDomains = New-Object System.Windows.Forms.TextBox
-    $txtDomains.Location = [System.Drawing.Point]::new(0,24); $txtDomains.Size = [System.Drawing.Size]::new($rw,76)
+    $txtDomains.Location = [System.Drawing.Point]::new(24,44); $txtDomains.Size = [System.Drawing.Size]::new(588,120)
     $txtDomains.Multiline = $true; $txtDomains.ScrollBars = [System.Windows.Forms.ScrollBars]::Vertical
-    $txtDomains.BackColor = [System.Drawing.Color]::FromArgb(40,50,70); $txtDomains.ForeColor = [System.Drawing.Color]::FromArgb(235,195,80)
+    $txtDomains.BackColor = [System.Drawing.Color]::White; $txtDomains.ForeColor = $clrText
     $txtDomains.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
     $txtDomains.Font = New-Object System.Drawing.Font('Consolas', 9)
     $pnlMulti.Controls.Add($txtDomains)
 
-    $y += 36    # single-panel gap (28px panel + 8px); toggle handler adds 72px more for multi mode
+    $y += 110    # single-panel height + gap
 
-    # ── VBU ID — sits directly below the domain input ────────────────────────
-    $lbBuid = MkLabel 'VBU ID:' $lx ($y+4)
+    # ── VBU ID Card ───────────────────────────────────────────────────────────
+    $null = MkSectionHeader 'VBU ID (Optional)' $y
+    $y += 32
+
+    $cardVbu = MkCard $lx $y $rw 80
+    $lbBuid = New-Object System.Windows.Forms.Label
+    $lbBuid.Text = 'VBU ID'; $lbBuid.Location = [System.Drawing.Point]::new(24,16); $lbBuid.AutoSize = $true
+    $lbBuid.Font = New-Object System.Drawing.Font('Segoe UI Semibold', 10); $lbBuid.ForeColor = $clrText
+    $cardVbu.Controls.Add($lbBuid)
+
     $txtBuid = New-Object System.Windows.Forms.TextBox
-    $txtBuid.Location = [System.Drawing.Point]::new($lx+115,$y+1); $txtBuid.Size = [System.Drawing.Size]::new(110,24)
-    $txtBuid.BackColor = [System.Drawing.Color]::FromArgb(40,50,70); $txtBuid.ForeColor = [System.Drawing.Color]::FromArgb(235,195,80)
+    $txtBuid.Location = [System.Drawing.Point]::new(24,44); $txtBuid.Size = [System.Drawing.Size]::new(200,28)
+    $txtBuid.BackColor = [System.Drawing.Color]::White; $txtBuid.ForeColor = $clrText
     $txtBuid.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
-    try { $txtBuid.PlaceholderText = 'optional' } catch {}
-    $form.Controls.Add($txtBuid)
+    $txtBuid.Font = $FontBody
+    try { $txtBuid.PlaceholderText = 'Filters by ExtensionAttribute7' } catch {}
+    $cardVbu.Controls.Add($txtBuid)
+    $y += 100
 
     # Auto-fill VBU ID when a domain is chosen — registered here so $txtBuid is in scope
     $cmbDomain.Add_SelectedIndexChanged({
