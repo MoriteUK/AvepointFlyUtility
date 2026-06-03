@@ -135,14 +135,14 @@ function Show-MainMenu {
     $y = 112
 
     # Row 1 (3 cards)
-    $card1 = MkCard $startX $y $cardW $cardH '🔐 App Registration' 'Register the Entra ID app and grant API permissions'
-    $card2 = MkCard ($startX + $cardW + $gap) $y $cardW $cardH '⚙️ AOS Setup' 'Configure AvePoint Online Services tenant'
-    $card3 = MkCard ($startX + ($cardW + $gap) * 2) $y $cardW $cardH '🔗 Connections' 'Manage connections and mappings'
+    $card1 = MkCard $startX $y $cardW $cardH 'App Registration' 'Register the Entra ID app and grant API permissions'
+    $card2 = MkCard ($startX + $cardW + $gap) $y $cardW $cardH 'AOS Setup' 'Configure AvePoint Online Services tenant'
+    $card3 = MkCard ($startX + ($cardW + $gap) * 2) $y $cardW $cardH 'Connections' 'Manage connections and mappings'
     $y += $cardH + $gap
 
     # Row 2 (2 cards)
-    $card4 = MkCard $startX $y $cardW $cardH '📊 Reports' 'View migration results and status'
-    $card5 = MkCard ($startX + $cardW + $gap) $y $cardW $cardH '📈 Monitor' 'Live project monitoring'
+    $card4 = MkCard $startX $y $cardW $cardH 'Reports' 'View migration results and status'
+    $card5 = MkCard ($startX + $cardW + $gap) $y $cardW $cardH 'Monitor' 'Live project monitoring'
 
     $footer = New-Object System.Windows.Forms.Panel
     $footer.Height = 64; $footer.Dock = [System.Windows.Forms.DockStyle]::Bottom
