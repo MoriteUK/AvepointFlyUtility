@@ -189,13 +189,44 @@ function Show-DiscoveryMenu {
     # ── Helpers for modern card-based layout ─────────────────────────────────
     $lx = 32; $rw = 636; $y = 96  # More generous margins
 
-    # Create a card panel (white background, subtle border)
+    # Create a rounded card panel (white background, rounded border)
     function MkCard { param([int]$X,[int]$Y,[int]$W,[int]$H)
         $card = New-Object System.Windows.Forms.Panel
         $card.Location = [System.Drawing.Point]::new($X,$Y)
         $card.Size = [System.Drawing.Size]::new($W,$H)
         $card.BackColor = [System.Drawing.Color]::White
-        $card.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
+        $card.BorderStyle = [System.Windows.Forms.BorderStyle]::None
+
+        # Add rounded corners with Paint event
+        $card.Add_Paint({
+            param($sender, $e)
+            $g = $e.Graphics
+            $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
+
+            # Create rounded rectangle path
+            $radius = 8
+            $rect = [System.Drawing.Rectangle]::new(0, 0, $sender.Width - 1, $sender.Height - 1)
+            $path = New-Object System.Drawing.Drawing2D.GraphicsPath
+
+            $path.AddArc($rect.X, $rect.Y, $radius * 2, $radius * 2, 180, 90)
+            $path.AddArc($rect.Right - $radius * 2, $rect.Y, $radius * 2, $radius * 2, 270, 90)
+            $path.AddArc($rect.Right - $radius * 2, $rect.Bottom - $radius * 2, $radius * 2, $radius * 2, 0, 90)
+            $path.AddArc($rect.X, $rect.Bottom - $radius * 2, $radius * 2, $radius * 2, 90, 90)
+            $path.CloseFigure()
+
+            # Fill background
+            $brush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::White)
+            $g.FillPath($brush, $path)
+
+            # Draw border
+            $pen = New-Object System.Drawing.Pen($clrBorder, 1)
+            $g.DrawPath($pen, $path)
+
+            $brush.Dispose()
+            $pen.Dispose()
+            $path.Dispose()
+        }.GetNewClosure())
+
         $form.Controls.Add($card)
         return $card
     }
