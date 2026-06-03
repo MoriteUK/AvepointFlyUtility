@@ -50,7 +50,7 @@ function Show-MainMenu {
     }
     $hdr.Controls.Add($btnGear)
 
-    # Card helper function with rounded corners
+    # Card helper function with rounded corners and blue top edge
     function MkCard { param([int]$X,[int]$Y,[int]$W,[int]$H,[string]$Title,[string]$Subtitle)
         $card = New-Object System.Windows.Forms.Panel
         $card.Location = [System.Drawing.Point]::new($X,$Y)
@@ -59,7 +59,7 @@ function Show-MainMenu {
         $card.BorderStyle = [System.Windows.Forms.BorderStyle]::None
         $card.Cursor = [System.Windows.Forms.Cursors]::Hand
 
-        # Add rounded corners with Paint event
+        # Add rounded corners with blue top edge
         $card.Add_Paint({
             param($sender, $e)
             $g = $e.Graphics
@@ -84,25 +84,44 @@ function Show-MainMenu {
             $pen = New-Object System.Drawing.Pen($clrBorder, 1)
             $g.DrawPath($pen, $path)
 
+            # Draw blue top edge (gradient bar)
+            $topPath = New-Object System.Drawing.Drawing2D.GraphicsPath
+            $topPath.AddArc($rect.X, $rect.Y, $radius * 2, $radius * 2, 180, 90)
+            $topPath.AddLine($rect.X + $radius, $rect.Y, $rect.Right - $radius, $rect.Y)
+            $topPath.AddArc($rect.Right - $radius * 2, $rect.Y, $radius * 2, $radius * 2, 270, 90)
+            $topPath.AddLine($rect.Right, $rect.Y + $radius, $rect.Right, $rect.Y + 4)
+            $topPath.AddLine($rect.Right, $rect.Y + 4, $rect.X, $rect.Y + 4)
+            $topPath.CloseFigure()
+
+            $gradientBrush = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
+                [System.Drawing.Point]::new(0, 0),
+                [System.Drawing.Point]::new($sender.Width, 0),
+                $clrAccent,
+                [System.Drawing.Color]::FromArgb(0, 82, 163)
+            )
+            $g.FillPath($gradientBrush, $topPath)
+
             $brush.Dispose()
             $pen.Dispose()
             $path.Dispose()
+            $topPath.Dispose()
+            $gradientBrush.Dispose()
         }.GetNewClosure())
 
         # Title label
         $lblTitle = New-Object System.Windows.Forms.Label
         $lblTitle.Text = $Title
-        $lblTitle.Location = [System.Drawing.Point]::new(24, 24)
+        $lblTitle.Location = [System.Drawing.Point]::new(16, 20)
         $lblTitle.AutoSize = $true
-        $lblTitle.Font = New-Object System.Drawing.Font('Segoe UI Semibold', 14)
+        $lblTitle.Font = New-Object System.Drawing.Font('Segoe UI Semibold', 13)
         $lblTitle.ForeColor = $clrText
         $card.Controls.Add($lblTitle)
 
         # Subtitle label
         $lblSub = New-Object System.Windows.Forms.Label
         $lblSub.Text = $Subtitle
-        $lblSub.Location = [System.Drawing.Point]::new(24, 54)
-        $lblSub.Size = [System.Drawing.Size]::new($W - 48, 40)
+        $lblSub.Location = [System.Drawing.Point]::new(16, 46)
+        $lblSub.Size = [System.Drawing.Size]::new($W - 32, 50)
         $lblSub.Font = $FontSub
         $lblSub.ForeColor = $clrMuted
         $card.Controls.Add($lblSub)
@@ -111,27 +130,19 @@ function Show-MainMenu {
         return $card
     }
 
-    $bW = 360; $bH = 110; $bX = 40; $y = 112
-    $gap = 20
+    # 3 cards wide layout
+    $cardW = 240; $cardH = 120; $startX = 40; $gap = 20
+    $y = 112
 
-    # ── 1. Create App Registration ────────────────────────────────────────────
-    $card1 = MkCard $bX $y $bW $bH '🔐 Create App Registration' 'Register the Entra ID app and grant required API permissions'
-    $y += $bH + $gap
+    # Row 1 (3 cards)
+    $card1 = MkCard $startX $y $cardW $cardH '🔐 App Registration' 'Register the Entra ID app and grant API permissions'
+    $card2 = MkCard ($startX + $cardW + $gap) $y $cardW $cardH '⚙️ AOS Setup' 'Configure AvePoint Online Services tenant'
+    $card3 = MkCard ($startX + ($cardW + $gap) * 2) $y $cardW $cardH '🔗 Connections' 'Manage connections and mappings'
+    $y += $cardH + $gap
 
-    # ── 2. Setup AOS Tenant & App ─────────────────────────────────────────────
-    $card2 = MkCard $bX $y $bW $bH '⚙️ Setup AOS Tenant & App' 'Configure the AvePoint Online Services tenant and application'
-    $y += $bH + $gap
-
-    # ── 3. Connections & Migration Mappings ───────────────────────────────────
-    $card3 = MkCard $bX $y $bW $bH '🔗 Connections & Mappings' 'Manage connections, source/destination accounts and job mappings'
-    $y += $bH + $gap
-
-    # ── 4. View Migration Reports ─────────────────────────────────────────────
-    $card4 = MkCard $bX $y $bW $bH '📊 View Migration Reports' 'Review per-user migration results and export status reports'
-    $y += $bH + $gap
-
-    # ── 5. Monitor Projects ───────────────────────────────────────────────────
-    $card5 = MkCard $bX $y $bW $bH '📈 Monitor Projects' 'Live project monitoring and migration progress tracking'
+    # Row 2 (2 cards)
+    $card4 = MkCard $startX $y $cardW $cardH '📊 Reports' 'View migration results and status'
+    $card5 = MkCard ($startX + $cardW + $gap) $y $cardW $cardH '📈 Monitor' 'Live project monitoring'
 
     $footer = New-Object System.Windows.Forms.Panel
     $footer.Height = 64; $footer.Dock = [System.Windows.Forms.DockStyle]::Bottom
