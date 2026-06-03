@@ -11,8 +11,9 @@
 
 function Show-MainMenu {
     $MenuForm = New-Object System.Windows.Forms.Form
-    $MenuForm.Text            = "AvePoint Fly - Migration Toolkit"
+    $MenuForm.Text            = "AvePoint Fly"
     $MenuForm.StartPosition   = [System.Windows.Forms.FormStartPosition]::CenterScreen
+    $MenuForm.ClientSize      = [System.Drawing.Size]::new(800, 750)
     $MenuForm.BackColor       = $clrBg
     $MenuForm.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedSingle
     $MenuForm.MaximizeBox     = $false
@@ -20,15 +21,15 @@ function Show-MainMenu {
     $_ico = Join-Path $PSScriptRoot 'FlyMigration.ico'; if (Test-Path $_ico) { $MenuForm.Icon = [System.Drawing.Icon]::new($_ico) }
 
     $hdr = New-Object System.Windows.Forms.Panel
-    $hdr.Size = [System.Drawing.Size]::new(480, 56); $hdr.Dock = [System.Windows.Forms.DockStyle]::Top; $hdr.BackColor = $clrAccent
+    $hdr.Size = [System.Drawing.Size]::new(800, 72); $hdr.Dock = [System.Windows.Forms.DockStyle]::Top; $hdr.BackColor = $clrAccent
     $MenuForm.Controls.Add($hdr)
-    $_hdrX = Add-HeaderLogo $hdr 40
+    $_hdrX = Add-HeaderLogo $hdr 44
     $hdrTitle = New-Object System.Windows.Forms.Label
-    $hdrTitle.Text      = "  Fly Migration Toolkit"
-    $hdrTitle.Font      = $FontTitle
+    $hdrTitle.Text      = "  🚀 AvePoint Fly"
+    $hdrTitle.Font      = New-Object System.Drawing.Font('Segoe UI Semibold', 16)
     $hdrTitle.ForeColor = [System.Drawing.Color]::White
     $hdrTitle.Location  = [System.Drawing.Point]::new($_hdrX, 0)
-    $hdrTitle.Size      = [System.Drawing.Size]::new(380, 56)
+    $hdrTitle.Size      = [System.Drawing.Size]::new(680, 72)
     $hdrTitle.TextAlign = [System.Drawing.ContentAlignment]::MiddleLeft
     $hdr.Controls.Add($hdrTitle)
 
@@ -37,145 +38,120 @@ function Show-MainMenu {
     $btnGear.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
     $btnGear.FlatAppearance.BorderSize = 0
     $btnGear.FlatAppearance.MouseOverBackColor = $clrAccentHover
-    $btnGear.Size     = [System.Drawing.Size]::new(38, 38)
-    $btnGear.Location = [System.Drawing.Point]::new(434, 9)
+    $btnGear.Size     = [System.Drawing.Size]::new(42, 42)
+    $btnGear.Location = [System.Drawing.Point]::new(748, 15)
     $btnGear.Cursor   = [System.Windows.Forms.Cursors]::Hand
     $btnGear.Add_Click({ Show-SettingsDialog })
     if ($script:GearBitmap) {
         $btnGear.Image = $script:GearBitmap; $btnGear.ImageAlign = [System.Drawing.ContentAlignment]::MiddleCenter
     } else {
-        $btnGear.Text = [char]0x2699; $btnGear.Font = New-Object System.Drawing.Font("Segoe UI Symbol", 16)
+        $btnGear.Text = [char]0x2699; $btnGear.Font = New-Object System.Drawing.Font("Segoe UI Symbol", 20)
         $btnGear.ForeColor = [System.Drawing.Color]::White
     }
     $hdr.Controls.Add($btnGear)
 
-    $bW = 400; $bH = 90; $bX = 40; $y = 82
+    # Card helper function with rounded corners
+    function MkCard { param([int]$X,[int]$Y,[int]$W,[int]$H,[string]$Title,[string]$Subtitle)
+        $card = New-Object System.Windows.Forms.Panel
+        $card.Location = [System.Drawing.Point]::new($X,$Y)
+        $card.Size = [System.Drawing.Size]::new($W,$H)
+        $card.BackColor = [System.Drawing.Color]::White
+        $card.BorderStyle = [System.Windows.Forms.BorderStyle]::None
+        $card.Cursor = [System.Windows.Forms.Cursors]::Hand
+
+        # Add rounded corners with Paint event
+        $card.Add_Paint({
+            param($sender, $e)
+            $g = $e.Graphics
+            $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
+
+            # Create rounded rectangle path
+            $radius = 12
+            $rect = [System.Drawing.Rectangle]::new(0, 0, $sender.Width - 1, $sender.Height - 1)
+            $path = New-Object System.Drawing.Drawing2D.GraphicsPath
+
+            $path.AddArc($rect.X, $rect.Y, $radius * 2, $radius * 2, 180, 90)
+            $path.AddArc($rect.Right - $radius * 2, $rect.Y, $radius * 2, $radius * 2, 270, 90)
+            $path.AddArc($rect.Right - $radius * 2, $rect.Bottom - $radius * 2, $radius * 2, $radius * 2, 0, 90)
+            $path.AddArc($rect.X, $rect.Bottom - $radius * 2, $radius * 2, $radius * 2, 90, 90)
+            $path.CloseFigure()
+
+            # Fill background
+            $brush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::White)
+            $g.FillPath($brush, $path)
+
+            # Draw border
+            $pen = New-Object System.Drawing.Pen($clrBorder, 1)
+            $g.DrawPath($pen, $path)
+
+            $brush.Dispose()
+            $pen.Dispose()
+            $path.Dispose()
+        }.GetNewClosure())
+
+        # Title label
+        $lblTitle = New-Object System.Windows.Forms.Label
+        $lblTitle.Text = $Title
+        $lblTitle.Location = [System.Drawing.Point]::new(24, 24)
+        $lblTitle.AutoSize = $true
+        $lblTitle.Font = New-Object System.Drawing.Font('Segoe UI Semibold', 14)
+        $lblTitle.ForeColor = $clrText
+        $card.Controls.Add($lblTitle)
+
+        # Subtitle label
+        $lblSub = New-Object System.Windows.Forms.Label
+        $lblSub.Text = $Subtitle
+        $lblSub.Location = [System.Drawing.Point]::new(24, 54)
+        $lblSub.Size = [System.Drawing.Size]::new($W - 48, 40)
+        $lblSub.Font = $FontSub
+        $lblSub.ForeColor = $clrMuted
+        $card.Controls.Add($lblSub)
+
+        $MenuForm.Controls.Add($card)
+        return $card
+    }
+
+    $bW = 360; $bH = 110; $bX = 40; $y = 112
+    $gap = 20
 
     # ── 1. Create App Registration ────────────────────────────────────────────
-    $btn1 = New-Object System.Windows.Forms.Button
-    $btn1.Text      = "1. Create App Registration"
-    $btn1.Font      = $FontTile
-    $btn1.Location  = [System.Drawing.Point]::new($bX, $y)
-    $btn1.Size      = [System.Drawing.Size]::new($bW, $bH)
-    $btn1.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
-    $btn1.FlatAppearance.BorderSize = 0; $btn1.BackColor = $clrAccent
-    $btn1.ForeColor = [System.Drawing.Color]::White; $btn1.Cursor = [System.Windows.Forms.Cursors]::Hand
-    $MenuForm.Controls.Add($btn1)
-    $y += $bH + 6
-
-    $sub1 = New-Object System.Windows.Forms.Label
-    $sub1.Text      = 'Register the Entra ID app and grant required API permissions'
-    $sub1.Font      = $FontSub
-    $sub1.ForeColor = $clrMuted
-    $sub1.Location  = [System.Drawing.Point]::new($bX + 4, $y)
-    $sub1.AutoSize  = $true
-    $MenuForm.Controls.Add($sub1)
-    $y += 26
+    $card1 = MkCard $bX $y $bW $bH '🔐 Create App Registration' 'Register the Entra ID app and grant required API permissions'
+    $y += $bH + $gap
 
     # ── 2. Setup AOS Tenant & App ─────────────────────────────────────────────
-    $btn2 = New-Object System.Windows.Forms.Button
-    $btn2.Text      = "2. Setup AOS Tenant & App"
-    $btn2.Font      = New-Object System.Drawing.Font('Segoe UI Semibold', 14)
-    $btn2.Location  = [System.Drawing.Point]::new($bX, $y)
-    $btn2.Size      = [System.Drawing.Size]::new($bW, $bH)
-    $btn2.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
-    $btn2.FlatAppearance.BorderSize = 0; $btn2.BackColor = $clrAccent
-    $btn2.ForeColor = [System.Drawing.Color]::White; $btn2.Cursor = [System.Windows.Forms.Cursors]::Hand
-    $MenuForm.Controls.Add($btn2)
-    $y += $bH + 6
-
-    $sub2 = New-Object System.Windows.Forms.Label
-    $sub2.Text      = 'Configure the AvePoint Online Services tenant and application'
-    $sub2.Font      = New-Object System.Drawing.Font('Segoe UI', 8.5)
-    $sub2.ForeColor = $clrMuted
-    $sub2.Location  = [System.Drawing.Point]::new($bX + 4, $y)
-    $sub2.AutoSize  = $true
-    $MenuForm.Controls.Add($sub2)
-    $y += 26
+    $card2 = MkCard $bX $y $bW $bH '⚙️ Setup AOS Tenant & App' 'Configure the AvePoint Online Services tenant and application'
+    $y += $bH + $gap
 
     # ── 3. Connections & Migration Mappings ───────────────────────────────────
-    $btn3 = New-Object System.Windows.Forms.Button
-    $btn3.Text      = "3. Connections & Migration Mappings"
-    $btn3.Font      = New-Object System.Drawing.Font('Segoe UI Semibold', 14)
-    $btn3.Location  = [System.Drawing.Point]::new($bX, $y)
-    $btn3.Size      = [System.Drawing.Size]::new($bW, $bH)
-    $btn3.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
-    $btn3.FlatAppearance.BorderSize = 0; $btn3.BackColor = $clrAccent
-    $btn3.ForeColor = [System.Drawing.Color]::White; $btn3.Cursor = [System.Windows.Forms.Cursors]::Hand
-    $MenuForm.Controls.Add($btn3)
-    $y += $bH + 6
-
-    $sub3 = New-Object System.Windows.Forms.Label
-    $sub3.Text      = 'Manage connections, source/destination accounts and job mappings'
-    $sub3.Font      = New-Object System.Drawing.Font('Segoe UI', 8.5)
-    $sub3.ForeColor = $clrMuted
-    $sub3.Location  = [System.Drawing.Point]::new($bX + 4, $y)
-    $sub3.AutoSize  = $true
-    $MenuForm.Controls.Add($sub3)
-    $y += 26
+    $card3 = MkCard $bX $y $bW $bH '🔗 Connections & Mappings' 'Manage connections, source/destination accounts and job mappings'
+    $y += $bH + $gap
 
     # ── 4. View Migration Reports ─────────────────────────────────────────────
-    $btn4 = New-Object System.Windows.Forms.Button
-    $btn4.Text      = "4. View Migration Reports"
-    $btn4.Font      = New-Object System.Drawing.Font('Segoe UI Semibold', 14)
-    $btn4.Location  = [System.Drawing.Point]::new($bX, $y)
-    $btn4.Size      = [System.Drawing.Size]::new($bW, $bH)
-    $btn4.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
-    $btn4.FlatAppearance.BorderSize = 0; $btn4.BackColor = $clrAccent
-    $btn4.ForeColor = [System.Drawing.Color]::White; $btn4.Cursor = [System.Windows.Forms.Cursors]::Hand
-    $MenuForm.Controls.Add($btn4)
-    $y += $bH + 6
-
-    $sub4 = New-Object System.Windows.Forms.Label
-    $sub4.Text      = 'Review per-user migration results and export status reports'
-    $sub4.Font      = New-Object System.Drawing.Font('Segoe UI', 8.5)
-    $sub4.ForeColor = $clrMuted
-    $sub4.Location  = [System.Drawing.Point]::new($bX + 4, $y)
-    $sub4.AutoSize  = $true
-    $MenuForm.Controls.Add($sub4)
-    $y += 26
+    $card4 = MkCard $bX $y $bW $bH '📊 View Migration Reports' 'Review per-user migration results and export status reports'
+    $y += $bH + $gap
 
     # ── 5. Monitor Projects ───────────────────────────────────────────────────
-    $btn5 = New-Object System.Windows.Forms.Button
-    $btn5.Text      = "5. Monitor Projects"
-    $btn5.Font      = New-Object System.Drawing.Font('Segoe UI Semibold', 14)
-    $btn5.Location  = [System.Drawing.Point]::new($bX, $y)
-    $btn5.Size      = [System.Drawing.Size]::new($bW, $bH)
-    $btn5.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
-    $btn5.FlatAppearance.BorderSize = 0; $btn5.BackColor = $clrAccent
-    $btn5.ForeColor = [System.Drawing.Color]::White; $btn5.Cursor = [System.Windows.Forms.Cursors]::Hand
-    $MenuForm.Controls.Add($btn5)
-    $y += $bH + 6
-
-    $sub5 = New-Object System.Windows.Forms.Label
-    $sub5.Text      = 'Live project monitoring and migration progress tracking'
-    $sub5.Font      = New-Object System.Drawing.Font('Segoe UI', 8.5)
-    $sub5.ForeColor = $clrMuted
-    $sub5.Location  = [System.Drawing.Point]::new($bX + 4, $y)
-    $sub5.AutoSize  = $true
-    $MenuForm.Controls.Add($sub5)
-
-    $MenuForm.ClientSize = [System.Drawing.Size]::new(480, ($y + 56))
+    $card5 = MkCard $bX $y $bW $bH '📈 Monitor Projects' 'Live project monitoring and migration progress tracking'
 
     $footer = New-Object System.Windows.Forms.Panel
-    $footer.Height = 46; $footer.Dock = [System.Windows.Forms.DockStyle]::Bottom
+    $footer.Height = 64; $footer.Dock = [System.Windows.Forms.DockStyle]::Bottom
     $footer.BackColor = $clrFooter
     $MenuForm.Controls.Add($footer)
     $btnClose = New-Object System.Windows.Forms.Button
-    $btnClose.Text = 'Close'; $btnClose.Size = [System.Drawing.Size]::new(90, 30)
-    $btnClose.Location = [System.Drawing.Point]::new(374, 8)
+    $btnClose.Text = 'Close'; $btnClose.Size = [System.Drawing.Size]::new(100, 36)
+    $btnClose.Location = [System.Drawing.Point]::new(680, 14)
     $btnClose.BackColor = $clrCloseRed
     $btnClose.ForeColor = [System.Drawing.Color]::White; $btnClose.Font = $FontBold
     $btnClose.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat; $btnClose.FlatAppearance.BorderSize = 0
     $btnClose.Cursor = [System.Windows.Forms.Cursors]::Hand
     $footer.Controls.Add($btnClose)
-    $footer.Add_SizeChanged({ $btnClose.Left = $footer.Width - 100 }.GetNewClosure())
+    $footer.Add_SizeChanged({ $btnClose.Left = $footer.Width - 106 }.GetNewClosure())
 
-    $btn1.Add_Click({ Show-AppRegistrationForm })
-    $btn2.Add_Click({ Show-AosSetupForm })
-    $btn3.Add_Click({ Show-MigrationRunnerForm })
-    $btn4.Add_Click({ Show-ReportingForm })
-    $btn5.Add_Click({
+    $card1.Add_Click({ Show-AppRegistrationForm })
+    $card2.Add_Click({ Show-AosSetupForm })
+    $card3.Add_Click({ Show-MigrationRunnerForm })
+    $card4.Add_Click({ Show-ReportingForm })
+    $card5.Add_Click({
         if ($script:MonitorFormInstance -and
             -not $script:MonitorFormInstance.IsDisposed -and
             $script:MonitorFormInstance.Visible) {
