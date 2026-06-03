@@ -1,7 +1,20 @@
 {
-  "version": "2.3.1",
+  "version": "2.4.0",
   "releaseDate": "2026-06-03",
   "changelog": [
+    {
+      "version": "2.4.0",
+      "date": "2026-06-03",
+      "changes": [
+        "Added Progress by Workload section with 4 workload cards",
+        "Shows progress for Exchange Online, OneDrive, SharePoint, and Teams",
+        "Visual progress bars with current/total counts",
+        "Added sidebar navigation to web edition",
+        "Web app now has Dashboard, Discovery, AvePoint Fly, Misc Scripts, Domain Removal quick links",
+        "Disabled DevTools auto-open in web app (Ctrl+Shift+I still works)",
+        "All menus now open maximized but remain resizable"
+      ]
+    },
     {
       "version": "2.3.1",
       "date": "2026-06-03",
