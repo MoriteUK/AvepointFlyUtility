@@ -1,12 +1,25 @@
 {
-  "version": "2.2.0",
+  "version": "2.3.0",
   "releaseDate": "2026-06-03",
   "changelog": [
+    {
+      "version": "2.3.0",
+      "date": "2026-06-03",
+      "changes": [
+        "Redesigned main launcher as at-a-glance dashboard with live stats",
+        "Added 4 stat cards at top: Active Projects, Users Migrated, Success Rate, Total Data",
+        "Reorganized main menu tiles into 3-column grid layout",
+        "Enlarged main launcher to 1000x700px for better dashboard visibility",
+        "Added Quick Actions section header",
+        "Updated footer with version display",
+        "Moved dashboard stats from AvePoint Fly to main launcher"
+      ]
+    },
     {
       "version": "2.2.0",
       "date": "2026-06-03",
       "changes": [
-        "Redesigned main menu as at-a-glance dashboard with live stats",
+        "Redesigned AvePoint Fly menu as at-a-glance dashboard with live stats",
         "Added 4 stat cards: Active Projects, Users Migrated, Success Rate, Total Data",
         "Reorganized action cards into 3x2 grid layout",
         "Added rounded corners to Discovery menu cards",

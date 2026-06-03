@@ -567,8 +567,8 @@ function Show-DomainRemovalSubMenu {
 # ── Main launcher ─────────────────────────────────────────────────────────────
 function Show-Launcher {
     $form = New-Object System.Windows.Forms.Form
-    $form.Text            = 'Migration Toolkit'
-    $form.ClientSize      = [System.Drawing.Size]::new(480, 620)
+    $form.Text            = 'Migration Toolkit - Dashboard'
+    $form.ClientSize      = [System.Drawing.Size]::new(1000, 700)
     $form.StartPosition   = [System.Windows.Forms.FormStartPosition]::CenterScreen
     $form.BackColor       = $clrBg
     $form.Font            = $FontBody
@@ -579,17 +579,17 @@ function Show-Launcher {
 
     # ── Header ────────────────────────────────────────────────────────────────
     $hdr = New-Object System.Windows.Forms.Panel
-    $hdr.Size = [System.Drawing.Size]::new(480, 56)
+    $hdr.Size = [System.Drawing.Size]::new(1000, 80)
     $hdr.Dock = [System.Windows.Forms.DockStyle]::Top
     $hdr.BackColor = $clrAccent
     $form.Controls.Add($hdr)
-    $_hdrX = Add-HeaderLogo $hdr 36
+    $_hdrX = Add-HeaderLogo $hdr 32
     $hdrLbl = New-Object System.Windows.Forms.Label
-    $hdrLbl.Text      = '  Migration Toolkit'
-    $hdrLbl.Font      = $FontTitle
+    $hdrLbl.Text      = '  Migration Toolkit - Dashboard'
+    $hdrLbl.Font      = New-Object System.Drawing.Font('Segoe UI Light', 22)
     $hdrLbl.ForeColor = [System.Drawing.Color]::White
     $hdrLbl.Location  = [System.Drawing.Point]::new($_hdrX, 0)
-    $hdrLbl.Size      = [System.Drawing.Size]::new(380, 56)
+    $hdrLbl.Size      = [System.Drawing.Size]::new(800, 80)
     $hdrLbl.TextAlign = [System.Drawing.ContentAlignment]::MiddleLeft
     $hdr.Controls.Add($hdrLbl)
 
@@ -597,18 +597,96 @@ function Show-Launcher {
     $btnGear.BackColor = $clrAccent; $btnGear.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
     $btnGear.FlatAppearance.BorderSize = 0
     $btnGear.FlatAppearance.MouseOverBackColor = $clrAccentHover
-    $btnGear.Size = [System.Drawing.Size]::new(38, 38); $btnGear.Location = [System.Drawing.Point]::new(434, 9)
+    $btnGear.Size = [System.Drawing.Size]::new(42, 42); $btnGear.Location = [System.Drawing.Point]::new(940, 19)
     $btnGear.Cursor = [System.Windows.Forms.Cursors]::Hand; $btnGear.Add_Click({ Show-SettingsDialog })
     if ($script:GearBitmap) { $btnGear.Image = $script:GearBitmap; $btnGear.ImageAlign = [System.Drawing.ContentAlignment]::MiddleCenter }
-    else { $btnGear.Text = [char]0x2699; $btnGear.Font = New-Object System.Drawing.Font('Segoe UI Symbol', 16); $btnGear.ForeColor = [System.Drawing.Color]::White }
+    else { $btnGear.Text = [char]0x2699; $btnGear.Font = New-Object System.Drawing.Font('Segoe UI Symbol', 20); $btnGear.ForeColor = [System.Drawing.Color]::White }
     $hdr.Controls.Add($btnGear)
 
-    $bW = 400; $bH = 90; $bX = 40; $y = 82
+    # Stat card helper function
+    function MkStatCard { param([int]$X,[int]$Y,[int]$W,[int]$H,[string]$Label,[string]$Value,[string]$Status)
+        $card = New-Object System.Windows.Forms.Panel
+        $card.Location = [System.Drawing.Point]::new($X,$Y)
+        $card.Size = [System.Drawing.Size]::new($W,$H)
+        $card.BackColor = [System.Drawing.Color]::White
+        $card.BorderStyle = [System.Windows.Forms.BorderStyle]::None
+        $radius = 8
+        $regionPath = New-Object System.Drawing.Drawing2D.GraphicsPath
+        $regionRect = [System.Drawing.Rectangle]::new(0, 0, $W, $H)
+        $regionPath.AddArc($regionRect.X, $regionRect.Y, $radius * 2, $radius * 2, 180, 90)
+        $regionPath.AddArc($regionRect.Right - $radius * 2, $regionRect.Y, $radius * 2, $radius * 2, 270, 90)
+        $regionPath.AddArc($regionRect.Right - $radius * 2, $regionRect.Bottom - $radius * 2, $radius * 2, $radius * 2, 0, 90)
+        $regionPath.AddArc($regionRect.X, $regionRect.Bottom - $radius * 2, $radius * 2, $radius * 2, 90, 90)
+        $regionPath.CloseFigure()
+        $card.Region = New-Object System.Drawing.Region($regionPath)
+        $card.Add_Paint({
+            param($s, $e)
+            $g = $e.Graphics
+            $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
+            $r = 8
+            $rect = [System.Drawing.Rectangle]::new(0, 0, $s.Width - 1, $s.Height - 1)
+            $path = New-Object System.Drawing.Drawing2D.GraphicsPath
+            $path.AddArc($rect.X, $rect.Y, $r * 2, $r * 2, 180, 90)
+            $path.AddArc($rect.Right - $r * 2, $rect.Y, $r * 2, $r * 2, 270, 90)
+            $path.AddArc($rect.Right - $r * 2, $rect.Bottom - $r * 2, $r * 2, $r * 2, 0, 90)
+            $path.AddArc($rect.X, $rect.Bottom - $r * 2, $r * 2, $r * 2, 90, 90)
+            $path.CloseFigure()
+            $pen = New-Object System.Drawing.Pen($clrBorder, 1)
+            $g.DrawPath($pen, $path)
+            $pen.Dispose()
+            $path.Dispose()
+        }.GetNewClosure())
+        $lblValue = New-Object System.Windows.Forms.Label
+        $lblValue.Text = $Value
+        $lblValue.Location = [System.Drawing.Point]::new(16, 16)
+        $lblValue.AutoSize = $true
+        $lblValue.Font = New-Object System.Drawing.Font('Segoe UI Light', 28)
+        $lblValue.ForeColor = $clrText
+        $card.Controls.Add($lblValue)
+        $lblLabel = New-Object System.Windows.Forms.Label
+        $lblLabel.Text = $Label
+        $lblLabel.Location = [System.Drawing.Point]::new(16, 60)
+        $lblLabel.Size = [System.Drawing.Size]::new($W - 32, 20)
+        $lblLabel.Font = New-Object System.Drawing.Font('Segoe UI', 9)
+        $lblLabel.ForeColor = $clrMuted
+        $card.Controls.Add($lblLabel)
+        if ($Status) {
+            $lblStatus = New-Object System.Windows.Forms.Label
+            $lblStatus.Text = $Status
+            $lblStatus.Location = [System.Drawing.Point]::new(16, 84)
+            $lblStatus.AutoSize = $true
+            $lblStatus.Font = New-Object System.Drawing.Font('Segoe UI Semibold', 8)
+            $lblStatus.ForeColor = [System.Drawing.Color]::FromArgb(16, 124, 16)
+            $card.Controls.Add($lblStatus)
+        }
+        $form.Controls.Add($card)
+        return $card
+    }
 
-    # ── Discovery tile ────────────────────────────────────────────────────────
+    $margin = 32; $gap = 20; $y = 110
+    $statW = 220; $statH = 110
+    $stat1 = MkStatCard $margin $y $statW $statH 'Active Projects' '3' 'Running'
+    $stat2 = MkStatCard ($margin + $statW + $gap) $y $statW $statH 'Users Migrated' '1,247' 'This month'
+    $stat3 = MkStatCard ($margin + ($statW + $gap) * 2) $y $statW $statH 'Success Rate' '94%' 'Last 30 days'
+    $stat4 = MkStatCard ($margin + ($statW + $gap) * 3) $y $statW $statH 'Total Data' '2.4 TB' 'Transferred'
+    $y += $statH + $gap + 10
+
+    $lblActions = New-Object System.Windows.Forms.Label
+    $lblActions.Text = 'Quick Actions'
+    $lblActions.Location = [System.Drawing.Point]::new($margin, $y)
+    $lblActions.AutoSize = $true
+    $lblActions.Font = New-Object System.Drawing.Font('Segoe UI Semibold', 12)
+    $lblActions.ForeColor = $clrText
+    $form.Controls.Add($lblActions)
+    $y += 35
+
+    $bW = 305; $bH = 110; $bX = $margin
+
+    # Action tiles in 3-column grid
+    # Row 1
     $btnDisc = New-Object System.Windows.Forms.Button
     $btnDisc.Text      = 'Discovery'
-    $btnDisc.Font      = New-Object System.Drawing.Font('Segoe UI Semibold', 14)
+    $btnDisc.Font      = New-Object System.Drawing.Font('Segoe UI Semibold', 13)
     $btnDisc.Location  = [System.Drawing.Point]::new($bX, $y)
     $btnDisc.Size      = [System.Drawing.Size]::new($bW, $bH)
     $btnDisc.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
@@ -622,29 +700,18 @@ function Show-Launcher {
         Write-Log 'Discovery sub-menu closed'
     }.GetNewClosure())
     $form.Controls.Add($btnDisc)
-    $y += $bH + 6
 
-    $lblDiscSub = New-Object System.Windows.Forms.Label
-    $lblDiscSub.Text      = 'M365 tenant assessment — mailboxes, sites, OneDrive, groups'
-    $lblDiscSub.Font      = New-Object System.Drawing.Font('Segoe UI', 8.5)
-    $lblDiscSub.ForeColor = $clrMuted
-    $lblDiscSub.Location  = [System.Drawing.Point]::new($bX + 4, $y)
-    $lblDiscSub.AutoSize  = $true
-    $form.Controls.Add($lblDiscSub)
-    $y += 26
-
-    # ── AvePoint Fly tile ─────────────────────────────────────────────────────
+    $menuScript = Join-Path $PSScriptRoot 'menu.ps1'
     $btnAve = New-Object System.Windows.Forms.Button
     $btnAve.Text      = 'AvePoint Fly'
-    $btnAve.Font      = New-Object System.Drawing.Font('Segoe UI Semibold', 14)
-    $btnAve.Location  = [System.Drawing.Point]::new($bX, $y)
+    $btnAve.Font      = New-Object System.Drawing.Font('Segoe UI Semibold', 13)
+    $btnAve.Location  = [System.Drawing.Point]::new($bX + $bW + $gap, $y)
     $btnAve.Size      = [System.Drawing.Size]::new($bW, $bH)
     $btnAve.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
     $btnAve.FlatAppearance.BorderSize = 0
     $btnAve.BackColor = $clrAccent
     $btnAve.ForeColor = [System.Drawing.Color]::White
     $btnAve.Cursor    = [System.Windows.Forms.Cursors]::Hand
-    $menuScript = Join-Path $PSScriptRoot 'menu.ps1'
     $btnAve.Add_Click({
         Write-Log "AvePoint Fly clicked  path=$menuScript"
         try   { [FlyConsole.NativeMethods]::AllowSetForegroundWindow(-1) | Out-Null } catch {}
@@ -658,22 +725,11 @@ function Show-Launcher {
         }
     }.GetNewClosure())
     $form.Controls.Add($btnAve)
-    $y += $bH + 6
 
-    $lblAveSub = New-Object System.Windows.Forms.Label
-    $lblAveSub.Text      = 'Migration toolkit — connections, mappings, monitoring'
-    $lblAveSub.Font      = New-Object System.Drawing.Font('Segoe UI', 8.5)
-    $lblAveSub.ForeColor = $clrMuted
-    $lblAveSub.Location  = [System.Drawing.Point]::new($bX + 4, $y)
-    $lblAveSub.AutoSize  = $true
-    $form.Controls.Add($lblAveSub)
-    $y += 26
-
-    # ── Misc Scripts tile ─────────────────────────────────────────────────────
     $btnMisc = New-Object System.Windows.Forms.Button
     $btnMisc.Text      = 'Misc Scripts'
-    $btnMisc.Font      = New-Object System.Drawing.Font('Segoe UI Semibold', 14)
-    $btnMisc.Location  = [System.Drawing.Point]::new($bX, $y)
+    $btnMisc.Font      = New-Object System.Drawing.Font('Segoe UI Semibold', 13)
+    $btnMisc.Location  = [System.Drawing.Point]::new($bX + ($bW + $gap) * 2, $y)
     $btnMisc.Size      = [System.Drawing.Size]::new($bW, $bH)
     $btnMisc.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
     $btnMisc.FlatAppearance.BorderSize = 0
@@ -686,21 +742,12 @@ function Show-Launcher {
         Write-Log 'Misc Scripts sub-menu closed'
     }.GetNewClosure())
     $form.Controls.Add($btnMisc)
-    $y += $bH + 6
+    $y += $bH + $gap
 
-    $lblMiscSub = New-Object System.Windows.Forms.Label
-    $lblMiscSub.Text      = 'Utility and helper scripts'
-    $lblMiscSub.Font      = New-Object System.Drawing.Font('Segoe UI', 8.5)
-    $lblMiscSub.ForeColor = $clrMuted
-    $lblMiscSub.Location  = [System.Drawing.Point]::new($bX + 4, $y)
-    $lblMiscSub.AutoSize  = $true
-    $form.Controls.Add($lblMiscSub)
-    $y += 26
-
-    # ── Domain Removal tile ───────────────────────────────────────────────────
+    # Row 2
     $btnDom = New-Object System.Windows.Forms.Button
     $btnDom.Text      = 'Domain Removal'
-    $btnDom.Font      = New-Object System.Drawing.Font('Segoe UI Semibold', 14)
+    $btnDom.Font      = New-Object System.Drawing.Font('Segoe UI Semibold', 13)
     $btnDom.Location  = [System.Drawing.Point]::new($bX, $y)
     $btnDom.Size      = [System.Drawing.Size]::new($bW, $bH)
     $btnDom.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
@@ -714,30 +761,30 @@ function Show-Launcher {
         Write-Log 'Domain Removal sub-menu closed'
     }.GetNewClosure())
     $form.Controls.Add($btnDom)
-    $y += $bH + 6
-
-    $lblDomSub = New-Object System.Windows.Forms.Label
-    $lblDomSub.Text      = 'Scripts for removing and cleaning up domains'
-    $lblDomSub.Font      = New-Object System.Drawing.Font('Segoe UI', 8.5)
-    $lblDomSub.ForeColor = $clrMuted
-    $lblDomSub.Location  = [System.Drawing.Point]::new($bX + 4, $y)
-    $lblDomSub.AutoSize  = $true
-    $form.Controls.Add($lblDomSub)
 
     $footer = New-Object System.Windows.Forms.Panel
-    $footer.Height = 46; $footer.Dock = [System.Windows.Forms.DockStyle]::Bottom
-    $footer.BackColor = $clrFooter
+    $footer.Height = 56; $footer.Dock = [System.Windows.Forms.DockStyle]::Bottom
+    $footer.BackColor = [System.Drawing.Color]::FromArgb(248, 249, 250)
     $form.Controls.Add($footer)
+
+    $lblVersion = New-Object System.Windows.Forms.Label
+    $lblVersion.Text = "Version $($script:ToolVersion)"
+    $lblVersion.Location = [System.Drawing.Point]::new(32, 18)
+    $lblVersion.AutoSize = $true
+    $lblVersion.Font = New-Object System.Drawing.Font('Segoe UI', 8.5)
+    $lblVersion.ForeColor = $clrMuted
+    $footer.Controls.Add($lblVersion)
+
     $btnClose = New-Object System.Windows.Forms.Button
-    $btnClose.Text = 'Close'; $btnClose.Size = [System.Drawing.Size]::new(90, 30)
-    $btnClose.Location = [System.Drawing.Point]::new(374, 8)
+    $btnClose.Text = 'Close'; $btnClose.Size = [System.Drawing.Size]::new(100, 36)
+    $btnClose.Location = [System.Drawing.Point]::new(880, 10)
     $btnClose.BackColor = $clrCloseRed
     $btnClose.ForeColor = [System.Drawing.Color]::White; $btnClose.Font = $FontBold
     $btnClose.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat; $btnClose.FlatAppearance.BorderSize = 0
     $btnClose.Cursor = [System.Windows.Forms.Cursors]::Hand
     $btnClose.Add_Click({ $form.Close() }.GetNewClosure())
     $footer.Controls.Add($btnClose)
-    $footer.Add_SizeChanged({ $btnClose.Left = $footer.Width - 100 }.GetNewClosure())
+    $footer.Add_SizeChanged({ $btnClose.Left = $footer.Width - 106 }.GetNewClosure())
 
     $form.Add_FormClosed({ Write-Log '=== Launcher closed ===' }.GetNewClosure())
 
