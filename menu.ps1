@@ -15,8 +15,9 @@ function Show-MainMenu {
     $MenuForm.StartPosition   = [System.Windows.Forms.FormStartPosition]::CenterScreen
     $MenuForm.ClientSize      = [System.Drawing.Size]::new(1000, 700)
     $MenuForm.BackColor       = $clrBg
-    $MenuForm.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedSingle
-    $MenuForm.MaximizeBox     = $false
+    $MenuForm.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::Sizable
+    $MenuForm.MaximizeBox     = $true
+    $MenuForm.WindowState     = [System.Windows.Forms.FormWindowState]::Maximized
     $MenuForm.Font            = $FontBody
     $_ico = Join-Path $PSScriptRoot 'FlyMigration.ico'; if (Test-Path $_ico) { $MenuForm.Icon = [System.Drawing.Icon]::new($_ico) }
 

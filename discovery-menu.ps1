@@ -139,6 +139,7 @@ function Show-DiscoveryMenu {
     $form.Font            = $FontBody
     $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::Sizable
     $form.MaximizeBox     = $true
+    $form.WindowState     = [System.Windows.Forms.FormWindowState]::Maximized
     $_ico = Join-Path $PSScriptRoot 'FlyMigration.ico'
     if (Test-Path $_ico) { $form.Icon = [System.Drawing.Icon]::new($_ico) }
 

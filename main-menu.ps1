@@ -572,8 +572,9 @@ function Show-Launcher {
     $form.StartPosition   = [System.Windows.Forms.FormStartPosition]::CenterScreen
     $form.BackColor       = $clrBg
     $form.Font            = $FontBody
-    $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedSingle
-    $form.MaximizeBox     = $false
+    $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::Sizable
+    $form.MaximizeBox     = $true
+    $form.WindowState     = [System.Windows.Forms.FormWindowState]::Maximized
     $_ico = Join-Path $PSScriptRoot 'FlyMigration.ico'
     if (Test-Path $_ico) { $form.Icon = [System.Drawing.Icon]::new($_ico) }
 
