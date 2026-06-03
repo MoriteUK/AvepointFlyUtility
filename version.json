@@ -1,7 +1,17 @@
 {
-  "version": "2.3.0",
+  "version": "2.3.1",
   "releaseDate": "2026-06-03",
   "changelog": [
+    {
+      "version": "2.3.1",
+      "date": "2026-06-03",
+      "changes": [
+        "Improved stat card labels - now show above values for clarity",
+        "Made stat labels uppercase and bold",
+        "Changed status text to muted color for better visual hierarchy",
+        "Stats now clearly indicate what each number represents"
+      ]
+    },
     {
       "version": "2.3.0",
       "date": "2026-06-03",
