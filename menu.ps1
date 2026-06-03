@@ -59,6 +59,9 @@ function Show-MainMenu {
         $card.BorderStyle = [System.Windows.Forms.BorderStyle]::None
         $card.Cursor = [System.Windows.Forms.Cursors]::Hand
 
+        # Store original position for hover effect
+        $card | Add-Member -NotePropertyName OriginalY -NotePropertyValue $Y
+
         # Add rounded corners with blue top edge
         $card.Add_Paint({
             param($sender, $e)
@@ -125,6 +128,20 @@ function Show-MainMenu {
         $lblSub.Font = $FontSub
         $lblSub.ForeColor = $clrMuted
         $card.Controls.Add($lblSub)
+
+        # Hover effect - move up on mouse enter
+        $card.Add_MouseEnter({
+            param($sender, $e)
+            $sender.Top = $sender.OriginalY - 4
+            $sender.Invalidate()
+        }.GetNewClosure())
+
+        # Hover effect - move back down on mouse leave
+        $card.Add_MouseLeave({
+            param($sender, $e)
+            $sender.Top = $sender.OriginalY
+            $sender.Invalidate()
+        }.GetNewClosure())
 
         $MenuForm.Controls.Add($card)
         return $card
