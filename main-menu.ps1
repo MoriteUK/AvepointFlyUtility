@@ -670,7 +670,78 @@ function Show-Launcher {
     $stat2 = MkStatCard ($margin + $statW + $gap) $y $statW $statH 'Users Migrated' '1,247' 'This month'
     $stat3 = MkStatCard ($margin + ($statW + $gap) * 2) $y $statW $statH 'Success Rate' '94%' 'Last 30 days'
     $stat4 = MkStatCard ($margin + ($statW + $gap) * 3) $y $statW $statH 'Total Data' '2.4 TB' 'Transferred'
-    $y += $statH + $gap + 10
+    $y += $statH + $gap + 20
+
+    # Progress by Workload section
+    $lblProgress = New-Object System.Windows.Forms.Label
+    $lblProgress.Text = 'Progress by Workload'
+    $lblProgress.Location = [System.Drawing.Point]::new($margin, $y)
+    $lblProgress.AutoSize = $true
+    $lblProgress.Font = New-Object System.Drawing.Font('Segoe UI Semibold', 12)
+    $lblProgress.ForeColor = $clrText
+    $form.Controls.Add($lblProgress)
+    $y += 35
+
+    # Helper function for workload progress cards
+    function MkWorkloadCard { param([int]$X,[int]$Y,[int]$W,[string]$Icon,[string]$Name,[int]$Current,[int]$Total)
+        $card = New-Object System.Windows.Forms.Panel
+        $card.Location = [System.Drawing.Point]::new($X,$Y)
+        $card.Size = [System.Drawing.Size]::new($W, 90)
+        $card.BackColor = [System.Drawing.Color]::White
+        $card.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
+
+        # Icon + Name
+        $lblIcon = New-Object System.Windows.Forms.Label
+        $lblIcon.Text = $Icon
+        $lblIcon.Font = New-Object System.Drawing.Font('Segoe UI', 18)
+        $lblIcon.Location = [System.Drawing.Point]::new(16, 16)
+        $lblIcon.AutoSize = $true
+        $card.Controls.Add($lblIcon)
+
+        $lblName = New-Object System.Windows.Forms.Label
+        $lblName.Text = $Name
+        $lblName.Font = New-Object System.Drawing.Font('Segoe UI Semibold', 11)
+        $lblName.ForeColor = $clrText
+        $lblName.Location = [System.Drawing.Point]::new(52, 20)
+        $lblName.AutoSize = $true
+        $card.Controls.Add($lblName)
+
+        # Progress bar background
+        $progBg = New-Object System.Windows.Forms.Panel
+        $progBg.Location = [System.Drawing.Point]::new(16, 52)
+        $progBg.Size = [System.Drawing.Size]::new($W - 32, 8)
+        $progBg.BackColor = [System.Drawing.Color]::FromArgb(232, 236, 243)
+        $card.Controls.Add($progBg)
+
+        # Progress bar fill
+        $percent = [Math]::Round(($Current / $Total) * 100)
+        $fillWidth = [int](($W - 32) * ($Current / $Total))
+        $progFill = New-Object System.Windows.Forms.Panel
+        $progFill.Location = [System.Drawing.Point]::new(0, 0)
+        $progFill.Size = [System.Drawing.Size]::new($fillWidth, 8)
+        $progFill.BackColor = $clrAccent
+        $progBg.Controls.Add($progFill)
+
+        # Progress text
+        $lblProg = New-Object System.Windows.Forms.Label
+        $lblProg.Text = "$Current / $Total $(if($Name -eq 'SharePoint'){'sites'}elseif($Name -eq 'Teams'){'teams'}elseif($Name -eq 'Exchange Online'){'mailboxes'}else{'accounts'})"
+        $lblProg.Font = New-Object System.Drawing.Font('Segoe UI Semibold', 9)
+        $lblProg.ForeColor = $clrMuted
+        $lblProg.Location = [System.Drawing.Point]::new(16, 66)
+        $lblProg.AutoSize = $true
+        $card.Controls.Add($lblProg)
+
+        $form.Controls.Add($card)
+    }
+
+    # Workload cards - 2 per row
+    $wCardW = 465
+    MkWorkloadCard $margin $y $wCardW '📧' 'Exchange Online' 750 1000
+    MkWorkloadCard ($margin + $wCardW + $gap) $y $wCardW '📁' 'OneDrive' 820 1000
+    $y += 90 + $gap
+    MkWorkloadCard $margin $y $wCardW '📑' 'SharePoint' 45 100
+    MkWorkloadCard ($margin + $wCardW + $gap) $y $wCardW '👥' 'Teams' 90 100
+    $y += 90 + $gap + 10
 
     $lblActions = New-Object System.Windows.Forms.Label
     $lblActions.Text = 'Quick Actions'
