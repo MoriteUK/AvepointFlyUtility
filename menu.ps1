@@ -62,6 +62,17 @@ function Show-MainMenu {
         # Store original position for hover effect
         $card | Add-Member -NotePropertyName OriginalY -NotePropertyValue $Y
 
+        # Create rounded region to clip the panel
+        $radius = 12
+        $regionPath = New-Object System.Drawing.Drawing2D.GraphicsPath
+        $regionRect = [System.Drawing.Rectangle]::new(0, 0, $W, $H)
+        $regionPath.AddArc($regionRect.X, $regionRect.Y, $radius * 2, $radius * 2, 180, 90)
+        $regionPath.AddArc($regionRect.Right - $radius * 2, $regionRect.Y, $radius * 2, $radius * 2, 270, 90)
+        $regionPath.AddArc($regionRect.Right - $radius * 2, $regionRect.Bottom - $radius * 2, $radius * 2, $radius * 2, 0, 90)
+        $regionPath.AddArc($regionRect.X, $regionRect.Bottom - $radius * 2, $radius * 2, $radius * 2, 90, 90)
+        $regionPath.CloseFigure()
+        $card.Region = New-Object System.Drawing.Region($regionPath)
+
         # Add rounded corners with blue top edge
         $card.Add_Paint({
             param($sender, $e)
