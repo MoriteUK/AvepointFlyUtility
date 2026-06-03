@@ -223,6 +223,11 @@ function Show-DiscoveryMenu {
         return $l
     }
 
+    function MkSep { param([int]$Y)
+        # Modern separator - just adds spacing, no visible line needed
+        return $Y
+    }
+
     # ── Scan Scope Card ───────────────────────────────────────────────────────
     $null = MkSectionHeader 'Scan Scope' $y
     $y += 32
