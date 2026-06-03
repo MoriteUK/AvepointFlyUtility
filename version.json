@@ -1,7 +1,20 @@
 {
-  "version": "2.1.14",
+  "version": "2.2.0",
   "releaseDate": "2026-06-03",
   "changelog": [
+    {
+      "version": "2.2.0",
+      "date": "2026-06-03",
+      "changes": [
+        "Redesigned main menu as at-a-glance dashboard with live stats",
+        "Added 4 stat cards: Active Projects, Users Migrated, Success Rate, Total Data",
+        "Reorganized action cards into 3x2 grid layout",
+        "Added rounded corners to Discovery menu cards",
+        "Added smooth hover animations to all cards",
+        "Enlarged dashboard to 1000x700px for better visibility",
+        "Added Documentation quick action card"
+      ]
+    },
     {
       "version": "2.1.14",
       "date": "2026-06-03",
