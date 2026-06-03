@@ -1,7 +1,18 @@
 {
-  "version": "2.1.4",
-  "releaseDate": "2026-06-02",
+  "version": "2.1.14",
+  "releaseDate": "2026-06-03",
   "changelog": [
+    {
+      "version": "2.1.14",
+      "date": "2026-06-03",
+      "changes": [
+        "Refined UI to match official design system specifications",
+        "Standardized all colors to design system palette",
+        "Unified font definitions across all windows and dialogs",
+        "Improved dark grid styling in Project Monitor",
+        "Added complete color token library to lib.ps1"
+      ]
+    },
     {
       "version": "2.1.4",
       "date": "2026-06-02",

@@ -61,23 +61,56 @@ function Start-HiddenProcess {
 }
 
 # ── SHARED COLOURS & FONTS ────────────────────────────────────────────────────
-$clrBg     = [System.Drawing.Color]::FromArgb(240, 242, 247)
-$clrPanel  = [System.Drawing.Color]::White
-$clrAccent = [System.Drawing.Color]::FromArgb(0, 100, 180)
-$clrText   = [System.Drawing.Color]::FromArgb(28, 28, 32)
-$clrMuted  = [System.Drawing.Color]::FromArgb(100, 108, 120)
-$clrBorder = [System.Drawing.Color]::FromArgb(210, 215, 228)
-$clrLogBg  = [System.Drawing.Color]::FromArgb(26, 27, 38)
-$clrGrey   = [System.Drawing.Color]::FromArgb(175, 182, 195)
-$clrGreen  = [System.Drawing.Color]::FromArgb(18, 155, 60)
-$clrAmber  = [System.Drawing.Color]::FromArgb(195, 135, 0)
-$clrRed    = [System.Drawing.Color]::FromArgb(195, 30, 30)
+# Design System: Fly Migration Toolkit — matched to design-system/colors_and_type.css
 
-$FontBody  = New-Object System.Drawing.Font("Segoe UI", 9)
-$FontBold  = New-Object System.Drawing.Font("Segoe UI Semibold", 9)
-$FontCap   = New-Object System.Drawing.Font("Segoe UI Semibold", 7.5)
-$FontMono  = New-Object System.Drawing.Font("Consolas", 8.5)
-$FontTitle = New-Object System.Drawing.Font("Segoe UI Semibold", 14)
+# Base palette
+$clrBg     = [System.Drawing.Color]::FromArgb(240, 242, 247)  # --fly-bg #f0f2f7
+$clrPanel  = [System.Drawing.Color]::White                     # --fly-panel
+$clrAccent = [System.Drawing.Color]::FromArgb(0, 100, 180)    # --fly-accent #0064b4 AvePoint blue
+$clrAccentHover = [System.Drawing.Color]::FromArgb(0, 78, 152) # --fly-accent-hover #004e98
+$clrAccentTint  = [System.Drawing.Color]::FromArgb(220, 230, 248) # --fly-accent-tint #dce6f8
+
+$clrText   = [System.Drawing.Color]::FromArgb(28, 28, 32)     # --fly-text #1c1c20
+$clrMuted  = [System.Drawing.Color]::FromArgb(100, 108, 120)  # --fly-muted #646c78
+$clrBorder = [System.Drawing.Color]::FromArgb(210, 215, 228)  # --fly-border #d2d7e4
+$clrGrey   = [System.Drawing.Color]::FromArgb(175, 182, 195)  # --fly-grey #afb6c3
+
+# Dark surfaces
+$clrLogBg  = [System.Drawing.Color]::FromArgb(26, 27, 38)     # --fly-log-bg #1a1b26
+$clrFooter = [System.Drawing.Color]::FromArgb(20, 24, 38)     # --fly-footer #141826
+$clrFooterAlt = [System.Drawing.Color]::FromArgb(28, 32, 48)  # --fly-footer-alt #1c2030
+
+# Status colors
+$clrGreen  = [System.Drawing.Color]::FromArgb(18, 155, 60)    # --fly-green #129b3c
+$clrAmber  = [System.Drawing.Color]::FromArgb(195, 135, 0)    # --fly-amber #c38700
+$clrRed    = [System.Drawing.Color]::FromArgb(195, 30, 30)    # --fly-red #c31e1e
+$clrCloseRed = [System.Drawing.Color]::FromArgb(200, 55, 55)  # --fly-close-red #c83737
+$clrBannerWarn = [System.Drawing.Color]::FromArgb(255, 243, 205) # --fly-banner-warn #fff3cd
+
+# Log console text colors
+$clrLogTimestamp = [System.Drawing.Color]::FromArgb(80, 95, 120)   # --fly-log-ts #505f78
+$clrLogInfo      = [System.Drawing.Color]::FromArgb(120, 155, 220) # --fly-log-info #789bdc
+$clrLogOK        = [System.Drawing.Color]::FromArgb(65, 195, 110)  # --fly-log-ok #41c36e
+$clrLogWarn      = [System.Drawing.Color]::FromArgb(220, 165, 45)  # --fly-log-warn #dca52d
+$clrLogError     = [System.Drawing.Color]::FromArgb(225, 80, 80)   # --fly-log-error #e15050
+$clrLogBody      = [System.Drawing.Color]::FromArgb(205, 212, 230) # --fly-log-body #cdd4e6
+$clrGridText     = [System.Drawing.Color]::FromArgb(190, 210, 255) # --fly-grid-text #bed2ff
+$clrGridLine     = [System.Drawing.Color]::FromArgb(45, 55, 75)    # --fly-grid-line #2d374b
+
+# Dark grid row tints
+$clrRowFailBg    = [System.Drawing.Color]::FromArgb(70, 25, 25)    # --fly-row-fail-bg #461919
+$clrRowFailFg    = [System.Drawing.Color]::FromArgb(240, 125, 125) # --fly-row-fail-fg #f07d7d
+$clrRowWarnBg    = [System.Drawing.Color]::FromArgb(65, 48, 12)    # --fly-row-warn-bg #41300c
+$clrRowWarnFg    = [System.Drawing.Color]::FromArgb(235, 195, 80)  # --fly-row-warn-fg #ebc350
+
+# Typography — Segoe UI system font, sizes matched to design system
+$FontBody  = New-Object System.Drawing.Font("Segoe UI", 9)          # --text-body 13px (9pt)
+$FontBold  = New-Object System.Drawing.Font("Segoe UI Semibold", 9) # --text-bold 13px semibold
+$FontCap   = New-Object System.Drawing.Font("Segoe UI Semibold", 7.5) # --text-cap 10px (7.5pt)
+$FontMono  = New-Object System.Drawing.Font("Consolas", 8.5)        # --text-mono 12px (8.5pt)
+$FontTitle = New-Object System.Drawing.Font("Segoe UI Semibold", 14) # --text-title 19px (14pt)
+$FontSub   = New-Object System.Drawing.Font("Segoe UI", 8.5)        # --text-sub 12px tile subtitle
+$FontTile  = New-Object System.Drawing.Font("Segoe UI Semibold", 14) # --text-tile 19px large nav tiles
 
 $AnchorTL  = [System.Windows.Forms.AnchorStyles]::Top  -bor [System.Windows.Forms.AnchorStyles]::Left
 $AnchorTLR = [System.Windows.Forms.AnchorStyles]::Top  -bor [System.Windows.Forms.AnchorStyles]::Left -bor [System.Windows.Forms.AnchorStyles]::Right

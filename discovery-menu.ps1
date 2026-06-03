@@ -26,7 +26,7 @@ if (-not $_libLoaded) {
     $clrLogBg  = [System.Drawing.Color]::FromArgb(26, 27, 38)
     $FontBody  = New-Object System.Drawing.Font('Segoe UI', 9)
     $FontBold  = New-Object System.Drawing.Font('Segoe UI Semibold', 9)
-    $FontTitle = New-Object System.Drawing.Font('Segoe UI Semibold', 14)
+    $FontTitle = $FontTile
     $AnchorTL  = [System.Windows.Forms.AnchorStyles]::Top -bor [System.Windows.Forms.AnchorStyles]::Left
     $AnchorTLR = [System.Windows.Forms.AnchorStyles]::Top -bor [System.Windows.Forms.AnchorStyles]::Left -bor [System.Windows.Forms.AnchorStyles]::Right
     function Add-HeaderLogo { param($Header, [int]$LogoH = 34) return ($LogoH + 16) }
@@ -159,7 +159,7 @@ function Show-DiscoveryMenu {
     $btnGear = New-Object System.Windows.Forms.Button
     $btnGear.BackColor = $clrAccent; $btnGear.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
     $btnGear.FlatAppearance.BorderSize = 0
-    $btnGear.FlatAppearance.MouseOverBackColor = [System.Drawing.Color]::FromArgb(0, 78, 152)
+    $btnGear.FlatAppearance.MouseOverBackColor = [System.Drawing.Color]::$clrAccentHover
     $btnGear.Size = [System.Drawing.Size]::new(38, 38); $btnGear.Location = [System.Drawing.Point]::new(494, 9)
     $btnGear.Cursor = [System.Windows.Forms.Cursors]::Hand
     $btnGear.Add_Click({ if (Get-Command Show-SettingsDialog -ErrorAction SilentlyContinue) { Show-SettingsDialog } })
@@ -170,12 +170,12 @@ function Show-DiscoveryMenu {
     # ── Footer ────────────────────────────────────────────────────────────────
     $footer = New-Object System.Windows.Forms.Panel
     $footer.Height = 46; $footer.Dock = [System.Windows.Forms.DockStyle]::Bottom
-    $footer.BackColor = [System.Drawing.Color]::FromArgb(20, 24, 38)
+    $footer.BackColor = [System.Drawing.Color]::$clrFooter
     $form.Controls.Add($footer)
     $btnClose = New-Object System.Windows.Forms.Button
     $btnClose.Text = 'Close'; $btnClose.Size = [System.Drawing.Size]::new(90, 30)
     $btnClose.Location = [System.Drawing.Point]::new(444, 8)
-    $btnClose.BackColor = [System.Drawing.Color]::FromArgb(200, 55, 55)
+    $btnClose.BackColor = [System.Drawing.Color]::$clrCloseRed
     $btnClose.ForeColor = [System.Drawing.Color]::White; $btnClose.Font = $FontBold
     $btnClose.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat; $btnClose.FlatAppearance.BorderSize = 0
     $btnClose.Cursor = [System.Windows.Forms.Cursors]::Hand; $btnClose.Add_Click({ $form.Close() })

@@ -60,11 +60,11 @@ function Show-DiscoverySubMenu {
     $btnGear = New-Object System.Windows.Forms.Button
     $btnGear.BackColor = $clrAccent; $btnGear.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
     $btnGear.FlatAppearance.BorderSize = 0
-    $btnGear.FlatAppearance.MouseOverBackColor = [System.Drawing.Color]::FromArgb(0, 78, 152)
+    $btnGear.FlatAppearance.MouseOverBackColor = $clrAccentHover
     $btnGear.Size = [System.Drawing.Size]::new(38, 38); $btnGear.Location = [System.Drawing.Point]::new(434, 9)
     $btnGear.Cursor = [System.Windows.Forms.Cursors]::Hand; $btnGear.Add_Click({ Show-SettingsDialog })
     if ($script:GearBitmap) { $btnGear.Image = $script:GearBitmap; $btnGear.ImageAlign = [System.Drawing.ContentAlignment]::MiddleCenter }
-    else { $btnGear.Text = [char]0x2699; $btnGear.Font = New-Object System.Drawing.Font('Segoe UI', 16); $btnGear.ForeColor = [System.Drawing.Color]::White }
+    else { $btnGear.Text = [char]0x2699; $btnGear.Font = New-Object System.Drawing.Font('Segoe UI Symbol', 16); $btnGear.ForeColor = [System.Drawing.Color]::White }
     $hdr.Controls.Add($btnGear)
 
     $bW = 400; $bH = 90; $bX = 40; $y = 82
@@ -72,7 +72,7 @@ function Show-DiscoverySubMenu {
     # ── M365 Discovery ────────────────────────────────────────────────────────
     $btn1 = New-Object System.Windows.Forms.Button
     $btn1.Text      = 'M365 Discovery'
-    $btn1.Font      = New-Object System.Drawing.Font('Segoe UI Semibold', 14)
+    $btn1.Font      = $FontTile
     $btn1.Location  = [System.Drawing.Point]::new($bX, $y)
     $btn1.Size      = [System.Drawing.Size]::new($bW, $bH)
     $btn1.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
@@ -99,7 +99,7 @@ function Show-DiscoverySubMenu {
 
     $sub1 = New-Object System.Windows.Forms.Label
     $sub1.Text      = 'M365 tenant assessment — mailboxes, sites, OneDrive, groups, devices'
-    $sub1.Font      = New-Object System.Drawing.Font('Segoe UI', 8.5)
+    $sub1.Font      = $FontSub
     $sub1.ForeColor = $clrMuted
     $sub1.Location  = [System.Drawing.Point]::new($bX + 4, $y)
     $sub1.AutoSize  = $true
@@ -107,12 +107,12 @@ function Show-DiscoverySubMenu {
 
     $footer = New-Object System.Windows.Forms.Panel
     $footer.Height = 46; $footer.Dock = [System.Windows.Forms.DockStyle]::Bottom
-    $footer.BackColor = [System.Drawing.Color]::FromArgb(20, 24, 38)
+    $footer.BackColor = $clrFooter
     $dlg.Controls.Add($footer)
     $btnClose = New-Object System.Windows.Forms.Button
     $btnClose.Text = 'Close'; $btnClose.Size = [System.Drawing.Size]::new(90, 30)
     $btnClose.Location = [System.Drawing.Point]::new(374, 8)
-    $btnClose.BackColor = [System.Drawing.Color]::FromArgb(200, 55, 55)
+    $btnClose.BackColor = $clrCloseRed
     $btnClose.ForeColor = [System.Drawing.Color]::White; $btnClose.Font = $FontBold
     $btnClose.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat; $btnClose.FlatAppearance.BorderSize = 0
     $btnClose.Cursor = [System.Windows.Forms.Cursors]::Hand
@@ -152,11 +152,11 @@ function Show-MiscSubMenu {
     $btnGear = New-Object System.Windows.Forms.Button
     $btnGear.BackColor = $clrAccent; $btnGear.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
     $btnGear.FlatAppearance.BorderSize = 0
-    $btnGear.FlatAppearance.MouseOverBackColor = [System.Drawing.Color]::FromArgb(0, 78, 152)
+    $btnGear.FlatAppearance.MouseOverBackColor = $clrAccentHover
     $btnGear.Size = [System.Drawing.Size]::new(38, 38); $btnGear.Location = [System.Drawing.Point]::new(434, 9)
     $btnGear.Cursor = [System.Windows.Forms.Cursors]::Hand; $btnGear.Add_Click({ Show-SettingsDialog })
     if ($script:GearBitmap) { $btnGear.Image = $script:GearBitmap; $btnGear.ImageAlign = [System.Drawing.ContentAlignment]::MiddleCenter }
-    else { $btnGear.Text = [char]0x2699; $btnGear.Font = New-Object System.Drawing.Font('Segoe UI', 16); $btnGear.ForeColor = [System.Drawing.Color]::White }
+    else { $btnGear.Text = [char]0x2699; $btnGear.Font = New-Object System.Drawing.Font('Segoe UI Symbol', 16); $btnGear.ForeColor = [System.Drawing.Color]::White }
     $hdr.Controls.Add($btnGear)
 
     $bW = 400; $bH = 90; $bX = 40; $y = 82
@@ -241,12 +241,12 @@ function Show-MiscSubMenu {
 
     $footer = New-Object System.Windows.Forms.Panel
     $footer.Height = 46; $footer.Dock = [System.Windows.Forms.DockStyle]::Bottom
-    $footer.BackColor = [System.Drawing.Color]::FromArgb(20, 24, 38)
+    $footer.BackColor = $clrFooter
     $dlg.Controls.Add($footer)
     $btnClose = New-Object System.Windows.Forms.Button
     $btnClose.Text = 'Close'; $btnClose.Size = [System.Drawing.Size]::new(90, 30)
     $btnClose.Location = [System.Drawing.Point]::new(374, 8)
-    $btnClose.BackColor = [System.Drawing.Color]::FromArgb(200, 55, 55)
+    $btnClose.BackColor = $clrCloseRed
     $btnClose.ForeColor = [System.Drawing.Color]::White; $btnClose.Font = $FontBold
     $btnClose.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat; $btnClose.FlatAppearance.BorderSize = 0
     $btnClose.Cursor = [System.Windows.Forms.Cursors]::Hand
@@ -286,11 +286,11 @@ function Show-DomainRemovalSubMenu {
     $btnGear = New-Object System.Windows.Forms.Button
     $btnGear.BackColor = $clrAccent; $btnGear.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
     $btnGear.FlatAppearance.BorderSize = 0
-    $btnGear.FlatAppearance.MouseOverBackColor = [System.Drawing.Color]::FromArgb(0, 78, 152)
+    $btnGear.FlatAppearance.MouseOverBackColor = $clrAccentHover
     $btnGear.Size = [System.Drawing.Size]::new(38, 38); $btnGear.Location = [System.Drawing.Point]::new(434, 9)
     $btnGear.Cursor = [System.Windows.Forms.Cursors]::Hand; $btnGear.Add_Click({ Show-SettingsDialog })
     if ($script:GearBitmap) { $btnGear.Image = $script:GearBitmap; $btnGear.ImageAlign = [System.Drawing.ContentAlignment]::MiddleCenter }
-    else { $btnGear.Text = [char]0x2699; $btnGear.Font = New-Object System.Drawing.Font('Segoe UI', 16); $btnGear.ForeColor = [System.Drawing.Color]::White }
+    else { $btnGear.Text = [char]0x2699; $btnGear.Font = New-Object System.Drawing.Font('Segoe UI Symbol', 16); $btnGear.ForeColor = [System.Drawing.Color]::White }
     $hdr.Controls.Add($btnGear)
 
     $bW = 400; $bH = 90; $bX = 40; $y = 82
@@ -548,12 +548,12 @@ function Show-DomainRemovalSubMenu {
 
     $footer = New-Object System.Windows.Forms.Panel
     $footer.Height = 46; $footer.Dock = [System.Windows.Forms.DockStyle]::Bottom
-    $footer.BackColor = [System.Drawing.Color]::FromArgb(20, 24, 38)
+    $footer.BackColor = $clrFooter
     $dlg.Controls.Add($footer)
     $btnClose = New-Object System.Windows.Forms.Button
     $btnClose.Text = 'Close'; $btnClose.Size = [System.Drawing.Size]::new(90, 30)
     $btnClose.Location = [System.Drawing.Point]::new(374, 8)
-    $btnClose.BackColor = [System.Drawing.Color]::FromArgb(200, 55, 55)
+    $btnClose.BackColor = $clrCloseRed
     $btnClose.ForeColor = [System.Drawing.Color]::White; $btnClose.Font = $FontBold
     $btnClose.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat; $btnClose.FlatAppearance.BorderSize = 0
     $btnClose.Cursor = [System.Windows.Forms.Cursors]::Hand
@@ -596,11 +596,11 @@ function Show-Launcher {
     $btnGear = New-Object System.Windows.Forms.Button
     $btnGear.BackColor = $clrAccent; $btnGear.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
     $btnGear.FlatAppearance.BorderSize = 0
-    $btnGear.FlatAppearance.MouseOverBackColor = [System.Drawing.Color]::FromArgb(0, 78, 152)
+    $btnGear.FlatAppearance.MouseOverBackColor = $clrAccentHover
     $btnGear.Size = [System.Drawing.Size]::new(38, 38); $btnGear.Location = [System.Drawing.Point]::new(434, 9)
     $btnGear.Cursor = [System.Windows.Forms.Cursors]::Hand; $btnGear.Add_Click({ Show-SettingsDialog })
     if ($script:GearBitmap) { $btnGear.Image = $script:GearBitmap; $btnGear.ImageAlign = [System.Drawing.ContentAlignment]::MiddleCenter }
-    else { $btnGear.Text = [char]0x2699; $btnGear.Font = New-Object System.Drawing.Font('Segoe UI', 16); $btnGear.ForeColor = [System.Drawing.Color]::White }
+    else { $btnGear.Text = [char]0x2699; $btnGear.Font = New-Object System.Drawing.Font('Segoe UI Symbol', 16); $btnGear.ForeColor = [System.Drawing.Color]::White }
     $hdr.Controls.Add($btnGear)
 
     $bW = 400; $bH = 90; $bX = 40; $y = 82
@@ -726,12 +726,12 @@ function Show-Launcher {
 
     $footer = New-Object System.Windows.Forms.Panel
     $footer.Height = 46; $footer.Dock = [System.Windows.Forms.DockStyle]::Bottom
-    $footer.BackColor = [System.Drawing.Color]::FromArgb(20, 24, 38)
+    $footer.BackColor = $clrFooter
     $form.Controls.Add($footer)
     $btnClose = New-Object System.Windows.Forms.Button
     $btnClose.Text = 'Close'; $btnClose.Size = [System.Drawing.Size]::new(90, 30)
     $btnClose.Location = [System.Drawing.Point]::new(374, 8)
-    $btnClose.BackColor = [System.Drawing.Color]::FromArgb(200, 55, 55)
+    $btnClose.BackColor = $clrCloseRed
     $btnClose.ForeColor = [System.Drawing.Color]::White; $btnClose.Font = $FontBold
     $btnClose.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat; $btnClose.FlatAppearance.BorderSize = 0
     $btnClose.Cursor = [System.Windows.Forms.Cursors]::Hand

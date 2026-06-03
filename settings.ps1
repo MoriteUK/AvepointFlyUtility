@@ -55,7 +55,7 @@ function Show-SettingsDialog {
     $dlg.Controls.Add($hdr)
     $hdrLbl = New-Object System.Windows.Forms.Label
     $hdrLbl.Text = "  ⚙  Settings"
-    $hdrLbl.Font = New-Object System.Drawing.Font("Segoe UI Semibold", 12)
+    $hdrLbl.Font = $FontBold
     $hdrLbl.ForeColor = [System.Drawing.Color]::White
     $hdrLbl.Location = [System.Drawing.Point]::new(8, 10); $hdrLbl.AutoSize = $true
     $hdr.Controls.Add($hdrLbl)
@@ -86,7 +86,7 @@ function Show-SettingsDialog {
     $mkNote = {
         param($parent, $text, $x, $y)
         $l = New-Object System.Windows.Forms.Label
-        $l.Text = $text; $l.Font = New-Object System.Drawing.Font("Segoe UI", 8)
+        $l.Text = $text; $l.Font = $FontSub
         $l.ForeColor = $clrMuted; $l.Location = [System.Drawing.Point]::new($x, $y)
         $l.Size = [System.Drawing.Size]::new(850, 16); $parent.Controls.Add($l)
     }
@@ -253,7 +253,7 @@ function Show-SettingsDialog {
     $dgvPfx.DefaultCellStyle.Font       = $FontBody
     $dgvPfx.AlternatingRowsDefaultCellStyle.BackColor = [System.Drawing.Color]::FromArgb(245, 246, 250)
     $dgvPfx.ColumnHeadersDefaultCellStyle.Font       = $FontBold
-    $dgvPfx.ColumnHeadersDefaultCellStyle.BackColor  = [System.Drawing.Color]::FromArgb(220, 230, 248)
+    $dgvPfx.ColumnHeadersDefaultCellStyle.BackColor  = $clrAccentTint
     $dgvPfx.ColumnHeadersDefaultCellStyle.ForeColor  = $clrText
     $dgvPfx.ColumnHeadersHeight           = 28
     $dgvPfx.ColumnHeadersHeightSizeMode   = [System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode]::DisableResizing

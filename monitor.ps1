@@ -60,7 +60,7 @@ function Show-ProjectMonitorForm {
     $footer = New-Object System.Windows.Forms.Panel
     $footer.Height    = 46
     $footer.Dock      = [System.Windows.Forms.DockStyle]::Bottom
-    $footer.BackColor = [System.Drawing.Color]::FromArgb(28, 32, 48)
+    $footer.BackColor = $clrFooterAlt
     $Form.Controls.Add($footer)
 
     $dotConn = New-Object System.Windows.Forms.Panel
@@ -73,7 +73,7 @@ function Show-ProjectMonitorForm {
     $lblConn.Text      = "Checking connection..."
     $lblConn.Location  = [System.Drawing.Point]::new(34, 14)
     $lblConn.Size      = [System.Drawing.Size]::new(440, 20)
-    $lblConn.ForeColor = [System.Drawing.Color]::FromArgb(190, 210, 255)
+    $lblConn.ForeColor = $clrGridText
     $footer.Controls.Add($lblConn)
 
     $btnConnect = New-Object System.Windows.Forms.Button
@@ -93,7 +93,7 @@ function Show-ProjectMonitorForm {
     $btnClose.Text      = "Close"
     $btnClose.Size      = [System.Drawing.Size]::new(90, 30)
     $btnClose.Location  = [System.Drawing.Point]::new(900, 8)
-    $btnClose.BackColor = [System.Drawing.Color]::FromArgb(200, 55, 55)
+    $btnClose.BackColor = $clrCloseRed
     $btnClose.ForeColor = [System.Drawing.Color]::White
     $btnClose.Font      = $FontBold
     $btnClose.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
@@ -125,7 +125,7 @@ function Show-ProjectMonitorForm {
     $_hdrX = Add-HeaderLogo $hdr 30
     $hdrTitle = New-Object System.Windows.Forms.Label
     $hdrTitle.Text      = "  Project Monitor"
-    $hdrTitle.Font      = New-Object System.Drawing.Font("Segoe UI Semibold", 12)
+    $hdrTitle.Font      = $FontBold
     $hdrTitle.ForeColor = [System.Drawing.Color]::White
     $hdrTitle.Location  = [System.Drawing.Point]::new($_hdrX, 0)
     $hdrTitle.Size      = [System.Drawing.Size]::new(400, 46)
@@ -136,7 +136,7 @@ function Show-ProjectMonitorForm {
     $btnGear.BackColor = $clrAccent
     $btnGear.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
     $btnGear.FlatAppearance.BorderSize = 0
-    $btnGear.FlatAppearance.MouseOverBackColor = [System.Drawing.Color]::FromArgb(0, 78, 152)
+    $btnGear.FlatAppearance.MouseOverBackColor = $clrAccentHover
     $btnGear.Size     = [System.Drawing.Size]::new(38, 38)
     $btnGear.Location = [System.Drawing.Point]::new(950, 4)
     $btnGear.Cursor   = [System.Windows.Forms.Cursors]::Hand
@@ -144,7 +144,7 @@ function Show-ProjectMonitorForm {
     if ($script:GearBitmap) {
         $btnGear.Image = $script:GearBitmap; $btnGear.ImageAlign = [System.Drawing.ContentAlignment]::MiddleCenter
     } else {
-        $btnGear.Text = [char]0x2699; $btnGear.Font = New-Object System.Drawing.Font("Segoe UI", 16)
+        $btnGear.Text = [char]0x2699; $btnGear.Font = New-Object System.Drawing.Font("Segoe UI Symbol", 16)
         $btnGear.ForeColor = [System.Drawing.Color]::White
     }
     $hdr.Controls.Add($btnGear)
@@ -153,7 +153,7 @@ function Show-ProjectMonitorForm {
     # Row 1 — project selector bar (light blue)
     $selBar = New-Object System.Windows.Forms.Panel
     $selBar.Dock      = [System.Windows.Forms.DockStyle]::Fill
-    $selBar.BackColor = [System.Drawing.Color]::FromArgb(220, 230, 248)
+    $selBar.BackColor = $clrAccentTint
     $tlp.Controls.Add($selBar, 0, 1)
 
     $lblPfx = New-Object System.Windows.Forms.Label
@@ -231,7 +231,7 @@ function Show-ProjectMonitorForm {
     $monDgv = New-Object System.Windows.Forms.DataGridView
     $monDgv.Dock                          = [System.Windows.Forms.DockStyle]::Fill
     $monDgv.BackgroundColor               = $clrLogBg
-    $monDgv.GridColor                     = [System.Drawing.Color]::FromArgb(45, 55, 75)
+    $monDgv.GridColor                     = $clrGridLine
     $monDgv.BorderStyle                   = [System.Windows.Forms.BorderStyle]::None
     $monDgv.EnableHeadersVisualStyles     = $false
     $monDgv.ColumnHeadersHeightSizeMode   = [System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode]::DisableResizing
@@ -241,8 +241,8 @@ function Show-ProjectMonitorForm {
     $monDgv.ColumnHeadersDefaultCellStyle.Font      = New-Object System.Drawing.Font($FontBody.FontFamily, $FontBody.Size, [System.Drawing.FontStyle]::Bold)
     $monDgv.ColumnHeadersBorderStyle      = [System.Windows.Forms.DataGridViewHeaderBorderStyle]::Single
     $monDgv.DefaultCellStyle.BackColor    = $clrLogBg
-    $monDgv.DefaultCellStyle.ForeColor    = [System.Drawing.Color]::FromArgb(190, 210, 255)
-    $monDgv.DefaultCellStyle.SelectionBackColor = [System.Drawing.Color]::FromArgb(0, 78, 152)
+    $monDgv.DefaultCellStyle.ForeColor    = $clrGridText
+    $monDgv.DefaultCellStyle.SelectionBackColor = $clrAccentHover
     $monDgv.DefaultCellStyle.SelectionForeColor = [System.Drawing.Color]::White
     $monDgv.RowHeadersVisible             = $false
     $monDgv.ReadOnly                      = $true
@@ -360,11 +360,11 @@ function Show-ProjectMonitorForm {
             [void]$monDgv.Rows.Add($vals)
             $newRow = $monDgv.Rows[$monDgv.Rows.Count - 1]
             if ($rowErr -or $failed -gt 0) {
-                $newRow.DefaultCellStyle.BackColor = [System.Drawing.Color]::FromArgb(70, 25, 25)
-                $newRow.DefaultCellStyle.ForeColor = [System.Drawing.Color]::FromArgb(240, 125, 125)
+                $newRow.DefaultCellStyle.BackColor = $clrRowFailBg
+                $newRow.DefaultCellStyle.ForeColor = $clrRowFailFg
             } elseif ($warnings -gt 0) {
-                $newRow.DefaultCellStyle.BackColor = [System.Drawing.Color]::FromArgb(65, 48, 12)
-                $newRow.DefaultCellStyle.ForeColor = [System.Drawing.Color]::FromArgb(235, 195, 80)
+                $newRow.DefaultCellStyle.BackColor = $clrRowWarnBg
+                $newRow.DefaultCellStyle.ForeColor = $clrRowWarnFg
             }
         }
         $lblRefreshed.Text = "Last refresh: $(Get-Date -Format 'HH:mm:ss')"
