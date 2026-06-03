@@ -25,7 +25,7 @@ function Show-MainMenu {
     $MenuForm.Controls.Add($hdr)
     $_hdrX = Add-HeaderLogo $hdr 44
     $hdrTitle = New-Object System.Windows.Forms.Label
-    $hdrTitle.Text      = "  🚀 AvePoint Fly"
+    $hdrTitle.Text      = "  AvePoint Fly"
     $hdrTitle.Font      = New-Object System.Drawing.Font('Segoe UI Semibold', 16)
     $hdrTitle.ForeColor = [System.Drawing.Color]::White
     $hdrTitle.Location  = [System.Drawing.Point]::new($_hdrX, 0)
@@ -130,8 +130,8 @@ function Show-MainMenu {
         return $card
     }
 
-    # 3 cards wide layout
-    $cardW = 240; $cardH = 120; $startX = 40; $gap = 20
+    # 3 cards wide layout - make cards slightly smaller to avoid edge clipping
+    $cardW = 235; $cardH = 120; $startX = 40; $gap = 20
     $y = 112
 
     # Row 1 (3 cards)
