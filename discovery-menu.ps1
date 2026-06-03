@@ -249,7 +249,7 @@ function Show-DiscoveryMenu {
     $null = MkSectionHeader 'Domain Selection' $y
     $y += 32
 
-    # ── Single domain panel (Card with dropdown) ──────────────────────────────
+    # ── Single domain panel (Card with dropdown and VBU ID side-by-side) ──────
     $pnlSingle = MkCard $lx $y $rw 90
     $lbDom = New-Object System.Windows.Forms.Label
     $lbDom.Text = 'Domain'; $lbDom.Location = [System.Drawing.Point]::new(24,16); $lbDom.AutoSize = $true
@@ -258,7 +258,7 @@ function Show-DiscoveryMenu {
 
     $cmbDomain = New-Object System.Windows.Forms.ComboBox
     $cmbDomain.Location        = [System.Drawing.Point]::new(24, 44)
-    $cmbDomain.Size            = [System.Drawing.Size]::new(400, 28)
+    $cmbDomain.Size            = [System.Drawing.Size]::new(360, 28)
     $cmbDomain.BackColor       = [System.Drawing.Color]::White
     $cmbDomain.ForeColor       = $clrText
     $cmbDomain.Font            = $FontBody
@@ -267,6 +267,20 @@ function Show-DiscoveryMenu {
     $cmbDomain.AutoCompleteSource = [System.Windows.Forms.AutoCompleteSource]::ListItems
     foreach ($d in $domainListSorted) { $cmbDomain.Items.Add($d) | Out-Null }
     $pnlSingle.Controls.Add($cmbDomain)
+
+    # VBU ID in same card
+    $lbBuidSingle = New-Object System.Windows.Forms.Label
+    $lbBuidSingle.Text = 'VBU ID (Optional)'; $lbBuidSingle.Location = [System.Drawing.Point]::new(404,16); $lbBuidSingle.AutoSize = $true
+    $lbBuidSingle.Font = New-Object System.Drawing.Font('Segoe UI Semibold', 10); $lbBuidSingle.ForeColor = $clrText
+    $pnlSingle.Controls.Add($lbBuidSingle)
+
+    $txtBuid = New-Object System.Windows.Forms.TextBox
+    $txtBuid.Location = [System.Drawing.Point]::new(404,44); $txtBuid.Size = [System.Drawing.Size]::new(200,28)
+    $txtBuid.BackColor = [System.Drawing.Color]::White; $txtBuid.ForeColor = $clrText
+    $txtBuid.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
+    $txtBuid.Font = $FontBody
+    try { $txtBuid.PlaceholderText = 'Filters by ExtensionAttribute7' } catch {}
+    $pnlSingle.Controls.Add($txtBuid)
 
     # ── Multiple domains panel (Card with multiline textbox) ──────────────────
     $pnlMulti = MkCard $lx $y $rw 180
@@ -291,25 +305,6 @@ function Show-DiscoveryMenu {
 
     $y += 110    # single-panel height + gap
 
-    # ── VBU ID Card ───────────────────────────────────────────────────────────
-    $null = MkSectionHeader 'VBU ID (Optional)' $y
-    $y += 32
-
-    $cardVbu = MkCard $lx $y $rw 80
-    $lbBuid = New-Object System.Windows.Forms.Label
-    $lbBuid.Text = 'VBU ID'; $lbBuid.Location = [System.Drawing.Point]::new(24,16); $lbBuid.AutoSize = $true
-    $lbBuid.Font = New-Object System.Drawing.Font('Segoe UI Semibold', 10); $lbBuid.ForeColor = $clrText
-    $cardVbu.Controls.Add($lbBuid)
-
-    $txtBuid = New-Object System.Windows.Forms.TextBox
-    $txtBuid.Location = [System.Drawing.Point]::new(24,44); $txtBuid.Size = [System.Drawing.Size]::new(200,28)
-    $txtBuid.BackColor = [System.Drawing.Color]::White; $txtBuid.ForeColor = $clrText
-    $txtBuid.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
-    $txtBuid.Font = $FontBody
-    try { $txtBuid.PlaceholderText = 'Filters by ExtensionAttribute7' } catch {}
-    $cardVbu.Controls.Add($txtBuid)
-    $y += 100
-
     # Auto-fill VBU ID when a domain is chosen — registered here so $txtBuid is in scope
     $cmbDomain.Add_SelectedIndexChanged({
         $sel = [string]$cmbDomain.SelectedItem
@@ -324,13 +319,8 @@ function Show-DiscoveryMenu {
         }
     }.GetNewClosure())
 
-    $lbBuidHint = New-Object System.Windows.Forms.Label
-    $lbBuidHint.Text = '(filters by ExtensionAttribute7)'; $lbBuidHint.Location = [System.Drawing.Point]::new($lx+233,$y+4)
-    $lbBuidHint.AutoSize = $true; $lbBuidHint.ForeColor = $clrMuted; $form.Controls.Add($lbBuidHint)
-    $y += 38
-
     # ── Separator + Options ───────────────────────────────────────────────────
-    $sep1Ctrl   = MkSep $y; $y += 12
+    $sep1Ctrl   = MkSep $y; $y += 20
     $lblOptions = MkLabel 'Options' $lx $y $true; $y += 26
 
     $chkSkipPP   = MkCheck 'Skip Power Platform  (recommended for unattended / batch runs)' ($lx+8) $y $true;  $y += 26
@@ -448,8 +438,7 @@ function Show-DiscoveryMenu {
         $delta = $newOffset - $script:discModeOffset
         if ($delta -ne 0) {
             $script:discModeOffset = $newOffset
-            foreach ($ctrl in @($lbBuid, $txtBuid, $lbBuidHint,
-                                $sep1Ctrl, $lblOptions,
+            foreach ($ctrl in @($sep1Ctrl, $lblOptions,
                                 $chkSkipPP, $chkHybrid, $chkMembers, $chkContinue,
                                 $sep2Ctrl, $lbOutDir, $txtOutDir, $btnBrowseOut,
                                 $btnRun, $btnStop, $btnClearLog, $rtbLog)) {
